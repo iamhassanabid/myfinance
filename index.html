@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Rubi Nexus - Udhar & Income Tracker</title>
+  
+  <!-- Apple Web App & Custom Icon Settings -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Udhar Tracker">
+  
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px 15px; }
+    .container { width: 100%; max-width: 480px; margin: 0 auto; }
+    #lock-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #090d16; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; padding: 20px; }
+    .lock-box { text-align: center; background: #1e293b; padding: 30px 25px; border-radius: 20px; border: 1px solid #334155; width: 100%; max-width: 350px; }
+    .lock-title { font-size: 22px; font-weight: 700; margin-bottom: 10px; color: #38bdf8; }
+    .lock-sub { font-size: 13px; color: #94a3b8; margin-bottom: 20px; }
+    .pin-input { width: 100%; padding: 14px; font-size: 24px; letter-spacing: 8px; text-align: center; border-radius: 12px; border: 2px solid #334155; background: #0f172a; color: #38bdf8; font-weight: bold; outline: none; margin-bottom: 15px; text-transform: uppercase; }
+    .pin-input:focus { border-color: #38bdf8; }
+    .btn-unlock { width: 100%; padding: 14px; background: #0284c7; color: white; font-size: 16px; font-weight: 600; border: none; border-radius: 12px; cursor: pointer; }
+    .error-msg { color: #f87171; font-size: 13px; margin-top: 10px; display: none; }
+    .app-header { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 20px; }
+    .app-title { font-size: 20px; font-weight: bold; color: #f8fafc; }
+    .month-picker { background: #1e293b; color: #38bdf8; border: 1px solid #334155; padding: 8px 12px; border-radius: 8px; font-weight: 600; outline: none; }
+    .alert-card { padding: 12px 16px; border-radius: 12px; font-size: 13px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .alert-warning { background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; }
+    .alert-good { background: rgba(34, 197, 94, 0.15); border: 1px solid #22c55e; color: #86efac; }
+    .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .card { background: #1e293b; padding: 16px; border-radius: 14px; border: 1px solid #334155; }
+    .card-label { font-size: 12px; color: #94a3b8; margin-bottom: 6px; font-weight: 500; }
+    .card-value { font-size: 20px; font-weight: 700; }
+    .val-given { color: #f87171; }
+    .val-received { color: #4ade80; }
+    .val-pending { color: #fbbf24; }
+    .val-income { color: #38bdf8; }
+    .form-card { background: #1e293b; padding: 18px; border-radius: 16px; border: 1px solid #334155; margin-bottom: 25px; }
+    .form-title { font-size: 15px; font-weight: 600; margin-bottom: 12px; color: #e2e8f0; }
+    .form-group { margin-bottom: 12px; }
+    .form-control { width: 100%; padding: 10px 12px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; font-size: 14px; outline: none; }
+    .form-row { display: flex; gap: 10px; }
+    .btn-submit { width: 100%; padding: 12px; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    .history-card { background: #1e293b; padding: 18px; border-radius: 16px; border: 1px solid #334155; }
+    .item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #334155; }
+    .item-row:last-child { border-bottom: none; }
+    .item-info { display: flex; flex-direction: column; gap: 2px; }
+    .item-name { font-size: 14px; font-weight: 600; }
+    .item-date { font-size: 11px; color: #94a3b8; }
+    .item-badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; display: inline-block; width: fit-content; margin-top: 2px; }
+    .badge-given { background: rgba(239,68,68,0.2); color: #f87171; }
+    .badge-received { background: rgba(34,197,94,0.2); color: #4ade80; }
+    .badge-income { background: rgba(56,189,248,0.2); color: #38bdf8; }
+    .item-amount { font-size: 15px; font-weight: 700; }
+    .btn-del { background: transparent; border: none; color: #64748b; font-size: 16px; margin-left: 10px; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <!-- LOCK SCREEN -->
+  <div id="lock-screen">
+    <div class="lock-box">
+      <div class="lock-title">RUBI NEXUS</div>
+      <div class="lock-sub">Enter Access PIN to Unlock</div>
+      <input type="password" id="pin-field" class="pin-input" placeholder="****" maxlength="4">
+      <button class="btn-unlock" onclick="checkPin()">UNLOCK APP</button>
+      <div id="error-text" class="error-msg">Incorrect PIN. Try again!</div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="container" id="app-container" style="display: none;">
+    <div class="app-header">
+      <div class="app-title">Udhar & Income</div>
+      <input type="month" id="month-filter" class="month-picker" onchange="renderDashboard()">
+    </div>
+
+    <div id="status-alert" class="alert-card alert-good">
+      <span>●</span> <span id="alert-text">Monthly balance is healthy.</span>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="card">
+        <div class="card-label">Wapas Mila</div>
+        <div class="card-value val-received" id="total-received">PKR 0</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Udhar Diya</div>
+        <div class="card-value val-given" id="total-given">PKR 0</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Pending Recovery</div>
+        <div class="card-value val-pending" id="total-pending">PKR 0</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Net Balance</div>
+        <div class="card-value val-income" id="total-income">PKR 0</div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-title">Nayi Entry Add Karein</div>
+      <form id="entry-form" onsubmit="addEntry(event)">
+        <div class="form-group">
+          <input type="text" id="person" class="form-control" placeholder="Naam (e.g. Huraira / Aman)" required>
+        </div>
+        <div class="form-row form-group">
+          <input type="number" id="amount" class="form-control" placeholder="Raqam (PKR)" required>
+          <select id="type" class="form-control" style="width: 140px;">
+            <option value="given">Udhar Diya</option>
+            <option value="received">Wapas Mila</option>
+            <option value="income">Direct Income</option>
+          </select>
+        </div>
+        <div class="form-row form-group">
+          <input type="date" id="entry-date" class="form-control" required>
+          <select id="status" class="form-control" style="width: 120px;">
+            <option value="pending">Pending</option>
+            <option value="cleared">Cleared</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-submit">+ Record Save Karein</button>
+      </form>
+    </div>
+
+    <div class="history-card">
+      <div class="form-title" style="margin-bottom: 15px;">Monthly History</div>
+      <div id="records-list"></div>
+    </div>
+  </div>
+
+  <script>
+    const CORRECT_PIN = "RRRR";
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      document.getElementById("month-filter").value = `${yyyy}-${mm}`;
+      document.getElementById("entry-date").valueAsDate = today;
+    });
+
+    function checkPin() {
+      const input = document.getElementById("pin-field").value.toUpperCase();
+      if (input === CORRECT_PIN) {
+        document.getElementById("lock-screen").style.display = "none";
+        document.getElementById("app-container").style.display = "block";
+        renderDashboard();
+      } else {
+        document.getElementById("error-text").style.display = "block";
+        document.getElementById("pin-field").value = "";
+      }
+    }
+
+    function getStoredData() {
+      return JSON.parse(localStorage.getItem("rubi_udhar_data") || "[]");
+    }
+
+    function addEntry(e) {
+      e.preventDefault();
+      const person = document.getElementById("person").value;
+      const amount = parseFloat(document.getElementById("amount").value);
+      const type = document.getElementById("type").value;
+      const date = document.getElementById("entry-date").value;
+      const status = document.getElementById("status").value;
+
+      const records = getStoredData();
+      records.push({ id: Date.now(), person, amount, type, date, status });
+      localStorage.setItem("rubi_udhar_data", JSON.stringify(records));
+
+      document.getElementById("entry-form").reset();
+      document.getElementById("entry-date").valueAsDate = new Date();
+      renderDashboard();
+    }
+
+    function deleteRecord(id) {
+      let records = getStoredData();
+      records = records.filter(r => r.id !== id);
+      localStorage.setItem("rubi_udhar_data", JSON.stringify(records));
+      renderDashboard();
+    }
+
+    function renderDashboard() {
+      const selectedMonth = document.getElementById("month-filter").value;
+      const records = getStoredData();
+      const filteredRecords = records.filter(r => r.date.startsWith(selectedMonth));
+
+      let totalGiven = 0, totalReceived = 0, totalPending = 0, totalIncome = 0;
+      const listContainer = document.getElementById("records-list");
+      listContainer.innerHTML = "";
+
+      if (filteredRecords.length === 0) {
+        listContainer.innerHTML = `<div style="text-align:center; color:#64748b; padding:20px 0; font-size:13px;">Is mahine koi entry nahi hai.</div>`;
+      }
+
+      filteredRecords.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(r => {
+        if (r.type === 'given') {
+          totalGiven += r.amount;
+          if (r.status === 'pending') totalPending += r.amount;
+        } else if (r.type === 'received') {
+          totalReceived += r.amount;
+        } else if (r.type === 'income') {
+          totalIncome += r.amount;
+        }
+
+        listContainer.innerHTML += `
+          <div class="item-row">
+            <div class="item-info">
+              <div class="item-name">${r.person}</div>
+              <div class="item-date">${r.date} • <span style="color:${r.status === 'pending' ? '#fbbf24' : '#4ade80'}">${r.status.toUpperCase()}</span></div>
+              <span class="item-badge badge-${r.type}">${r.type === 'given' ? 'Udhar Diya' : r.type === 'received' ? 'Wapas Mila' : 'Income'}</span>
+            </div>
+            <div style="display:flex; align-items:center;">
+              <div class="item-amount ${r.type === 'given' ? 'val-given' : 'val-received'}">
+                ${r.type === 'given' ? '-' : '+'} PKR ${r.amount.toLocaleString()}
+              </div>
+              <button class="btn-del" onclick="deleteRecord(${r.id})">✕</button>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById("total-given").innerText = `PKR ${totalGiven.toLocaleString()}`;
+      document.getElementById("total-received").innerText = `PKR ${totalReceived.toLocaleString()}`;
+      document.getElementById("total-pending").innerText = `PKR ${totalPending.toLocaleString()}`;
+      document.getElementById("total-income").innerText = `PKR ${(totalIncome + totalReceived - totalGiven).toLocaleString()}`;
+
+      const alertCard = document.getElementById("status-alert");
+      const alertText = document.getElementById("alert-text");
+
+      if (totalGiven > (totalIncome + totalReceived)) {
+        alertCard.className = "alert-card alert-warning";
+        alertText.innerText = "WARNING: Is mahine Udhar aap ki Income / Recovery se zyada ho raha hai!";
+      } else {
+        alertCard.className = "alert-card alert-good";
+        alertText.innerText = "STATUS OK: Clear monthly balance & healthy recovery.";
+      }
+    }
+  </script>
+</body>
+</html>
