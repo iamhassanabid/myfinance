@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>HASSAN - Pro Financial Dashboard</title>
   
+  <!-- App Favicons -->
   <link id="app-favicon" rel="icon" type="image/jpeg" href="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=300&q=80">
   <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=300&q=80">
 
+  <!-- Tailwind CSS, Supabase & html2canvas -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -25,6 +27,14 @@
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* Ultra-Smooth Day to Night / Night to Day Smooth Transition */
+    html, body, aside, main, header, div, table, tr, td, th {
+      transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                  color 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                  border-color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                  box-shadow 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+
     .top-loader-line {
       position: fixed;
       top: 0; left: 0; height: 3px; width: 100%;
@@ -64,10 +74,11 @@
     body { touch-action: manipulation; }
   </style>
 </head>
-<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-300">
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen">
 
   <div id="topLoader" class="top-loader-line"></div>
 
+  <!-- LOADING SCREEN -->
   <div id="loadingScreen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950">
     <div class="relative flex flex-col items-center">
       <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=300&q=80" alt="Plant HD Logo" class="w-28 h-28 object-cover rounded-full bg-slate-800 p-1 shadow-2xl animate-logo-pulse border-2 border-emerald-500">
@@ -76,6 +87,7 @@
     </div>
   </div>
 
+  <!-- AUTH SCREEN -->
   <div id="authScreen" class="hidden fixed inset-0 z-40 flex items-center justify-center p-4 bg-slate-950/95">
     <div class="glass-panel rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md text-center">
       <div class="inline-block p-1 rounded-full bg-slate-800 mb-4 shadow-lg border border-slate-700">
@@ -98,8 +110,10 @@
     </div>
   </div>
 
+  <!-- MAIN APP SCREEN -->
   <div id="appScreen" class="hidden min-h-screen flex flex-col md:flex-row">
     
+    <!-- LEFT SIDEBAR -->
     <aside id="sidebarMenu" class="hidden md:flex md:w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-col justify-between shrink-0">
       <div>
         <div class="p-5 flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800">
@@ -116,11 +130,13 @@
             <span>Overview Metrics</span>
           </button>
 
+          <!-- Monthly Reports Tab (Admin Only) -->
           <button onclick="switchTab('monthlyReportsView')" id="navMonthly" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
             <i class="fa-solid fa-calendar-days w-5 text-indigo-500"></i>
             <span>Monthly Reports</span>
           </button>
 
+          <!-- Password & User Control (Admin Only) -->
           <button onclick="switchTab('userSecurityView')" id="navAdminSec" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
             <i class="fa-solid fa-users-gear w-5 text-amber-500"></i>
             <span>Password & User Control</span>
@@ -133,7 +149,7 @@
           <span class="flex items-center space-x-2">
             <i class="fa-solid fa-moon dark:hidden text-indigo-600"></i>
             <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
-            <span>Theme Mode</span>
+            <span>Day / Night View</span>
           </span>
         </button>
 
@@ -144,6 +160,7 @@
       </div>
     </aside>
 
+    <!-- RIGHT MAIN CONTENT -->
     <div class="flex-1 flex flex-col min-w-0">
       <header class="md:hidden sticky top-0 z-30 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 h-16 flex items-center justify-between">
         <div class="flex items-center space-x-3">
@@ -161,6 +178,7 @@
 
       <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 overflow-y-auto">
 
+        <!-- GUEST BANNER FOR NON-ADMIN -->
         <div id="guestBanner" class="hidden bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-4 flex items-center justify-between">
           <div class="flex items-center space-x-3">
             <i class="fa-solid fa-user-shield text-indigo-500 text-xl"></i>
@@ -171,6 +189,7 @@
           </div>
         </div>
 
+        <!-- ================= VIEW 1: DASHBOARD OVERVIEW ================= -->
         <div id="dashboardView" class="space-y-6">
           <div id="adminMetrics" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             <div class="glass-panel p-5 rounded-2xl shadow-sm flex items-center justify-between">
@@ -216,6 +235,7 @@
 
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div id="adminControls" class="lg:col-span-1 space-y-6">
+              <!-- Add Income / Expense -->
               <div class="glass-panel p-5 rounded-2xl shadow-sm">
                 <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center space-x-2">
                   <i class="fa-solid fa-plus-circle text-indigo-500"></i>
@@ -247,6 +267,7 @@
                 </form>
               </div>
 
+              <!-- Log Personal Expense -->
               <div class="glass-panel p-5 rounded-2xl shadow-sm">
                 <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center space-x-2">
                   <i class="fa-solid fa-user-gear text-purple-500"></i>
@@ -271,6 +292,7 @@
                 </form>
               </div>
 
+              <!-- Manage Debt -->
               <div class="glass-panel p-5 rounded-2xl shadow-sm">
                 <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center space-x-2">
                   <i class="fa-solid fa-hand-holding-hand text-amber-500"></i>
@@ -321,6 +343,7 @@
             </div>
 
             <div id="displaySection" class="lg:col-span-2 space-y-6">
+              <!-- Active Debt Ledgers -->
               <div class="glass-panel p-5 rounded-2xl shadow-sm">
                 <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center justify-between">
                   <span class="flex items-center space-x-2"><i class="fa-solid fa-users text-indigo-500"></i><span>Active Debt Ledgers</span></span>
@@ -342,6 +365,7 @@
                 </div>
               </div>
 
+              <!-- Personal Expenses Log -->
               <div id="personalExpensesSection" class="glass-panel p-5 rounded-2xl shadow-sm">
                 <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center justify-between">
                   <span class="flex items-center space-x-2"><i class="fa-solid fa-user-gear text-purple-500"></i><span>Personal Expenses Log</span></span>
@@ -362,6 +386,7 @@
                 </div>
               </div>
 
+              <!-- Master Transaction Audit Logs -->
               <div class="glass-panel p-5 rounded-2xl shadow-sm">
                 <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center justify-between">
                   <span class="flex items-center space-x-2"><i class="fa-solid fa-list-check text-indigo-500"></i><span>Master Transaction Audit Logs</span></span>
@@ -385,6 +410,7 @@
           </div>
         </div>
 
+        <!-- ================= VIEW 2: MONTHLY REPORTS (ADMIN ONLY) ================= -->
         <div id="monthlyReportsView" class="hidden space-y-6">
           <div class="glass-panel p-6 rounded-2xl shadow-sm space-y-6" id="monthlyReportCard">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
@@ -409,6 +435,7 @@
               </div>
             </div>
 
+            <!-- Monthly Summary Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div class="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
                 <span class="text-xs font-semibold text-emerald-500 uppercase">Monthly Income</span>
@@ -424,6 +451,7 @@
               </div>
             </div>
 
+            <!-- Monthly Filtered Table -->
             <div class="overflow-x-auto">
               <table class="w-full text-left border-collapse" id="monthlyReportTable">
                 <thead>
@@ -440,6 +468,7 @@
           </div>
         </div>
 
+        <!-- ================= VIEW 3: PASSWORD & USER CONTROL (WITH EYE ICON & DELETE PROFILE) ================= -->
         <div id="userSecurityView" class="hidden space-y-6">
           <div class="max-w-2xl mx-auto space-y-6">
             <div class="glass-panel p-6 rounded-2xl shadow-sm">
@@ -464,8 +493,9 @@
                 <i class="fa-solid fa-users-gear text-indigo-500"></i>
                 <span>Manage All User Passwords & Profiles</span>
               </h2>
-              <p class="text-xs text-slate-400 mb-4">View or change password keys for existing ledger profiles or add new users.</p>
+              <p class="text-xs text-slate-400 mb-4">Click eye icon to reveal password or delete non-admin profiles.</p>
 
+              <!-- EXISTING USERS LIST WITH EYE ICON & DELETE -->
               <div id="userListContainer" class="space-y-3 mb-6"></div>
 
               <div class="border-t border-slate-200 dark:border-slate-800 pt-4">
@@ -614,7 +644,6 @@
         
         document.getElementById('sidebarUserBadge').innerText = `Role: ${currentUser}`;
         
-        // PRIVACY RULE: Non-Admin Users only see their ledger dashboard
         if (currentUser !== "Admin") {
           document.getElementById('guestBanner').classList.remove('hidden');
           document.getElementById('guestName').innerText = currentUser;
@@ -774,9 +803,8 @@
       window.open(whatsappUrl, '_blank');
     }
 
-    // MONTHLY REPORT FILTER & EXPORT LOGIC
     function renderMonthlyReport() {
-      const pickerVal = document.getElementById('reportMonthPicker').value; // e.g., "2026-07"
+      const pickerVal = document.getElementById('reportMonthPicker').value;
       if (!pickerVal) return;
 
       const filteredTrans = state.logs.filter(item => item.date && item.date.startsWith(pickerVal));
@@ -848,12 +876,37 @@
       }
     }
 
+    function togglePasswordVisibility(uName) {
+      const passSpan = document.getElementById(`passText_${uName.replace(/\s+/g, '_')}`);
+      const icon = document.getElementById(`eyeIcon_${uName.replace(/\s+/g, '_')}`);
+      const actualPin = USER_PASSWORDS[uName] || '••••••••';
+
+      if (passSpan.innerText === '••••••••') {
+        passSpan.innerText = actualPin;
+        icon.className = "fa-solid fa-eye-slash";
+      } else {
+        passSpan.innerText = '••••••••';
+        icon.className = "fa-solid fa-eye";
+      }
+    }
+
     async function updateUserPassword(uName) {
       const newPin = prompt(`Enter NEW Password Key for ${uName}:`);
       if (newPin && newPin.trim() !== '') {
         showLoader();
         await supabaseClient.from('settings').upsert({ key: `user_pin_${uName}`, value: newPin.trim() });
         alert(`Password for ${uName} updated successfully!`);
+        await loadDataFromSupabase();
+      }
+    }
+
+    async function deleteUserProfile(uName) {
+      if (confirm(`Are you sure you want to DELETE profile for '${uName}'?`)) {
+        showLoader();
+        await supabaseClient.from('settings').delete().eq('key', `user_pin_${uName}`);
+        await supabaseClient.from('debts').delete().eq('person', uName);
+        delete USER_PASSWORDS[uName];
+        alert(`Profile for '${uName}' has been deleted.`);
         await loadDataFromSupabase();
       }
     }
@@ -875,6 +928,7 @@
       await loadDataFromSupabase();
     }
 
+    // USER SECURITY LIST WITH EYE ICON & DELETE OPTION
     function renderUserSecurityList() {
       const container = document.getElementById('userListContainer');
       if (!container) return;
@@ -883,16 +937,27 @@
       for (let uName in USER_PASSWORDS) {
         if (uName === 'Admin') continue;
 
+        const safeId = uName.replace(/\s+/g, '_');
         const row = document.createElement('div');
         row.className = "flex items-center justify-between p-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm";
         row.innerHTML = `
           <div>
             <span class="font-bold dark:text-white text-slate-900">${uName}</span>
-            <span class="text-xs text-slate-400 block font-mono">Password: ••••••••</span>
+            <div class="flex items-center space-x-2 mt-0.5">
+              <span class="text-xs text-slate-400 font-mono" id="passText_${safeId}">••••••••</span>
+              <button onclick="togglePasswordVisibility('${uName}')" class="text-slate-400 hover:text-indigo-500 text-xs">
+                <i class="fa-solid fa-eye" id="eyeIcon_${safeId}"></i>
+              </button>
+            </div>
           </div>
-          <button onclick="updateUserPassword('${uName}')" class="btn-pro px-3 py-1.5 bg-indigo-500/10 text-indigo-500 border border-indigo-500/30 hover:bg-indigo-500/20 text-xs rounded-lg font-medium">
-            <i class="fa-solid fa-pen"></i> Change Password
-          </button>
+          <div class="flex items-center space-x-2">
+            <button onclick="updateUserPassword('${uName}')" class="btn-pro px-2.5 py-1.5 bg-indigo-500/10 text-indigo-500 border border-indigo-500/30 hover:bg-indigo-500/20 text-xs rounded-lg font-medium">
+              <i class="fa-solid fa-pen"></i> Edit
+            </button>
+            <button onclick="deleteUserProfile('${uName}')" class="btn-pro px-2.5 py-1.5 bg-rose-500/10 text-rose-500 border border-rose-500/30 hover:bg-rose-500/20 text-xs rounded-lg font-medium">
+              <i class="fa-solid fa-trash"></i> Delete
+            </button>
+          </div>
         `;
         container.appendChild(row);
       }
