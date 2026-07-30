@@ -27,7 +27,6 @@
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Ultra-Smooth Day to Night / Night to Day Smooth Transition */
     html, body, aside, main, header, div, table, tr, td, th {
       transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
                   color 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
@@ -77,6 +76,44 @@
 <body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen">
 
   <div id="topLoader" class="top-loader-line"></div>
+
+  <!-- WHATSAPP NUMBER MODAL (DASHBOARD PAR REHNE KE LIYE) -->
+  <div id="whatsappModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+    <div class="glass-panel p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl border border-slate-700">
+      <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+        <h3 class="text-base font-bold text-emerald-500 flex items-center space-x-2">
+          <i class="fa-brands fa-whatsapp text-lg"></i>
+          <span>Send WhatsApp Receipt</span>
+        </h3>
+        <button onclick="closeWhatsAppModal()" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="space-y-3 text-left">
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Country Code</label>
+          <select id="waCountryCode" class="w-full px-3 py-2 rounded-xl border border-slate-700 bg-slate-900 text-white text-sm">
+            <option value="971">🇦🇪 UAE (+971)</option>
+            <option value="92">🇵🇰 Pakistan (+92)</option>
+            <option value="966">🇸🇦 Saudi Arabia (+966)</option>
+            <option value="1">🇺🇸 USA (+1)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">WhatsApp Mobile Number</label>
+          <input type="tel" id="waPhoneNumber" placeholder="e.g. 501234567" class="w-full px-3 py-2 rounded-xl border border-slate-700 bg-slate-900 text-white text-sm focus:ring-2 focus:ring-emerald-500">
+        </div>
+      </div>
+
+      <div class="flex space-x-2 pt-2">
+        <button onclick="closeWhatsAppModal()" class="w-1/2 py-2.5 bg-slate-800 text-slate-300 font-medium rounded-xl text-xs">Cancel</button>
+        <button onclick="executeWhatsAppSend()" class="w-1/2 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-xs flex items-center justify-center space-x-1">
+          <i class="fa-solid fa-paper-plane"></i>
+          <span>Send Now</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- LOADING SCREEN -->
   <div id="loadingScreen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950">
@@ -130,13 +167,11 @@
             <span>Overview Metrics</span>
           </button>
 
-          <!-- Monthly Reports Tab (Admin Only) -->
           <button onclick="switchTab('monthlyReportsView')" id="navMonthly" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
             <i class="fa-solid fa-calendar-days w-5 text-indigo-500"></i>
             <span>Monthly Reports</span>
           </button>
 
-          <!-- Password & User Control (Admin Only) -->
           <button onclick="switchTab('userSecurityView')" id="navAdminSec" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
             <i class="fa-solid fa-users-gear w-5 text-amber-500"></i>
             <span>Password & User Control</span>
@@ -178,7 +213,6 @@
 
       <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 overflow-y-auto">
 
-        <!-- GUEST BANNER FOR NON-ADMIN -->
         <div id="guestBanner" class="hidden bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-4 flex items-center justify-between">
           <div class="flex items-center space-x-3">
             <i class="fa-solid fa-user-shield text-indigo-500 text-xl"></i>
@@ -189,7 +223,7 @@
           </div>
         </div>
 
-        <!-- ================= VIEW 1: DASHBOARD OVERVIEW ================= -->
+        <!-- DASHBOARD OVERVIEW -->
         <div id="dashboardView" class="space-y-6">
           <div id="adminMetrics" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             <div class="glass-panel p-5 rounded-2xl shadow-sm flex items-center justify-between">
@@ -292,7 +326,7 @@
                 </form>
               </div>
 
-              <!-- Manage Debt -->
+              <!-- Manage Debt Form -->
               <div class="glass-panel p-5 rounded-2xl shadow-sm">
                 <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center space-x-2">
                   <i class="fa-solid fa-hand-holding-hand text-amber-500"></i>
@@ -386,7 +420,7 @@
                 </div>
               </div>
 
-              <!-- Master Transaction Audit Logs -->
+              <!-- Audit Logs -->
               <div class="glass-panel p-5 rounded-2xl shadow-sm">
                 <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center justify-between">
                   <span class="flex items-center space-x-2"><i class="fa-solid fa-list-check text-indigo-500"></i><span>Master Transaction Audit Logs</span></span>
@@ -410,7 +444,7 @@
           </div>
         </div>
 
-        <!-- ================= VIEW 2: MONTHLY REPORTS (ADMIN ONLY) ================= -->
+        <!-- MONTHLY REPORTS -->
         <div id="monthlyReportsView" class="hidden space-y-6">
           <div class="glass-panel p-6 rounded-2xl shadow-sm space-y-6" id="monthlyReportCard">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
@@ -435,7 +469,6 @@
               </div>
             </div>
 
-            <!-- Monthly Summary Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div class="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
                 <span class="text-xs font-semibold text-emerald-500 uppercase">Monthly Income</span>
@@ -451,7 +484,6 @@
               </div>
             </div>
 
-            <!-- Monthly Filtered Table -->
             <div class="overflow-x-auto">
               <table class="w-full text-left border-collapse" id="monthlyReportTable">
                 <thead>
@@ -468,7 +500,7 @@
           </div>
         </div>
 
-        <!-- ================= VIEW 3: PASSWORD & USER CONTROL (WITH EYE ICON & DELETE PROFILE) ================= -->
+        <!-- PASSWORD & USER CONTROL -->
         <div id="userSecurityView" class="hidden space-y-6">
           <div class="max-w-2xl mx-auto space-y-6">
             <div class="glass-panel p-6 rounded-2xl shadow-sm">
@@ -495,7 +527,6 @@
               </h2>
               <p class="text-xs text-slate-400 mb-4">Click eye icon to reveal password or delete non-admin profiles.</p>
 
-              <!-- EXISTING USERS LIST WITH EYE ICON & DELETE -->
               <div id="userListContainer" class="space-y-3 mb-6"></div>
 
               <div class="border-t border-slate-200 dark:border-slate-800 pt-4">
@@ -532,6 +563,7 @@
     };
 
     let currentUser = null;
+    let pendingWhatsAppMessage = "";
     let state = { cashflow: [], personalExpenses: [], debts: [], logs: [] };
 
     function showLoader() { document.getElementById('topLoader').style.display = 'block'; }
@@ -691,7 +723,6 @@
       }
     }
 
-    // Handlers
     async function handleAddIncomeExpense(e) {
       e.preventDefault();
       showLoader();
@@ -776,31 +807,65 @@
       await loadDataFromSupabase();
     }
 
+    // MODAL WHATSAPP BACKEND SENDER (DASHBOARD PAR HI REHNE KE LIYE)
     function generateWhatsAppReceiptLink(personName, action, currentAmount, totalGiven, totalReturned, dateStr, noteText) {
       const remainingBalance = totalGiven - totalReturned;
-      let message = "";
+      const receiptNo = "HSN-" + Math.floor(100000 + Math.random() * 900000);
+      let actionTitle = action === 'RECEIVED' ? 'PAYMENT RECEIVED' : (action === 'TAKEN' ? 'LOAN ACKNOWLEDGMENT' : 'LEDGER UPDATE');
 
-      if (action === 'RECEIVED') {
-        message = `Dear ${personName},\n\nThank you very much for your payment of AED ${currentAmount} received on ${dateStr}.\n\n` +
-          `• Total Amount Borrowed: AED ${totalGiven}\n` +
-          `• Total Amount Repaid: AED ${totalReturned}\n` +
-          `• Remaining Net Balance: AED ${remainingBalance > 0 ? remainingBalance : 0}\n\n` +
-          `We appreciate your prompt settlement. Have a great day!\n- HASSAN Ledger Management`;
-      } else if (action === 'TAKEN') {
-        message = `Dear ${personName},\n\nThis is an acknowledgment for the loan borrowed amount of AED ${currentAmount} on ${dateStr} (${noteText}).\n\n` +
-          `• Total Borrowed Amount: AED ${totalReturned}\n` +
-          `• Total Repaid Back: AED ${totalGiven}\n` +
-          `• Current Net Payable: AED ${Math.abs(remainingBalance)}\n\n` +
-          `Thank you for your trust and support!\n- HASSAN Ledger Management`;
-      } else {
-        message = `Dear ${personName},\n\nLedger Update Notice (${dateStr}):\n` +
-          `Transaction Amount: AED ${currentAmount} (${action} - ${noteText})\n` +
-          `Current Net Balance: AED ${remainingBalance}\n\n` +
-          `Thank you!\n- HASSAN Ledger Management`;
+      pendingWhatsAppMessage = 
+        `==================================\n` +
+        `🧾 *HASSAN FINANCIAL LEDGER RECEIPT*\n` +
+        `==================================\n` +
+        `*Receipt No:* ${receiptNo}\n` +
+        `*Date:* ${dateStr}\n` +
+        `*Client Profile:* ${personName}\n` +
+        `----------------------------------\n` +
+        `*Transaction Type:* ${actionTitle}\n` +
+        `*Amount:* AED ${currentAmount.toLocaleString()}\n` +
+        `*Note / Particulars:* ${noteText || 'Standard Ledger Entry'}\n` +
+        `----------------------------------\n` +
+        `📊 *ACCOUNT SUMMARY STATEMENT*\n` +
+        `• Total Amount Given/Issued: AED ${totalGiven.toLocaleString()}\n` +
+        `• Total Amount Repaid/Cleared: AED ${totalReturned.toLocaleString()}\n` +
+        `• *Current Net Outstanding Balance:* AED ${remainingBalance.toLocaleString()}\n` +
+        `==================================\n` +
+        `🙏 *THANK YOU!*\n` +
+        `We appreciate your prompt settlement & continued trust.\n\n` +
+        `_HASSAN Financial Services & Ledger Management_`;
+
+      document.getElementById('whatsappModal').classList.remove('hidden');
+    }
+
+    function closeWhatsAppModal() {
+      document.getElementById('whatsappModal').classList.add('hidden');
+      pendingWhatsAppMessage = "";
+    }
+
+    function executeWhatsAppSend() {
+      const code = document.getElementById('waCountryCode').value;
+      const num = document.getElementById('waPhoneNumber').value.trim();
+
+      if (!num) {
+        alert("Please enter WhatsApp Phone Number.");
+        return;
       }
 
-      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
+      const fullPhone = code + num.replace(/[^0-9]/g, '');
+      const waUrl = `https://api.whatsapp.com/send?phone=${fullPhone}&text=${encodeURIComponent(pendingWhatsAppMessage)}`;
+      
+      // Open in background iframe or popup without leaving main dashboard focus
+      const hiddenIframe = document.createElement('iframe');
+      hiddenIframe.style.display = 'none';
+      hiddenIframe.src = waUrl;
+      document.body.appendChild(hiddenIframe);
+
+      setTimeout(() => {
+        document.body.removeChild(hiddenIframe);
+      }, 2000);
+
+      window.open(waUrl, '_blank');
+      closeWhatsAppModal();
     }
 
     function renderMonthlyReport() {
@@ -928,7 +993,6 @@
       await loadDataFromSupabase();
     }
 
-    // USER SECURITY LIST WITH EYE ICON & DELETE OPTION
     function renderUserSecurityList() {
       const container = document.getElementById('userListContainer');
       if (!container) return;
