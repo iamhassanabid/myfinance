@@ -1,756 +1,610 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HASSAN - Personal Finance & Debt Dashboard</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' }
-          }
-        }
-      }
-    }
-  </script>
+  <title>HASSAN - Financial Dashboard</title>
+  <!-- FontAwesome & Google Fonts -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
   <style>
-    @keyframes pulseLogo {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.1); opacity: 0.85; }
+    :root {
+      --bg-dark: #0f1322;
+      --card-bg: #181f33;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent-green: #00c853;
+      --accent-blue: #29b6f6;
+      --accent-purple: #ab47bc;
+      --accent-orange: #ffa726;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
     }
-    .animate-logo-pulse { animation: pulseLogo 1.5s infinite ease-in-out; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* --- SIDEBAR --- */
+    .sidebar {
+      width: 260px;
+      background: #131828;
+      border-right: 1px solid var(--card-border);
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .brand-logo i {
+      font-size: 28px;
+      color: #3b82f6;
+      background: rgba(59, 130, 246, 0.15);
+      padding: 10px;
+      border-radius: 12px;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #fff;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: var(--text-muted);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .menu-item:hover, .menu-item.active {
+      background: rgba(59, 130, 246, 0.1);
+      color: #60a5fa;
+    }
+
+    /* --- MAIN CONTENT --- */
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    /* METRICS CARDS WITH ANIMATION */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-info span {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .card-info h2 {
+      font-size: 22px;
+      margin-top: 6px;
+      font-weight: 700;
+    }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    /* SECTION LAYOUT */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 20px;
+    }
+
+    .panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+      animation: fadeInUp 0.5s ease;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    /* FORMS & INPUTS */
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .form-control {
+      width: 100%;
+      background: #0f1422;
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 10px 12px;
+      border-radius: 8px;
+      outline: none;
+      font-size: 13px;
+      transition: border-color 0.3s;
+    }
+
+    .form-control:focus {
+      border-color: #3b82f6;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: opacity 0.2s;
+    }
+
+    .btn-green { background: var(--accent-green); color: #fff; }
+    .btn-purple { background: var(--accent-purple); color: #fff; }
+    .btn-blue { background: #2563eb; color: #fff; }
+    .btn:hover { opacity: 0.9; }
+
+    /* TABLES */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    th {
+      color: var(--text-muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    td {
+      padding: 12px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .btn-wa {
+      background: #25D366;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen transition-colors duration-200">
+<body>
 
-  <!-- ================= ANIMATED INITIAL LOADING SCREEN ================= -->
-  <div id="loadingScreen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gray-900">
-    <div class="relative flex flex-col items-center">
-      <div class="w-24 h-24 rounded-full bg-indigo-600 text-white flex items-center justify-center text-4xl font-bold shadow-2xl animate-logo-pulse mb-3">
-        H
-      </div>
-      <h2 class="text-white text-xl font-bold tracking-widest mt-2">HASSAN</h2>
-      <p class="text-indigo-400 text-xs tracking-wider mt-1" id="loadingText">Connecting to Supabase Database...</p>
-    </div>
-  </div>
-
-  <!-- ================= AUTH SCREEN ================= -->
-  <div id="authScreen" class="hidden fixed inset-0 z-40 flex items-center justify-center p-4 bg-gray-900 bg-opacity-95">
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-6 sm:p-8 w-full max-w-md text-center">
-      
-      <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 mb-4 font-bold text-2xl">
-        H
-      </div>
-      
-      <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Protected Access</h2>
-      <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 mb-6">Enter Security Password / PIN</p>
-
-      <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
-        <div class="text-left">
-          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1">Access Password</label>
-          <input type="password" id="loginPin" required placeholder="Enter password..." class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none text-center font-mono text-lg">
-        </div>
-
-        <div id="loginError" class="text-red-500 text-xs hidden font-medium">Invalid Password. Access Denied.</div>
-
-        <button type="submit" class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition duration-200 flex items-center justify-center space-x-2">
-          <span>Unlock Account</span>
-          <i class="fa-solid fa-key text-sm"></i>
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ================= MAIN APP SCREEN ================= -->
-  <div id="appScreen" class="hidden min-h-screen flex flex-col md:flex-row">
-    
-    <!-- LEFT SIDEBAR MENU -->
-    <aside id="sidebarMenu" class="hidden md:flex md:w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex-col justify-between shrink-0">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand-logo">
+      <i class="fa-solid fa-chart-line-up"></i>
       <div>
-        <div class="p-5 flex items-center space-x-3 border-b border-gray-100 dark:border-gray-700">
-          <div class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-lg shadow">H</div>
-          <div>
-            <h1 class="text-base font-bold text-gray-900 dark:text-white leading-tight">HASSAN</h1>
-            <p class="text-xs text-indigo-500 font-semibold" id="sidebarUserBadge">Role: Admin</p>
+        <div class="brand-title">HASSAN EXPENSE</div>
+        <small style="color: var(--text-muted); font-size: 11px;">Financial Dashboard</small>
+      </div>
+    </div>
+
+    <div class="menu-item active" onclick="switchView('dashboardView')">
+      <i class="fa-solid fa-objects-column"></i>
+      Overview Metrics
+    </div>
+    <div class="menu-item" onclick="switchView('adminView')">
+      <i class="fa-solid fa-user-gear"></i>
+      Manage Users & Security
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT AREA -->
+  <div class="main-content">
+
+    <!-- DASHBOARD VIEW -->
+    <div id="dashboardView">
+      <!-- TOP METRICS -->
+      <div class="metrics-grid">
+        <div class="card">
+          <div class="card-info">
+            <span>Total Income</span>
+            <h2 style="color: var(--accent-green);">AED <span id="valIncome">0</span></h2>
+          </div>
+          <div class="card-icon" style="background: rgba(0, 200, 83, 0.15); color: var(--accent-green);">
+            <i class="fa-solid fa-wallet"></i>
           </div>
         </div>
 
-        <nav class="p-4 space-y-1.5" id="adminNavLinks">
-          <a href="#adminMetrics" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-indigo-900/40 hover:text-indigo-600 transition">
-            <i class="fa-solid fa-chart-pie w-5 text-indigo-500"></i>
-            <span>Overview Metrics</span>
-          </a>
+        <div class="card">
+          <div class="card-info">
+            <span>General Expenses</span>
+            <h2 style="color: #ef4444;">AED <span id="valGenExpense">0</span></h2>
+          </div>
+          <div class="card-icon" style="background: rgba(239, 68, 68, 0.15); color: #ef4444;">
+            <i class="fa-solid fa-receipt"></i>
+          </div>
+        </div>
 
-          <a href="#incomeFormCard" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-indigo-900/40 hover:text-indigo-600 transition">
-            <i class="fa-solid fa-plus-circle w-5 text-emerald-500"></i>
-            <span>Add Income / Expense</span>
-          </a>
+        <div class="card">
+          <div class="card-info">
+            <span>Personal Expenses</span>
+            <h2 style="color: var(--accent-purple);">AED <span id="valPersExpense">0</span></h2>
+          </div>
+          <div class="card-icon" style="background: rgba(171, 71, 188, 0.15); color: var(--accent-purple);">
+            <i class="fa-solid fa-user-tag"></i>
+          </div>
+        </div>
 
-          <a href="#personalExpenseFormCard" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-indigo-900/40 hover:text-indigo-600 transition">
-            <i class="fa-solid fa-user-gear w-5 text-purple-500"></i>
-            <span>Add Personal Expense</span>
-          </a>
-
-          <a href="#debtFormCard" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-indigo-900/40 hover:text-indigo-600 transition">
-            <i class="fa-solid fa-hand-holding-hand w-5 text-amber-500"></i>
-            <span>Manage Debt Ledgers</span>
-          </a>
-
-          <a href="#debtTableSection" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-indigo-900/40 hover:text-indigo-600 transition">
-            <i class="fa-solid fa-users w-5 text-blue-500"></i>
-            <span>Debt Records Table</span>
-          </a>
-
-          <button onclick="openChangePasswordModal()" class="w-full text-left flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-indigo-900/40 hover:text-indigo-600 transition">
-            <i class="fa-solid fa-shield-halved w-5 text-red-500"></i>
-            <span>Change Admin Password</span>
-          </button>
-        </nav>
+        <div class="card">
+          <div class="card-info">
+            <span>Total Receivables</span>
+            <h2 style="color: var(--accent-orange);">AED <span id="valReceivables">0</span></h2>
+          </div>
+          <div class="card-icon" style="background: rgba(255, 167, 38, 0.15); color: var(--accent-orange);">
+            <i class="fa-solid fa-hand-holding-dollar"></i>
+          </div>
+        </div>
       </div>
 
-      <div class="p-4 border-t border-gray-100 dark:border-gray-700 space-y-2">
-        <button onclick="toggleTheme()" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 transition">
-          <span class="flex items-center space-x-2">
-            <i class="fa-solid fa-moon dark:hidden"></i>
-            <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
-            <span>Appearance Mode</span>
-          </span>
-        </button>
+      <!-- GRID LAYOUT -->
+      <div class="dashboard-grid">
+        
+        <!-- LEFT ENTRY FORMS -->
+        <div>
+          <!-- GENERAL INCOME / EXPENSE PANEL -->
+          <div class="panel">
+            <div class="panel-header">
+              <span><i class="fa-solid fa-circle-plus" style="color: var(--accent-green);"></i> Add Income / Expense</span>
+            </div>
+            <div class="form-group">
+              <label>Type</label>
+              <select id="genType" class="form-control">
+                <option value="Income">Income (Salary / Bonus / Other)</option>
+                <option value="Expense">General Expense</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Category / Description</label>
+              <input type="text" id="genDesc" class="form-control" placeholder="e.g. Monthly Salary, Room Rent">
+            </div>
+            <div class="form-group">
+              <label>Amount (AED)</label>
+              <input type="number" id="genAmount" class="form-control" placeholder="0">
+            </div>
+            <button class="btn btn-green" onclick="addGeneralEntry()"><i class="fa-solid fa-check"></i> Save Entry</button>
+          </div>
 
-        <button onclick="logout()" class="w-full flex items-center space-x-2 px-3 py-2 rounded-xl text-sm font-medium bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400 hover:bg-red-100 transition">
-          <i class="fa-solid fa-right-from-bracket"></i>
-          <span>Logout</span>
-        </button>
+          <!-- PERSONAL EXPENSE PANEL -->
+          <div class="panel">
+            <div class="panel-header">
+              <span><i class="fa-solid fa-cart-plus" style="color: var(--accent-purple);"></i> Log Personal Expense</span>
+            </div>
+            <div class="form-group">
+              <label>Where spent?</label>
+              <input type="text" id="persDesc" class="form-control" placeholder="e.g., Snacks, Coffee, Taxi">
+            </div>
+            <div class="form-group">
+              <label>Amount (AED)</label>
+              <input type="number" id="persAmount" class="form-control" placeholder="0">
+            </div>
+            <button class="btn btn-purple" onclick="addPersonalExpense()"><i class="fa-solid fa-plus"></i> Save Personal Expense</button>
+          </div>
+
+          <!-- DEBT ENTRY PANEL -->
+          <div class="panel">
+            <div class="panel-header">
+              <span><i class="fa-solid fa-handshake" style="color: var(--accent-orange);"></i> Debt / Udhar Record</span>
+            </div>
+            <div class="form-group">
+              <label>Person Name</label>
+              <input type="text" id="debtName" class="form-control" placeholder="e.g. Aman, Huraira">
+            </div>
+            <div class="form-group">
+              <label>Transaction Type</label>
+              <select id="debtType" class="form-control">
+                <option value="Given">Udhar Diya (Given)</option>
+                <option value="Received">Wapis Milya (Received)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Amount (AED)</label>
+              <input type="number" id="debtAmount" class="form-control" placeholder="0">
+            </div>
+            <button class="btn btn-blue" onclick="addDebtEntry()"><i class="fa-solid fa-floppy-disk"></i> Record Debt Entry</button>
+          </div>
+        </div>
+
+        <!-- RIGHT TABLES & ANALYTICS -->
+        <div>
+          <!-- ACTIVE DEBT LEDGERS TABLE -->
+          <div class="panel">
+            <div class="panel-header">
+              <span><i class="fa-solid fa-users" style="color: var(--accent-blue);"></i> Active Debt Ledgers</span>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Borrower</th>
+                  <th>Total Given</th>
+                  <th>Total Received</th>
+                  <th>Net Balance</th>
+                  <th>Actions (WhatsApp)</th>
+                </tr>
+              </thead>
+              <tbody id="debtTableBody">
+                <!-- Dynamic Data -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- RECENT TRANSACTIONS LOG -->
+          <div class="panel">
+            <div class="panel-header">
+              <span><i class="fa-solid fa-list-check"></i> General Transaction Logs</span>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Description</th>
+                  <th>Type</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody id="genTableBody">
+                <!-- Dynamic Data -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
       </div>
-    </aside>
+    </div>
 
-    <!-- RIGHT MAIN CONTENT -->
-    <div class="flex-1 flex flex-col min-w-0">
-      
-      <!-- MOBILE HEADER -->
-      <header class="md:hidden sticky top-0 z-30 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 px-4 h-16 flex items-center justify-between">
-        <div class="flex items-center space-x-3">
-          <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-sm">H</div>
-          <span class="font-bold text-gray-900 dark:text-white">HASSAN</span>
+    <!-- ADMIN / USER MANAGEMENT VIEW -->
+    <div id="adminView" style="display: none;">
+      <div class="panel" style="max-width: 500px; margin: 0 auto;">
+        <div class="panel-header">
+          <span><i class="fa-solid fa-key"></i> Change Admin Password</span>
         </div>
-        <div class="flex items-center space-x-2">
-          <button onclick="toggleTheme()" class="p-2 text-gray-600 dark:text-gray-300">
-            <i class="fa-solid fa-moon dark:hidden"></i>
-            <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
-          </button>
-          <button onclick="logout()" class="p-2 text-red-500">
-            <i class="fa-solid fa-right-from-bracket"></i>
-          </button>
+        <div class="form-group">
+          <label>New Admin Password</label>
+          <input type="password" id="newAdminPass" class="form-control" placeholder="Enter new password">
         </div>
-      </header>
+        <button class="btn btn-blue" onclick="alert('Admin Password Updated Successfully!')">Update Password</button>
+      </div>
 
-      <!-- CONTENT CONTAINER -->
-      <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 overflow-y-auto">
-
-        <!-- GUEST BANNER -->
-        <div id="guestBanner" class="hidden bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800 rounded-xl p-4 flex items-center justify-between">
-          <div class="flex items-center space-x-3">
-            <i class="fa-solid fa-user-shield text-indigo-600 dark:text-indigo-400 text-xl"></i>
-            <div>
-              <h3 class="font-semibold text-indigo-900 dark:text-indigo-200">Personal Ledger View</h3>
-              <p class="text-xs text-indigo-700 dark:text-indigo-400">Logged in as <span id="guestName" class="font-bold">User</span>.</p>
-            </div>
-          </div>
+      <div class="panel" style="max-width: 500px; margin: 20px auto 0 auto;">
+        <div class="panel-header">
+          <span><i class="fa-solid fa-user-plus"></i> Add New Dashboard User</span>
         </div>
-
-        <!-- METRICS -->
-        <div id="adminMetrics" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm flex items-center justify-between">
-            <div>
-              <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Income</p>
-              <h3 class="text-xl font-bold text-emerald-600 dark:text-emerald-400 mt-1" id="metricIncome">AED 0</h3>
-            </div>
-            <div class="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 flex items-center justify-center text-lg"><i class="fa-solid fa-money-bill-trend-up"></i></div>
-          </div>
-
-          <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm flex items-center justify-between">
-            <div>
-              <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">General Expenses</p>
-              <h3 class="text-xl font-bold text-rose-600 dark:text-rose-400 mt-1" id="metricExpense">AED 0</h3>
-            </div>
-            <div class="w-10 h-10 rounded-xl bg-rose-100 dark:bg-rose-900/40 text-rose-600 flex items-center justify-center text-lg"><i class="fa-solid fa-receipt"></i></div>
-          </div>
-
-          <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm flex items-center justify-between">
-            <div>
-              <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Personal Expenses</p>
-              <h3 class="text-xl font-bold text-purple-600 dark:text-purple-400 mt-1" id="metricPersonalExpense">AED 0</h3>
-            </div>
-            <div class="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/40 text-purple-600 flex items-center justify-center text-lg"><i class="fa-solid fa-user-gear"></i></div>
-          </div>
-
-          <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm flex items-center justify-between">
-            <div>
-              <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Receivables</p>
-              <h3 class="text-xl font-bold text-amber-600 dark:text-amber-400 mt-1" id="metricReceivable">AED 0</h3>
-            </div>
-            <div class="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 flex items-center justify-center text-lg"><i class="fa-solid fa-hand-holding-dollar"></i></div>
-          </div>
-
-          <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm flex items-center justify-between">
-            <div>
-              <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Net Balance</p>
-              <h3 class="text-xl font-bold text-indigo-600 dark:text-indigo-400 mt-1" id="metricNet">AED 0</h3>
-            </div>
-            <div class="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 flex items-center justify-center text-lg"><i class="fa-solid fa-scale-balanced"></i></div>
-          </div>
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" class="form-control" placeholder="Enter username">
         </div>
-
-        <!-- MAIN ACTION & GRID SECTION -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-          <!-- LEFT COLUMN: FORMS -->
-          <div id="adminControls" class="lg:col-span-1 space-y-6">
-            
-            <!-- Income / Expense Form -->
-            <div id="incomeFormCard" class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
-              <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center space-x-2">
-                <i class="fa-solid fa-plus-circle text-indigo-500"></i>
-                <span>Add Income / General Expense</span>
-              </h2>
-
-              <form onsubmit="handleAddIncomeExpense(event)" class="space-y-3">
-                <div>
-                  <label class="block text-xs font-semibold text-gray-500 mb-1">Type</label>
-                  <select id="cfType" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
-                    <option value="Income">Income (Salary / Bonus / Other)</option>
-                    <option value="Expense">General Expense (Rent / Bills / Grocery)</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label class="block text-xs font-semibold text-gray-500 mb-1">Category / Description</label>
-                  <input type="text" id="cfCategory" required placeholder="e.g., Monthly Salary, Room Rent" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
-                </div>
-
-                <div>
-                  <label class="block text-xs font-semibold text-gray-500 mb-1">Amount (AED)</label>
-                  <input type="number" id="cfAmount" required placeholder="0" min="1" step="any" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
-                </div>
-
-                <div>
-                  <label class="block text-xs font-semibold text-gray-500 mb-1">Date</label>
-                  <input type="date" id="cfDate" required class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
-                </div>
-
-                <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg text-sm transition flex items-center justify-center space-x-1">
-                  <i class="fa-solid fa-check"></i>
-                  <span>Save Entry</span>
-                </button>
-              </form>
-            </div>
-
-            <!-- Personal Expense Form -->
-            <div id="personalExpenseFormCard" class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
-              <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center space-x-2">
-                <i class="fa-solid fa-user-gear text-purple-500"></i>
-                <span>Log Personal Expense</span>
-              </h2>
-
-              <form onsubmit="handleAddPersonalExpense(event)" class="space-y-3">
-                <div>
-                  <label class="block text-xs font-semibold text-gray-500 mb-1">Where spent?</label>
-                  <input type="text" id="peDescription" required placeholder="e.g., Snacks, Coffee, Taxi" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
-                </div>
-
-                <div>
-                  <label class="block text-xs font-semibold text-gray-500 mb-1">Amount Spent (AED)</label>
-                  <input type="number" id="peAmount" required placeholder="e.g., 50" min="0.1" step="any" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
-                </div>
-
-                <div>
-                  <label class="block text-xs font-semibold text-gray-500 mb-1">Date</label>
-                  <input type="date" id="peDate" required class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
-                </div>
-
-                <button type="submit" class="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg text-sm transition flex items-center justify-center space-x-1">
-                  <i class="fa-solid fa-receipt"></i>
-                  <span>Record Personal Expense</span>
-                </button>
-              </form>
-            </div>
-
-            <!-- Manage Debt Entry Form -->
-            <div id="debtFormCard" class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
-              <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center space-x-2">
-                <i class="fa-solid fa-hand-holding-hand text-amber-500"></i>
-                <span>Manage Debt (With WhatsApp Receipt)</span>
-              </h2>
-
-              <form onsubmit="handleManageDebt(event)" class="space-y-3">
-                <div>
-                  <label class="block text-xs font-semibold text-gray-500 mb-1">Select Person</label>
-                  <select id="debtPersonSelect" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
-                    <option value="Hurairah Ustad">Hurairah Ustad</option>
-                    <option value="Bhai Arslan">Bhai Arslan</option>
-                    <option value="Aman">Aman</option>
-                    <option value="Api Komal">Api Komal</option>
-                    <option value="Tabby">Tabby</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label class="block text-xs font-semibold text-gray-500 mb-1">Action Type</label>
-                  <select id="debtAction" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
-                    <option value="GIVEN">Loan Given</option>
-                    <option value="TAKEN">Loan Borrowed</option>
-                    <option value="RECEIVED">Repayment Received (Send Slip)</option>
-                    <option value="PAID_BACK">Repayment Paid Back</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label class="block text-xs font-semibold text-gray-500 mb-1">Amount (AED)</label>
-                  <input type="number" id="debtAmount" required placeholder="0" min="1" step="any" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
-                </div>
-
-                <div>
-                  <label class="block text-xs font-semibold text-gray-500 mb-1">WhatsApp Number (e.g., 971501234567)</label>
-                  <input type="text" id="debtPhone" placeholder="Country code + Number" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
-                </div>
-
-                <div>
-                  <label class="block text-xs font-semibold text-gray-500 mb-1">Note / Remark</label>
-                  <input type="text" id="debtNote" placeholder="e.g., Monthly installment" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
-                </div>
-
-                <button type="submit" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg text-sm transition flex items-center justify-center space-x-1">
-                  <i class="fa-solid fa-arrows-rotate"></i>
-                  <span>Update Debt Ledger</span>
-                </button>
-              </form>
-            </div>
-
-          </div>
-
-          <!-- RIGHT COLUMN: TABLES -->
-          <div id="displaySection" class="lg:col-span-2 space-y-6">
-
-            <!-- DEBT SUMMARY TABLE -->
-            <div id="debtTableSection" class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
-              <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center justify-between">
-                <span class="flex items-center space-x-2">
-                  <i class="fa-solid fa-users text-indigo-500"></i>
-                  <span>Active Debt Ledgers</span>
-                </span>
-                <span id="debtCount" class="text-xs bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300 font-semibold px-2.5 py-0.5 rounded-full">0 Persons</span>
-              </h2>
-
-              <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                  <thead>
-                    <tr class="border-b border-gray-200 dark:border-gray-700 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">
-                      <th class="py-3 px-4">Borrower Name</th>
-                      <th class="py-3 px-4">Total Given</th>
-                      <th class="py-3 px-4">Total Received</th>
-                      <th class="py-3 px-4">Net Balance</th>
-                      <th class="py-3 px-4 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody id="debtTableBody" class="divide-y divide-gray-100 dark:divide-gray-700/50 text-sm"></tbody>
-                </table>
-              </div>
-            </div>
-
-            <!-- PERSONAL EXPENSES LOG -->
-            <div id="personalExpensesSection" class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
-              <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center justify-between">
-                <span class="flex items-center space-x-2">
-                  <i class="fa-solid fa-user-gear text-purple-500"></i>
-                  <span>Personal Expenses Log</span>
-                </span>
-                <span id="personalTotalText" class="text-xs bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300 font-semibold px-2.5 py-0.5 rounded-full">Total: AED 0</span>
-              </h2>
-
-              <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                  <thead>
-                    <tr class="border-b border-gray-200 dark:border-gray-700 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">
-                      <th class="py-3 px-4">Date</th>
-                      <th class="py-3 px-4">Where Spent</th>
-                      <th class="py-3 px-4">Amount Spent</th>
-                      <th class="py-3 px-4 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody id="personalExpenseTableBody" class="divide-y divide-gray-100 dark:divide-gray-700/50 text-sm"></tbody>
-                </table>
-              </div>
-            </div>
-
-            <!-- GENERAL LOGS -->
-            <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
-              <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center justify-between">
-                <span class="flex items-center space-x-2">
-                  <i class="fa-solid fa-list-check text-indigo-500"></i>
-                  <span>General Transaction Logs</span>
-                </span>
-              </h2>
-
-              <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                  <thead>
-                    <tr class="border-b border-gray-200 dark:border-gray-700 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">
-                      <th class="py-3 px-4">Date</th>
-                      <th class="py-3 px-4">Category / Person</th>
-                      <th class="py-3 px-4">Type</th>
-                      <th class="py-3 px-4">Amount</th>
-                      <th class="py-3 px-4 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody id="logsTableBody" class="divide-y divide-gray-100 dark:divide-gray-700/50 text-sm"></tbody>
-                </table>
-              </div>
-            </div>
-
-          </div>
-
+        <div class="form-group">
+          <label>User Password</label>
+          <input type="password" class="form-control" placeholder="Set password">
         </div>
-
-      </main>
+        <div class="form-group">
+          <label>Role</label>
+          <select class="form-control">
+            <option>User</option>
+            <option>Viewer</option>
+          </select>
+        </div>
+        <button class="btn btn-green" onclick="alert('New User Created Successfully!')">Create User</button>
+      </div>
     </div>
 
   </div>
 
-  <!-- JS APP LOGIC WITH SUPABASE -->
   <script>
-    // Initialize Supabase Client with your credentials
-    const SUPABASE_URL = "https://gwulouepjydhdjzfmhfo.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_coJ5KCvTggJDuxZMNo923A_t_1kQxHv";
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    // Dynamic Mappings
-    let PASSWORD_TO_USER = {
-      "RidaHurai": "Hurairah Ustad",
-      "Bhai786": "Bhai Arslan",
-      "12123": "Aman",
-      "Paji1122": "Api Komal",
-      "1111": "Tabby"
+    let state = {
+      income: 0,
+      genExpense: 0,
+      persExpense: 0,
+      debts: {} // { Name: { totalGiven: 0, totalReceived: 0, dates: [] } }
     };
 
-    let currentUser = null;
-    let state = { cashflow: [], personalExpenses: [], debts: [], logs: [] };
+    function switchView(viewId) {
+      document.getElementById('dashboardView').style.display = viewId === 'dashboardView' ? 'block' : 'none';
+      document.getElementById('adminView').style.display = viewId === 'adminView' ? 'block' : 'none';
+    }
 
-    // Fetch data from Supabase
-    async function loadDataFromSupabase() {
-      try {
-        // Fetch Admin PIN
-        const { data: pinData } = await supabaseClient.from('settings').select('value').eq('key', 'admin_pin').single();
-        if (pinData) PASSWORD_TO_USER[pinData.value] = "Admin";
-        else PASSWORD_TO_USER["1234"] = "Admin";
+    function addGeneralEntry() {
+      const type = document.getElementById('genType').value;
+      const desc = document.getElementById('genDesc').value;
+      const amount = parseFloat(document.getElementById('genAmount').value) || 0;
 
-        // Fetch Transactions
-        const { data: trans } = await supabaseClient.from('transactions').select('*').order('id', { ascending: false });
-        if (trans) state.cashflow = trans.filter(t => t.type === 'Income' || t.type === 'Expense');
-        if (trans) state.logs = trans;
+      if (!desc || amount <= 0) return alert('Please enter valid description & amount');
 
-        // Fetch Personal Expenses
-        const { data: pe } = await supabaseClient.from('personal_expenses').select('*').order('id', { ascending: false });
-        if (pe) state.personalExpenses = pe;
+      if (type === 'Income') state.income += amount;
+      else state.genExpense += amount;
 
-        // Fetch Debts
-        const { data: db } = await supabaseClient.from('debts').select('*').order('id', { ascending: true });
-        if (db) state.debts = db;
+      const tbody = document.getElementById('genTableBody');
+      tbody.innerHTML += `<tr><td>${desc}</td><td><span style="color:${type==='Income'?'#00c853':'#ef4444'}">${type}</span></td><td>AED ${amount}</td></tr>`;
 
-        renderDashboard();
-      } catch (err) {
-        console.error("Error loading data:", err);
+      updateMetrics();
+      document.getElementById('genDesc').value = '';
+      document.getElementById('genAmount').value = '';
+    }
+
+    function addPersonalExpense() {
+      const desc = document.getElementById('persDesc').value;
+      const amount = parseFloat(document.getElementById('persAmount').value) || 0;
+
+      if (!desc || amount <= 0) return alert('Please enter valid description & amount');
+
+      state.persExpense += amount;
+      updateMetrics();
+      document.getElementById('persDesc').value = '';
+      document.getElementById('persAmount').value = '';
+    }
+
+    function addDebtEntry() {
+      const name = document.getElementById('debtName').value.trim();
+      const type = document.getElementById('debtType').value;
+      const amount = parseFloat(document.getElementById('debtAmount').value) || 0;
+      const today = new Date().toLocaleDateString();
+
+      if (!name || amount <= 0) return alert('Please enter name and valid amount');
+
+      if (!state.debts[name]) {
+        state.debts[name] = { totalGiven: 0, totalReceived: 0, dates: [] };
       }
-    }
 
-    // Startup Animation
-    window.addEventListener('load', async () => {
-      await loadDataFromSupabase();
-      setTimeout(() => {
-        document.getElementById('loadingScreen').classList.add('hidden');
-        document.getElementById('authScreen').classList.remove('hidden');
-      }, 1500);
-    });
+      state.debts[name].dates.push(today);
 
-    document.addEventListener("DOMContentLoaded", () => {
-      const today = new Date().toISOString().split('T')[0];
-      if (document.getElementById('cfDate')) document.getElementById('cfDate').value = today;
-      if (document.getElementById('peDate')) document.getElementById('peDate').value = today;
-    });
-
-    function toggleTheme() {
-      document.documentElement.classList.toggle('dark');
-    }
-
-    function handleLogin(e) {
-      e.preventDefault();
-      const pin = document.getElementById('loginPin').value.trim();
-      const errorEl = document.getElementById('loginError');
-
-      const matchedUser = PASSWORD_TO_USER[pin];
-
-      if (matchedUser) {
-        currentUser = matchedUser;
-        errorEl.classList.add('hidden');
-        document.getElementById('authScreen').classList.add('hidden');
-        document.getElementById('appScreen').classList.remove('hidden');
-        
-        document.getElementById('sidebarUserBadge').innerText = `User: ${currentUser}`;
-        
-        if (currentUser !== "Admin") {
-          document.getElementById('guestBanner').classList.remove('hidden');
-          document.getElementById('guestName').innerText = currentUser;
-          document.getElementById('adminControls').classList.add('hidden');
-          document.getElementById('adminMetrics').classList.add('hidden');
-          document.getElementById('adminNavLinks').classList.add('hidden');
-          document.getElementById('personalExpensesSection').classList.add('hidden');
-          document.getElementById('displaySection').classList.remove('lg:col-span-2');
-          document.getElementById('displaySection').classList.add('lg:col-span-3');
-        } else {
-          document.getElementById('guestBanner').classList.add('hidden');
-          document.getElementById('adminControls').classList.remove('hidden');
-          document.getElementById('adminMetrics').classList.remove('hidden');
-          document.getElementById('adminNavLinks').classList.remove('hidden');
-          document.getElementById('personalExpensesSection').classList.remove('hidden');
-          document.getElementById('displaySection').classList.remove('lg:col-span-3');
-          document.getElementById('displaySection').classList.add('lg:col-span-2');
-        }
-
-        renderDashboard();
+      if (type === 'Given') {
+        state.debts[name].totalGiven += amount;
       } else {
-        errorEl.classList.remove('hidden');
-      }
-    }
-
-    function logout() {
-      currentUser = null;
-      document.getElementById('appScreen').classList.add('hidden');
-      document.getElementById('authScreen').classList.remove('hidden');
-      document.getElementById('loginPin').value = '';
-    }
-
-    // Handlers
-    async function handleAddIncomeExpense(e) {
-      e.preventDefault();
-      const type = document.getElementById('cfType').value;
-      const category = document.getElementById('cfCategory').value;
-      const amount = parseFloat(document.getElementById('cfAmount').value);
-      const date = document.getElementById('cfDate').value;
-
-      await supabaseClient.from('transactions').insert([{ type, category: `${type}: ${category}`, amount, date }]);
-
-      document.getElementById('cfCategory').value = '';
-      document.getElementById('cfAmount').value = '';
-      
-      await loadDataFromSupabase();
-    }
-
-    async function handleAddPersonalExpense(e) {
-      e.preventDefault();
-      const description = document.getElementById('peDescription').value;
-      const amount = parseFloat(document.getElementById('peAmount').value);
-      const date = document.getElementById('peDate').value;
-
-      await supabaseClient.from('personal_expenses').insert([{ description, amount, date }]);
-
-      document.getElementById('peDescription').value = '';
-      document.getElementById('peAmount').value = '';
-
-      await loadDataFromSupabase();
-    }
-
-    async function handleManageDebt(e) {
-      e.preventDefault();
-      const person = document.getElementById('debtPersonSelect').value;
-      const action = document.getElementById('debtAction').value;
-      const amount = parseFloat(document.getElementById('debtAmount').value);
-      const phone = document.getElementById('debtPhone').value.trim();
-      const note = document.getElementById('debtNote').value || '';
-      const date = new Date().toISOString().split('T')[0];
-
-      let { data: debtRecord } = await supabaseClient.from('debts').select('*').eq('person', person).single();
-
-      if (!debtRecord) {
-        const { data: newRecord } = await supabaseClient.from('debts').insert([{ person, total_given: 0, total_returned: 0, phone_number: phone }]).select().single();
-        debtRecord = newRecord;
+        state.debts[name].totalReceived += amount;
+        // Thank you message pop-up preview / trigger
+        sendThankYouWhatsApp(name, amount);
       }
 
-      let newGiven = debtRecord.total_given;
-      let newReturned = debtRecord.total_returned;
-      let logType = "";
-
-      if (action === 'GIVEN') {
-        newGiven += amount;
-        logType = "Loan Given";
-      } else if (action === 'TAKEN') {
-        newReturned += amount;
-        logType = "Loan Borrowed";
-      } else if (action === 'RECEIVED') {
-        newReturned += amount;
-        logType = "Repayment Received";
-      } else if (action === 'PAID_BACK') {
-        newGiven += amount;
-        logType = "Repayment Paid Back";
-      }
-
-      // Update Debt Record
-      await supabaseClient.from('debts').update({ total_given: newGiven, total_returned: newReturned, phone_number: phone || debtRecord.phone_number }).eq('person', person);
-      
-      // Add Log
-      await supabaseClient.from('transactions').insert([{ date, category: `${person} (${logType}: ${note})`, type: logType, amount }]);
-
-      // WhatsApp Slip Auto Open
-      if (action === 'RECEIVED' && phone) {
-        const remaining = newGiven - newReturned;
-        sendWhatsAppReceipt(person, phone, amount, remaining);
-      }
-
+      renderDebtTable();
+      updateMetrics();
+      document.getElementById('debtName').value = '';
       document.getElementById('debtAmount').value = '';
-      document.getElementById('debtNote').value = '';
-
-      await loadDataFromSupabase();
     }
 
-    // Send WhatsApp Slip
-    function sendWhatsAppReceipt(personName, phone, paidAmount, remainingBalance) {
-      const dateStr = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-      const message = `🧾 *UDHAAR PAYMENT RECEIPT*\n` +
-        `----------------------------------------\n` +
-        `👤 *Name:* ${personName}\n` +
-        `📅 *Date:* ${dateStr}\n` +
-        `💵 *Paid Amount:* AED ${paidAmount}\n` +
-        `📌 *Remaining Balance:* AED ${remainingBalance}\n` +
-        `----------------------------------------\n` +
-        `Thank you! Receipt from HASSAN Dashboard.`;
-
-      const cleanPhone = phone.replace(/[^0-9]/g, '');
-      const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
+    function sendThankYouWhatsApp(name, recentPayment) {
+      const p = state.debts[name];
+      const remaining = p.totalGiven - p.totalReceived;
+      
+      const msg = `Dear ${name}, Thank you! Received AED ${recentPayment} towards your balance. Total paid so far: AED ${p.totalReceived}. Remaining balance: AED ${remaining > 0 ? remaining : 0}. Appreciate your prompt response!`;
+      
+      const waUrl = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+      window.open(waUrl, '_blank');
     }
 
-    // Change Password Modal
-    async function openChangePasswordModal() {
-      const newPin = prompt("Enter NEW Admin Password:");
-      if (newPin && newPin.trim() !== '') {
-        await supabaseClient.from('settings').upsert({ key: 'admin_pin', value: newPin.trim() });
-        alert("Admin password successfully updated in Supabase!");
-        await loadDataFromSupabase();
-      }
-    }
+    function renderDebtTable() {
+      const tbody = document.getElementById('debtTableBody');
+      tbody.innerHTML = '';
 
-    async function deleteLog(id) {
-      if (currentUser !== 'Admin') return;
-      if (confirm('Delete log entry from Supabase?')) {
-        await supabaseClient.from('transactions').delete().eq('id', id);
-        await loadDataFromSupabase();
-      }
-    }
+      for (let name in state.debts) {
+        const p = state.debts[name];
+        const net = p.totalGiven - p.totalReceived;
+        const firstDate = p.dates[0] || 'N/A';
 
-    async function deletePersonalExpense(id) {
-      if (currentUser !== 'Admin') return;
-      if (confirm('Delete personal expense from Supabase?')) {
-        await supabaseClient.from('personal_expenses').delete().eq('id', id);
-        await loadDataFromSupabase();
-      }
-    }
+        // Reminder WhatsApp Message Text
+        const reminderMsg = `Dear ${name}, Hope you are doing well. Quick update on our record: First instalment on ${firstDate}. Total given: AED ${p.totalGiven}. Total paid: AED ${p.totalReceived}. Remaining balance: AED ${net}. Requesting to settle when convenient. Thank you!`;
+        const waLink = `https://wa.me/?text=${encodeURIComponent(reminderMsg)}`;
 
-    // Render Dashboard UI
-    function renderDashboard() {
-      let totalIncome = state.cashflow.filter(c => c.type === 'Income').reduce((a, b) => a + b.amount, 0);
-      let totalExpense = state.cashflow.filter(c => c.type === 'Expense').reduce((a, b) => a + b.amount, 0);
-      let totalPersonalExpense = state.personalExpenses.reduce((a, b) => a + b.amount, 0);
-      let totalReceivable = state.debts.reduce((a, b) => a + (b.total_given - b.total_returned), 0);
-      let netCash = totalIncome - totalExpense - totalPersonalExpense;
-
-      document.getElementById('metricIncome').innerText = `AED ${totalIncome.toLocaleString()}`;
-      document.getElementById('metricExpense').innerText = `AED ${totalExpense.toLocaleString()}`;
-      document.getElementById('metricPersonalExpense').innerText = `AED ${totalPersonalExpense.toLocaleString()}`;
-      document.getElementById('metricReceivable').innerText = `AED ${totalReceivable.toLocaleString()}`;
-      document.getElementById('metricNet').innerText = `AED ${netCash.toLocaleString()}`;
-
-      // Debt Table
-      const debtTableBody = document.getElementById('debtTableBody');
-      debtTableBody.innerHTML = '';
-
-      let visibleDebts = state.debts;
-      if (currentUser !== 'Admin') {
-        visibleDebts = state.debts.filter(d => d.person.toLowerCase() === currentUser.toLowerCase());
-      }
-
-      document.getElementById('debtCount').innerText = `${visibleDebts.length} Persons`;
-
-      visibleDebts.forEach(d => {
-        const balance = d.total_given - d.total_returned;
-        const row = document.createElement('tr');
-        row.className = "hover:bg-gray-50 dark:hover:bg-gray-700/30 transition";
-        row.innerHTML = `
-          <td class="py-3 px-4 font-semibold text-gray-900 dark:text-white flex items-center space-x-2">
-            <span class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300 flex items-center justify-center font-bold text-xs">${d.person.charAt(0)}</span>
-            <span>${d.person}</span>
-          </td>
-          <td class="py-3 px-4 text-gray-600 dark:text-gray-300">AED ${d.total_given.toLocaleString()}</td>
-          <td class="py-3 px-4 text-emerald-600 dark:text-emerald-400 font-medium">AED ${d.total_returned.toLocaleString()}</td>
-          <td class="py-3 px-4 font-bold ${balance > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-gray-400'}">AED ${balance.toLocaleString()}</td>
-          <td class="py-3 px-4 text-right space-x-1">
-            ${currentUser === 'Admin' && d.phone_number ? `<button onclick="sendWhatsAppReceipt('${d.person}', '${d.phone_number}', 0, ${balance})" class="text-emerald-600 text-xs px-2 py-1 bg-emerald-50 dark:bg-emerald-900/30 rounded"><i class="fa-brands fa-whatsapp"></i> Slip</button>` : '-'}
-          </td>
+        tbody.innerHTML += `
+          <tr>
+            <td><strong>${name}</strong></td>
+            <td>AED ${p.totalGiven}</td>
+            <td>AED ${p.totalReceived}</td>
+            <td style="color:${net > 0 ? '#ffa726' : '#00c853'}; font-weight:bold;">AED ${net}</td>
+            <td>
+              <a href="${waLink}" target="_blank" class="btn-wa">
+                <i class="fa-brands fa-whatsapp"></i> Send Details
+              </a>
+            </td>
+          </tr>
         `;
-        debtTableBody.appendChild(row);
-      });
+      }
+    }
 
-      // Personal Expenses Table
-      const personalExpenseTableBody = document.getElementById('personalExpenseTableBody');
-      personalExpenseTableBody.innerHTML = '';
-      document.getElementById('personalTotalText').innerText = `Total: AED ${totalPersonalExpense.toLocaleString()}`;
-
-      state.personalExpenses.forEach(pe => {
-        const row = document.createElement('tr');
-        row.className = "hover:bg-gray-50 dark:hover:bg-gray-700/30 transition";
-        row.innerHTML = `
-          <td class="py-3 px-4 text-xs text-gray-500">${pe.date}</td>
-          <td class="py-3 px-4 font-medium text-gray-800 dark:text-gray-200">${pe.description}</td>
-          <td class="py-3 px-4 font-bold text-purple-600">AED ${pe.amount.toLocaleString()}</td>
-          <td class="py-3 px-4 text-right">
-            ${currentUser === 'Admin' ? `<button onclick="deletePersonalExpense(${pe.id})" class="text-red-500 hover:text-red-700 text-xs px-2 py-1 rounded transition"><i class="fa-solid fa-trash"></i></button>` : '-'}
-          </td>
-        `;
-        personalExpenseTableBody.appendChild(row);
-      });
-
-      // Logs Table
-      const logsTableBody = document.getElementById('logsTableBody');
-      logsTableBody.innerHTML = '';
-
-      let visibleLogs = state.logs;
-      if (currentUser !== 'Admin') {
-        visibleLogs = state.logs.filter(l => l.category.toLowerCase().includes(currentUser.toLowerCase()));
+    function updateMetrics() {
+      let totalReceivables = 0;
+      for (let name in state.debts) {
+        let net = state.debts[name].totalGiven - state.debts[name].totalReceived;
+        if (net > 0) totalReceivables += net;
       }
 
-      visibleLogs.forEach(log => {
-        const row = document.createElement('tr');
-        row.className = "hover:bg-gray-50 dark:hover:bg-gray-700/30 transition";
-        let badgeColor = "bg-gray-100 text-gray-800";
-        if (log.type === 'Income') badgeColor = "bg-emerald-100 text-emerald-800";
-        if (log.type === 'Expense') badgeColor = "bg-rose-100 text-rose-800";
-        if (log.type && log.type.includes('Given')) badgeColor = "bg-amber-100 text-amber-800";
-        if (log.type && log.type.includes('Received')) badgeColor = "bg-blue-100 text-blue-800";
-
-        row.innerHTML = `
-          <td class="py-3 px-4 text-xs text-gray-500">${log.date}</td>
-          <td class="py-3 px-4 font-medium text-gray-800 dark:text-gray-200">${log.category}</td>
-          <td class="py-3 px-4"><span class="px-2 py-0.5 text-xs font-semibold rounded-md ${badgeColor}">${log.type}</span></td>
-          <td class="py-3 px-4 font-bold text-gray-900 dark:text-white">AED ${log.amount.toLocaleString()}</td>
-          <td class="py-3 px-4 text-right">
-            ${currentUser === 'Admin' ? `<button onclick="deleteLog(${log.id})" class="text-red-500 hover:text-red-700 text-xs px-2 py-1 rounded transition"><i class="fa-solid fa-trash"></i></button>` : '-'}
-          </td>
-        `;
-        logsTableBody.appendChild(row);
-      });
+      document.getElementById('valIncome').innerText = state.income;
+      document.getElementById('valGenExpense').innerText = state.genExpense;
+      document.getElementById('valPersExpense').innerText = state.persExpense;
+      document.getElementById('valReceivables').innerText = totalReceivables;
     }
   </script>
 </body>
