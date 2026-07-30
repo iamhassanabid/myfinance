@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Finance Command Center - Smart Dashboard</title>
+  <title>Finance Command Center</title>
   
   <style>
     :root {
@@ -53,7 +53,6 @@
     .metric-num.green { color: var(--green-val); }
     .metric-num.red { color: var(--red-val); }
     .metric-num.amber { color: var(--amber-val); }
-    .metric-num.blue { color: var(--accent-blue); }
 
     /* DATA PANELS */
     .card-panel { background: var(--card-bg); padding: 22px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; margin-bottom: 25px; }
@@ -89,7 +88,7 @@
   <div id="lock-screen">
     <div class="lock-box">
       <div class="lock-title">💎 Finance Command</div>
-      <p style="font-size: 13px; color: #94a3b8;">Enter PIN code to continue</p>
+      <p style="font-size: 13px; color: #94a3b8;">Enter PIN code to unlock</p>
       <input type="password" id="pin-field" class="pin-input" maxlength="4" placeholder="****">
       <button class="btn-unlock" onclick="checkPin()">UNLOCK APP</button>
       <div id="error-text" class="error-msg">Incorrect PIN!</div>
@@ -103,56 +102,56 @@
     <div class="sidebar">
       <div class="brand">💎 Finance Command</div>
       <ul class="nav-list">
-        <li class="nav-item active" onclick="switchTab('dashboard', this)">📊 Quick Entry & Overview</li>
+        <li class="nav-item active" onclick="switchTab('dashboard', this)">📊 Dashboard Overview</li>
         <li class="nav-item" onclick="switchTab('income', this)">💵 Salary & Income Logs</li>
         <li class="nav-item" onclick="switchTab('expenses', this)">💸 Expenses (Debit)</li>
-        <li class="nav-item" onclick="switchTab('credit', this)">🤝 Udhaar & Contacts Manager</li>
+        <li class="nav-item" onclick="switchTab('credit', this)">🤝 Credit & Udhar Manager</li>
       </ul>
     </div>
 
     <!-- MAIN CONTENT -->
     <div class="main-content">
       
-      <!-- TOP OVERVIEW CARDS -->
+      <!-- TOP OVERVIEW CARDS (AED CURRENCY) -->
       <div class="metrics-grid">
         <div class="metric-card">
-          <div class="metric-title">Is Month Ki Income</div>
-          <div class="metric-num green" id="stat-income">PKR 0</div>
+          <div class="metric-title">Monthly Income Received</div>
+          <div class="metric-num green" id="stat-income">AED 0</div>
         </div>
         <div class="metric-card">
           <div class="metric-title">Total Expenses</div>
-          <div class="metric-num red" id="stat-expenses">PKR 0</div>
+          <div class="metric-num red" id="stat-expenses">AED 0</div>
         </div>
         <div class="metric-card">
-          <div class="metric-title">Owed to Me (Mene Diya)</div>
-          <div class="metric-num amber" id="stat-owed-me">PKR 0</div>
+          <div class="metric-title">Owed to Me (Receivable Balance)</div>
+          <div class="metric-num amber" id="stat-owed-me">AED 0</div>
         </div>
         <div class="metric-card">
-          <div class="metric-title">I Owe (Mere Upar Udhaar)</div>
-          <div class="metric-num red" id="stat-owe">PKR 0</div>
+          <div class="metric-title">I Owe (Payable Balance)</div>
+          <div class="metric-num red" id="stat-owe">AED 0</div>
         </div>
       </div>
 
       <!-- TAB 1: QUICK ENTRY DASHBOARD -->
       <div id="view-dashboard" class="tab-view">
         <div class="card-panel">
-          <div class="panel-header">⚡ Smart Auto Entry System</div>
+          <div class="panel-header">⚡ Smart Transaction Entry</div>
           <form onsubmit="addSmartEntry(event)">
             <div class="form-grid">
               
-              <!-- Transaction Type -->
+              <!-- Transaction Type Options -->
               <select id="smart-type" class="input-field" onchange="toggleSmartFields()" required>
-                <option value="income">💵 Income / Salary</option>
+                <option value="income">💵 Salary / Income</option>
                 <option value="expense">💸 Expense (Debit)</option>
-                <option value="udhaar_give">🤝 Udhaar Diya (Owed to Me)</option>
-                <option value="udhaar_rec">📥 Udhaar Wapas Mila (Recovery)</option>
-                <option value="udhaar_take">💰 Udhaar Liya (I Owe)</option>
+                <option value="udhaar_give">🤝 Udhar Given (Owed to Me)</option>
+                <option value="udhaar_returned">📥 Udhar Returned (Paid Back to Me)</option>
+                <option value="udhaar_take">💰 Udhar Taken (I Owe)</option>
               </select>
 
               <!-- Dynamic Dropdown for Person Name -->
               <div id="person-select-wrapper">
                 <select id="smart-person" class="input-field">
-                  <option value="">-- Name Select Karein --</option>
+                  <option value="">-- Select Person --</option>
                 </select>
               </div>
 
@@ -166,26 +165,26 @@
                 </select>
               </div>
 
-              <!-- Amount -->
-              <input type="number" id="smart-amount" class="input-field" placeholder="Amount (PKR)" required>
+              <!-- Amount in AED -->
+              <input type="number" id="smart-amount" class="input-field" placeholder="Amount (AED)" step="0.01" required>
               
               <!-- Date -->
               <input type="date" id="smart-date" class="input-field" required>
             </div>
 
-            <button type="submit" class="btn-action">+ Submit & Update Dashboard</button>
+            <button type="submit" class="btn-action">+ Submit Entry</button>
           </form>
         </div>
 
         <div class="card-panel">
-          <div class="panel-header">Recent Activity Ledger</div>
+          <div class="panel-header">Recent Financial Activity</div>
           <table>
             <thead>
               <tr>
-                <th>Category</th>
+                <th>Type</th>
                 <th>Date</th>
-                <th>Name / Source</th>
-                <th>Amount</th>
+                <th>Source / Person</th>
+                <th>Amount (AED)</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -197,10 +196,10 @@
       <!-- TAB 2: SALARY & INCOME LOGS -->
       <div id="view-income" class="tab-view" style="display: none;">
         <div class="card-panel">
-          <div class="panel-header">Income Logs Sheet</div>
+          <div class="panel-header">Income & Salary Ledger</div>
           <table>
             <thead>
-              <tr><th>Date</th><th>Type</th><th>Amount</th><th>Action</th></tr>
+              <tr><th>Date</th><th>Source</th><th>Amount (AED)</th><th>Action</th></tr>
             </thead>
             <tbody id="table-income"></tbody>
           </table>
@@ -213,30 +212,30 @@
           <div class="panel-header">Expense Debit Ledger</div>
           <table>
             <thead>
-              <tr><th>Date</th><th>Description</th><th>Amount</th><th>Action</th></tr>
+              <tr><th>Date</th><th>Description</th><th>Amount (AED)</th><th>Action</th></tr>
             </thead>
             <tbody id="table-expenses"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- TAB 4: UDHAAR & CONTACTS MANAGER -->
+      <!-- TAB 4: UDHAR & CONTACTS MANAGER -->
       <div id="view-credit" class="tab-view" style="display: none;">
         <div class="card-panel">
-          <div class="panel-header">👤 Naya Contact / Person Add Karein</div>
+          <div class="panel-header">👤 Add New Contact Person</div>
           <form onsubmit="addNewPerson(event)">
             <div class="form-grid">
-              <input type="text" id="new-person-name" class="input-field" placeholder="Person Name (e.g. Aman, Huraira)" required>
+              <input type="text" id="new-person-name" class="input-field" placeholder="Contact Name (e.g., Aman, Huraira)" required>
             </div>
-            <button type="submit" class="btn-action" style="background: var(--amber-val);">+ Add Contact to Dropdown</button>
+            <button type="submit" class="btn-action" style="background: var(--amber-val);">+ Add Contact</button>
           </form>
         </div>
 
         <div class="card-panel">
-          <div class="panel-header">Udhaar & Credit Ledger</div>
+          <div class="panel-header">Udhar & Credit Ledger</div>
           <table>
             <thead>
-              <tr><th>Date</th><th>Name</th><th>Type</th><th>Amount</th><th>Action</th></tr>
+              <tr><th>Date</th><th>Name</th><th>Transaction Status</th><th>Amount (AED)</th><th>Action</th></tr>
             </thead>
             <tbody id="table-credit"></tbody>
           </table>
@@ -275,13 +274,13 @@
       element.classList.add("active");
     }
 
-    function getData() { return JSON.parse(localStorage.getItem("fc_smart_data") || "[]"); }
+    function getData() { return JSON.parse(localStorage.getItem("fc_smart_data_aed") || "[]"); }
     function getPersons() { return JSON.parse(localStorage.getItem("fc_persons") || '["Aman", "Huraira"]'); }
 
     function loadPersons() {
       const persons = getPersons();
       const select = document.getElementById("smart-person");
-      select.innerHTML = '<option value="">-- Name Select Karein --</option>';
+      select.innerHTML = '<option value="">-- Select Person --</option>';
       persons.forEach(p => {
         select.innerHTML += `<option value="${p}">${p}</option>`;
       });
@@ -298,7 +297,7 @@
         persons.push(name);
         localStorage.setItem("fc_persons", JSON.stringify(persons));
         loadPersons();
-        alert(`${name} added to dropdown list!`);
+        alert(`${name} added to contact list!`);
       }
       nameInput.value = "";
     }
@@ -332,14 +331,14 @@
         entry.source = document.getElementById("smart-income-type").value;
       } else if (type.startsWith('udhaar')) {
         entry.person = document.getElementById("smart-person").value;
-        if (!entry.person) { alert("Meherbani karke naam select karein!"); return; }
+        if (!entry.person) { alert("Please select a person's name!"); return; }
       } else {
-        entry.source = "Expense Debit";
+        entry.source = "Debit Expense";
       }
 
       const data = getData();
       data.push(entry);
-      localStorage.setItem("fc_smart_data", JSON.stringify(data));
+      localStorage.setItem("fc_smart_data_aed", JSON.stringify(data));
 
       document.getElementById("smart-amount").value = "";
       renderApp();
@@ -347,7 +346,7 @@
 
     function deleteRecord(id) {
       let data = getData().filter(r => r.id !== id);
-      localStorage.setItem("fc_smart_data", JSON.stringify(data));
+      localStorage.setItem("fc_smart_data_aed", JSON.stringify(data));
       renderApp();
     }
 
@@ -369,33 +368,32 @@
         if (r.type === 'income') {
           incSum += r.amount;
           badge = '<span class="badge-tag bg-green">Income</span>';
-          tIncome.innerHTML += `<tr><td>${r.date}</td><td>${r.source}</td><td class="val-plus">+${r.amount}</td><td><button onclick="deleteRecord(${r.id})">✕</button></td></tr>`;
+          tIncome.innerHTML += `<tr><td>${r.date}</td><td>${r.source}</td><td class="val-plus">+AED ${r.amount.toFixed(2)}</td><td><button onclick="deleteRecord(${r.id})">✕</button></td></tr>`;
         } else if (r.type === 'expense') {
           expSum += r.amount;
           badge = '<span class="badge-tag bg-red">Expense</span>';
-          tExpenses.innerHTML += `<tr><td>${r.date}</td><td>${title}</td><td class="val-minus">-${r.amount}</td><td><button onclick="deleteRecord(${r.id})">✕</button></td></tr>`;
+          tExpenses.innerHTML += `<tr><td>${r.date}</td><td>${title}</td><td class="val-minus">-AED ${r.amount.toFixed(2)}</td><td><button onclick="deleteRecord(${r.id})">✕</button></td></tr>`;
         } else if (r.type === 'udhaar_give') {
           owedMeSum += r.amount;
-          badge = '<span class="badge-tag bg-amber">Udhaar Diya</span>';
-          tCredit.innerHTML += `<tr><td>${r.date}</td><td>${r.person}</td><td>Diya (Receivable)</td><td class="val-minus">${r.amount}</td><td><button onclick="deleteRecord(${r.id})">✕</button></td></tr>`;
-        } else if (r.type === 'udhaar_rec') {
+          badge = '<span class="badge-tag bg-amber">Udhar Given</span>';
+          tCredit.innerHTML += `<tr><td>${r.date}</td><td>${r.person}</td><td>Udhar Given (Receivable)</td><td class="val-minus">AED ${r.amount.toFixed(2)}</td><td><button onclick="deleteRecord(${r.id})">✕</button></td></tr>`;
+        } else if (r.type === 'udhaar_returned') {
           owedMeSum -= r.amount;
-          incSum += r.amount;
-          badge = '<span class="badge-tag bg-green">Recovery</span>';
-          tCredit.innerHTML += `<tr><td>${r.date}</td><td>${r.person}</td><td>Wapas Mila</td><td class="val-plus">+${r.amount}</td><td><button onclick="deleteRecord(${r.id})">✕</button></td></tr>`;
+          badge = '<span class="badge-tag bg-green">Udhar Returned</span>';
+          tCredit.innerHTML += `<tr><td>${r.date}</td><td>${r.person}</td><td>Udhar Paid Back</td><td class="val-plus">+AED ${r.amount.toFixed(2)}</td><td><button onclick="deleteRecord(${r.id})">✕</button></td></tr>`;
         } else if (r.type === 'udhaar_take') {
           oweSum += r.amount;
-          badge = '<span class="badge-tag bg-red">Udhaar Liya</span>';
-          tCredit.innerHTML += `<tr><td>${r.date}</td><td>${r.person}</td><td>Liya (Payable)</td><td class="val-minus">${r.amount}</td><td><button onclick="deleteRecord(${r.id})">✕</button></td></tr>`;
+          badge = '<span class="badge-tag bg-red">Udhar Taken</span>';
+          tCredit.innerHTML += `<tr><td>${r.date}</td><td>${r.person}</td><td>Udhar Taken (Payable)</td><td class="val-minus">AED ${r.amount.toFixed(2)}</td><td><button onclick="deleteRecord(${r.id})">✕</button></td></tr>`;
         }
 
-        tRecent.innerHTML += `<tr><td>${badge}</td><td>${r.date}</td><td>${title}</td><td style="font-weight:700;">PKR ${r.amount}</td><td><button onclick="deleteRecord(${r.id})">✕</button></td></tr>`;
+        tRecent.innerHTML += `<tr><td>${badge}</td><td>${r.date}</td><td>${title}</td><td style="font-weight:700;">AED ${r.amount.toFixed(2)}</td><td><button onclick="deleteRecord(${r.id})">✕</button></td></tr>`;
       });
 
-      document.getElementById("stat-income").innerText = `PKR ${incSum.toLocaleString()}`;
-      document.getElementById("stat-expenses").innerText = `PKR ${expSum.toLocaleString()}`;
-      document.getElementById("stat-owed-me").innerText = `PKR ${Math.max(0, owedMeSum).toLocaleString()}`;
-      document.getElementById("stat-owe").innerText = `PKR ${oweSum.toLocaleString()}`;
+      document.getElementById("stat-income").innerText = `AED ${incSum.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+      document.getElementById("stat-expenses").innerText = `AED ${expSum.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+      document.getElementById("stat-owed-me").innerText = `AED ${Math.max(0, owedMeSum).toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+      document.getElementById("stat-owe").innerText = `AED ${oweSum.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
     }
   </script>
 </body>
