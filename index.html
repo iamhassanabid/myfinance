@@ -26,29 +26,78 @@
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* Top Animated Neon Loader Line */
+    .top-loader-line {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 100%;
+      background: linear-gradient(90deg, #10b981, #6366f1, #f59e0b, #ec4899);
+      background-size: 200% 100%;
+      animation: loadingStream 1.5s infinite linear;
+      z-index: 9999;
+      display: none;
+    }
+    @keyframes loadingStream {
+      0% { background-position: 100% 0; }
+      100% { background-position: -100% 0; }
+    }
+
     @keyframes pulseLogo {
       0%, 100% { transform: scale(1); opacity: 1; }
       50% { transform: scale(1.08); opacity: 0.85; }
     }
     .animate-logo-pulse { animation: pulseLogo 1.6s infinite ease-in-out; }
-    .glass-panel {
-      background: rgba(30, 41, 59, 0.75);
-      backdrop-filter: blur(12px);
+
+    /* Glassmorphism Panels Dark & Light */
+    .dark .glass-panel {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(14px);
       border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #f8fafc;
     }
-    body {
-      touch-action: manipulation;
+    html:not(.dark) .glass-panel {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      color: #0f172a;
     }
+
+    /* Pro Buttons & Hover Pop Animations */
+    .btn-pro {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-pro:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+    }
+    .btn-pro:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    /* Sidebar Item Hover Animation */
+    .nav-item {
+      transition: all 0.25s ease;
+    }
+    .nav-item:hover {
+      transform: translateX(5px);
+    }
+
+    body { touch-action: manipulation; }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen transition-colors duration-200">
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-300">
+
+  <!-- TOP GLOWING ANIMATED LOADER LINE -->
+  <div id="topLoader" class="top-loader-line"></div>
 
   <!-- ================= INITIAL ANIMATED LOADING SCREEN ================= -->
   <div id="loadingScreen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950">
     <div class="relative flex flex-col items-center">
       <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=300&q=80" alt="Plant HD Logo" class="w-28 h-28 object-cover rounded-full bg-slate-800 p-1 shadow-2xl animate-logo-pulse border-2 border-emerald-500">
       <h2 class="text-white text-xl font-bold tracking-widest mt-5">HASSAN</h2>
-      <p class="text-emerald-400 text-xs tracking-wider mt-1" id="loadingText">Connecting to Secure Supabase Engine...</p>
+      <p class="text-emerald-400 text-xs tracking-wider mt-1">Connecting to Secure Supabase Engine...</p>
     </div>
   </div>
 
@@ -60,7 +109,7 @@
         <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=300&q=80" alt="HASSAN Logo" class="w-20 h-20 object-cover rounded-full">
       </div>
       
-      <h2 class="text-2xl font-bold text-white">Protected Access</h2>
+      <h2 class="text-2xl font-bold dark:text-white text-slate-900">Protected Access</h2>
       <p class="text-xs text-slate-400 mt-1 mb-6">Enter Security Password Key</p>
 
       <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
@@ -71,7 +120,7 @@
 
         <div id="loginError" class="text-rose-500 text-xs hidden font-medium">Invalid Password Key. Access Denied.</div>
 
-        <button type="submit" class="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl shadow-lg transition duration-200 flex items-center justify-center space-x-2">
+        <button type="submit" class="btn-pro w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl shadow-lg flex items-center justify-center space-x-2">
           <span>Unlock Account</span>
           <i class="fa-solid fa-key text-sm"></i>
         </button>
@@ -83,39 +132,40 @@
   <div id="appScreen" class="hidden min-h-screen flex flex-col md:flex-row">
     
     <!-- LEFT SIDEBAR MENU -->
-    <aside id="sidebarMenu" class="hidden md:flex md:w-64 bg-slate-900 border-r border-slate-800 flex-col justify-between shrink-0">
+    <aside id="sidebarMenu" class="hidden md:flex md:w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-col justify-between shrink-0">
       <div>
-        <div class="p-5 flex items-center space-x-3 border-b border-slate-800">
+        <div class="p-5 flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800">
           <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=300&q=80" alt="Plant HD Logo" class="w-11 h-11 object-cover rounded-full border border-emerald-500/50 p-0.5 shadow-md">
           <div>
-            <h1 class="text-base font-bold text-white leading-tight">HASSAN</h1>
-            <p class="text-xs text-emerald-400 font-semibold" id="sidebarUserBadge">Role: Admin</p>
+            <h1 class="text-base font-bold dark:text-white text-slate-900 leading-tight">HASSAN</h1>
+            <p class="text-xs text-emerald-500 font-semibold" id="sidebarUserBadge">Role: Admin</p>
           </div>
         </div>
 
         <nav class="p-4 space-y-2">
-          <button onclick="switchTab('dashboardView')" id="navDash" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 transition">
+          <button onclick="switchTab('dashboardView')" id="navDash" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-emerald-500 bg-emerald-500/10 border border-emerald-500/20">
             <i class="fa-solid fa-chart-pie w-5"></i>
             <span>Overview Metrics</span>
           </button>
 
-          <button onclick="switchTab('userSecurityView')" id="navAdminSec" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition">
-            <i class="fa-solid fa-users-gear w-5 text-amber-400"></i>
+          <!-- Password & User Control (Hidden for Non-Admin Users) -->
+          <button onclick="switchTab('userSecurityView')" id="navAdminSec" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+            <i class="fa-solid fa-users-gear w-5 text-amber-500"></i>
             <span>Password & User Control</span>
           </button>
         </nav>
       </div>
 
-      <div class="p-4 border-t border-slate-800 space-y-2">
-        <button onclick="toggleTheme()" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium bg-slate-800 text-slate-200 hover:bg-slate-700 transition">
+      <div class="p-4 border-t border-slate-200 dark:border-slate-800 space-y-2">
+        <button onclick="toggleTheme()" class="btn-pro w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
           <span class="flex items-center space-x-2">
-            <i class="fa-solid fa-moon dark:hidden"></i>
+            <i class="fa-solid fa-moon dark:hidden text-indigo-600"></i>
             <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
-            <span>Theme Control</span>
+            <span>Theme Mode</span>
           </span>
         </button>
 
-        <button onclick="logout()" class="w-full flex items-center space-x-2 px-3 py-2 rounded-xl text-sm font-medium bg-rose-950/40 text-rose-400 border border-rose-900/40 hover:bg-rose-900/60 transition">
+        <button onclick="logout()" class="btn-pro w-full flex items-center space-x-2 px-3 py-2.5 rounded-xl text-sm font-medium bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
           <i class="fa-solid fa-right-from-bracket"></i>
           <span>Logout</span>
         </button>
@@ -126,17 +176,17 @@
     <div class="flex-1 flex flex-col min-w-0">
       
       <!-- MOBILE HEADER -->
-      <header class="md:hidden sticky top-0 z-30 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 h-16 flex items-center justify-between">
+      <header class="md:hidden sticky top-0 z-30 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 h-16 flex items-center justify-between">
         <div class="flex items-center space-x-3">
           <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=300&q=80" alt="Plant HD Logo" class="w-9 h-9 object-cover rounded-full border border-emerald-500">
-          <span class="font-bold text-white text-sm">HASSAN EXPENSE</span>
+          <span class="font-bold dark:text-white text-slate-900 text-sm">HASSAN EXPENSE</span>
         </div>
         <div class="flex items-center space-x-3">
-          <button onclick="toggleTheme()" class="text-slate-300 p-1">
+          <button onclick="toggleTheme()" class="p-1 text-slate-600 dark:text-slate-300">
             <i class="fa-solid fa-moon dark:hidden"></i>
             <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
           </button>
-          <button onclick="logout()" class="p-1 text-rose-400">
+          <button onclick="logout()" class="p-1 text-rose-500">
             <i class="fa-solid fa-right-from-bracket"></i>
           </button>
         </div>
@@ -146,12 +196,12 @@
       <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 overflow-y-auto">
 
         <!-- GUEST BANNER -->
-        <div id="guestBanner" class="hidden bg-indigo-950/50 border border-indigo-800 rounded-xl p-4 flex items-center justify-between">
+        <div id="guestBanner" class="hidden bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-4 flex items-center justify-between">
           <div class="flex items-center space-x-3">
-            <i class="fa-solid fa-user-shield text-indigo-400 text-xl"></i>
+            <i class="fa-solid fa-user-shield text-indigo-500 text-xl"></i>
             <div>
-              <h3 class="font-semibold text-indigo-200 text-sm">Personal Ledger View</h3>
-              <p class="text-xs text-indigo-400">Logged in as <span id="guestName" class="font-bold">User</span>.</p>
+              <h3 class="font-semibold dark:text-indigo-200 text-indigo-900 text-sm">Personal Ledger View</h3>
+              <p class="text-xs text-indigo-500">Logged in as <span id="guestName" class="font-bold">User</span>.</p>
             </div>
           </div>
         </div>
@@ -165,9 +215,9 @@
             <div class="glass-panel p-5 rounded-2xl shadow-sm flex items-center justify-between">
               <div>
                 <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Income</p>
-                <h3 class="text-xl font-bold text-emerald-400 mt-1" id="metricIncome">AED 0</h3>
+                <h3 class="text-xl font-bold text-emerald-500 mt-1" id="metricIncome">AED 0</h3>
               </div>
-              <div class="w-10 h-10 rounded-xl bg-emerald-900/40 text-emerald-400 flex items-center justify-center text-lg">
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-lg">
                 <i class="fa-solid fa-money-bill-trend-up"></i>
               </div>
             </div>
@@ -175,9 +225,9 @@
             <div class="glass-panel p-5 rounded-2xl shadow-sm flex items-center justify-between">
               <div>
                 <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">General Expenses</p>
-                <h3 class="text-xl font-bold text-rose-400 mt-1" id="metricExpense">AED 0</h3>
+                <h3 class="text-xl font-bold text-rose-500 mt-1" id="metricExpense">AED 0</h3>
               </div>
-              <div class="w-10 h-10 rounded-xl bg-rose-900/40 text-rose-400 flex items-center justify-center text-lg">
+              <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-500 flex items-center justify-center text-lg">
                 <i class="fa-solid fa-receipt"></i>
               </div>
             </div>
@@ -185,9 +235,9 @@
             <div class="glass-panel p-5 rounded-2xl shadow-sm flex items-center justify-between">
               <div>
                 <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Personal Expenses</p>
-                <h3 class="text-xl font-bold text-purple-400 mt-1" id="metricPersonalExpense">AED 0</h3>
+                <h3 class="text-xl font-bold text-purple-500 mt-1" id="metricPersonalExpense">AED 0</h3>
               </div>
-              <div class="w-10 h-10 rounded-xl bg-purple-900/40 text-purple-400 flex items-center justify-center text-lg">
+              <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center text-lg">
                 <i class="fa-solid fa-user-gear"></i>
               </div>
             </div>
@@ -195,9 +245,9 @@
             <div class="glass-panel p-5 rounded-2xl shadow-sm flex items-center justify-between">
               <div>
                 <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Receivables</p>
-                <h3 class="text-xl font-bold text-amber-400 mt-1" id="metricReceivable">AED 0</h3>
+                <h3 class="text-xl font-bold text-amber-500 mt-1" id="metricReceivable">AED 0</h3>
               </div>
-              <div class="w-10 h-10 rounded-xl bg-amber-900/40 text-amber-400 flex items-center justify-center text-lg">
+              <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center text-lg">
                 <i class="fa-solid fa-hand-holding-dollar"></i>
               </div>
             </div>
@@ -205,9 +255,9 @@
             <div class="glass-panel p-5 rounded-2xl shadow-sm flex items-center justify-between">
               <div>
                 <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Net Cash Balance</p>
-                <h3 class="text-xl font-bold text-indigo-400 mt-1" id="metricNet">AED 0</h3>
+                <h3 class="text-xl font-bold text-indigo-500 mt-1" id="metricNet">AED 0</h3>
               </div>
-              <div class="w-10 h-10 rounded-xl bg-indigo-900/40 text-indigo-400 flex items-center justify-center text-lg">
+              <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center text-lg">
                 <i class="fa-solid fa-scale-balanced"></i>
               </div>
             </div>
@@ -222,15 +272,15 @@
               
               <!-- Income / General Expense Form -->
               <div class="glass-panel p-5 rounded-2xl shadow-sm">
-                <h2 class="text-base font-bold text-white mb-4 flex items-center space-x-2">
-                  <i class="fa-solid fa-plus-circle text-indigo-400"></i>
+                <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center space-x-2">
+                  <i class="fa-solid fa-plus-circle text-indigo-500"></i>
                   <span>Add Income / General Expense</span>
                 </h2>
 
                 <form onsubmit="handleAddIncomeExpense(event)" class="space-y-3">
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Type</label>
-                    <select id="cfType" class="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-900 text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                    <select id="cfType" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
                       <option value="Income">Income (Salary / Bonus / Business)</option>
                       <option value="Expense">General Expense (Rent / Bills / Ration)</option>
                     </select>
@@ -238,20 +288,20 @@
 
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Category / Description</label>
-                    <input type="text" id="cfCategory" required placeholder="e.g., Monthly Salary, Room Rent" class="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-900 text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                    <input type="text" id="cfCategory" required placeholder="e.g., Monthly Salary, Room Rent" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
                   </div>
 
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Amount (AED)</label>
-                    <input type="number" id="cfAmount" required placeholder="0" min="1" step="any" class="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-900 text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                    <input type="number" id="cfAmount" required placeholder="0" min="1" step="any" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
                   </div>
 
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Date</label>
-                    <input type="date" id="cfDate" required class="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-900 text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                    <input type="date" id="cfDate" required class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
                   </div>
 
-                  <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg text-sm transition flex items-center justify-center space-x-1">
+                  <button type="submit" class="btn-pro w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg text-sm flex items-center justify-center space-x-1">
                     <i class="fa-solid fa-check"></i>
                     <span>Save Entry</span>
                   </button>
@@ -260,56 +310,52 @@
 
               <!-- Log Personal Expense Form -->
               <div class="glass-panel p-5 rounded-2xl shadow-sm">
-                <h2 class="text-base font-bold text-white mb-4 flex items-center space-x-2">
-                  <i class="fa-solid fa-user-gear text-purple-400"></i>
+                <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center space-x-2">
+                  <i class="fa-solid fa-user-gear text-purple-500"></i>
                   <span>Log Personal Expense</span>
                 </h2>
 
                 <form onsubmit="handleAddPersonalExpense(event)" class="space-y-3">
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Where spent?</label>
-                    <input type="text" id="peDescription" required placeholder="e.g., Snacks, Coffee, Taxi" class="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-900 text-white text-sm focus:ring-2 focus:ring-purple-500">
+                    <input type="text" id="peDescription" required placeholder="e.g., Snacks, Coffee, Taxi" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-purple-500">
                   </div>
 
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Amount Spent (AED)</label>
-                    <input type="number" id="peAmount" required placeholder="e.g., 50" min="0.1" step="any" class="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-900 text-white text-sm focus:ring-2 focus:ring-purple-500">
+                    <input type="number" id="peAmount" required placeholder="e.g., 50" min="0.1" step="any" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-purple-500">
                   </div>
 
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Date</label>
-                    <input type="date" id="peDate" required class="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-900 text-white text-sm focus:ring-2 focus:ring-purple-500">
+                    <input type="date" id="peDate" required class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-purple-500">
                   </div>
 
-                  <button type="submit" class="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg text-sm transition flex items-center justify-center space-x-1">
+                  <button type="submit" class="btn-pro w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg text-sm flex items-center justify-center space-x-1">
                     <i class="fa-solid fa-receipt"></i>
                     <span>Record Personal Expense</span>
                   </button>
                 </form>
               </div>
 
-              <!-- Manage Debt Entry Form (4 English Options) -->
+              <!-- Manage Debt Entry Form -->
               <div class="glass-panel p-5 rounded-2xl shadow-sm">
-                <h2 class="text-base font-bold text-white mb-4 flex items-center space-x-2">
-                  <i class="fa-solid fa-hand-holding-hand text-amber-400"></i>
+                <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center space-x-2">
+                  <i class="fa-solid fa-hand-holding-hand text-amber-500"></i>
                   <span>Manage Debt (4 Action Options)</span>
                 </h2>
 
                 <form onsubmit="handleManageDebt(event)" class="space-y-3">
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Select Person</label>
-                    <select id="debtPersonSelect" class="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-900 text-white text-sm focus:ring-2 focus:ring-indigo-500">
-                      <option value="Hurairah Ustad">Hurairah Ustad</option>
-                      <option value="Bhai Arslan">Bhai Arslan</option>
-                      <option value="Aman">Aman</option>
-                      <option value="Api Komal">Api Komal</option>
-                      <option value="Tabby">Tabby</option>
+                    <select id="debtPersonSelect" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                      <!-- Dynamic Options populated from database -->
                     </select>
                   </div>
 
                   <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">Action Type (English Options)</label>
-                    <select id="debtAction" class="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-900 text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Action Type</label>
+                    <select id="debtAction" onchange="toggleSpentOption()" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
                       <option value="GIVEN">Loan Given</option>
                       <option value="TAKEN">Loan Borrowed</option>
                       <option value="RECEIVED">Repayment Received</option>
@@ -317,24 +363,33 @@
                     </select>
                   </div>
 
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">Amount (AED)</label>
-                    <input type="number" id="debtAmount" required placeholder="0" min="1" step="any" class="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-900 text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                  <!-- SPENT ITEM CHECKBOX (FOR BORROWED LOANS) -->
+                  <div id="spentOptionBox" class="hidden p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 space-y-1">
+                    <label class="inline-flex items-center space-x-2 text-xs text-amber-600 dark:text-amber-300 cursor-pointer">
+                      <input type="checkbox" id="alreadySpentCheck" class="rounded border-slate-700 text-amber-500 focus:ring-amber-500 bg-slate-900">
+                      <span class="font-semibold">Already Spent / Bought Item? (e.g. iPhone)</span>
+                    </label>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400">If checked, loan will be recorded in ledger but WILL NOT increase Net Cash Balance.</p>
                   </div>
 
                   <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">Note / Remark</label>
-                    <input type="text" id="debtNote" placeholder="e.g., Monthly installment" class="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-900 text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Amount (AED)</label>
+                    <input type="number" id="debtAmount" required placeholder="0" min="1" step="any" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Note / Remark (e.g. iPhone purchase)</label>
+                    <input type="text" id="debtNote" placeholder="e.g., iPhone purchase, Installment" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
                   </div>
 
                   <div class="pt-1">
-                    <label class="inline-flex items-center space-x-2 text-xs text-slate-300 cursor-pointer">
+                    <label class="inline-flex items-center space-x-2 text-xs text-slate-600 dark:text-slate-300 cursor-pointer">
                       <input type="checkbox" id="sendWhatsAppCheck" class="rounded border-slate-700 text-emerald-500 focus:ring-emerald-500 bg-slate-900">
                       <span>Generate Professional WhatsApp Receipt Link</span>
                     </label>
                   </div>
 
-                  <button type="submit" id="updateDebtBtn" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg text-sm transition flex items-center justify-center space-x-1">
+                  <button type="submit" id="updateDebtBtn" class="btn-pro w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg text-sm flex items-center justify-center space-x-1">
                     <i class="fa-solid fa-arrows-rotate"></i>
                     <span>Update Debt Ledger</span>
                   </button>
@@ -348,18 +403,18 @@
 
               <!-- DEBT SUMMARY CARDS / TABLE -->
               <div class="glass-panel p-5 rounded-2xl shadow-sm">
-                <h2 class="text-base font-bold text-white mb-4 flex items-center justify-between">
+                <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center justify-between">
                   <span class="flex items-center space-x-2">
-                    <i class="fa-solid fa-users text-indigo-400"></i>
+                    <i class="fa-solid fa-users text-indigo-500"></i>
                     <span>Active Debt Ledgers</span>
                   </span>
-                  <span id="debtCount" class="text-xs bg-indigo-950 text-indigo-300 border border-indigo-800 font-semibold px-2.5 py-0.5 rounded-full">0 Persons</span>
+                  <span id="debtCount" class="text-xs bg-indigo-500/10 text-indigo-500 border border-indigo-500/20 font-semibold px-2.5 py-0.5 rounded-full">0 Persons</span>
                 </h2>
 
                 <div class="overflow-x-auto">
                   <table class="w-full text-left border-collapse">
                     <thead>
-                      <tr class="border-b border-slate-800 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                      <tr class="border-b border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-400 uppercase tracking-wider">
                         <th class="py-3 px-4">Person</th>
                         <th class="py-3 px-4">Total Given</th>
                         <th class="py-3 px-4">Total Received</th>
@@ -367,7 +422,7 @@
                         <th class="py-3 px-4 text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody id="debtTableBody" class="divide-y divide-slate-800/60 text-sm">
+                    <tbody id="debtTableBody" class="divide-y divide-slate-200 dark:divide-slate-800/60 text-sm">
                       <!-- Dynamic Rows -->
                     </tbody>
                   </table>
@@ -376,25 +431,25 @@
 
               <!-- PERSONAL EXPENSES HISTORY -->
               <div id="personalExpensesSection" class="glass-panel p-5 rounded-2xl shadow-sm">
-                <h2 class="text-base font-bold text-white mb-4 flex items-center justify-between">
+                <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center justify-between">
                   <span class="flex items-center space-x-2">
-                    <i class="fa-solid fa-user-gear text-purple-400"></i>
+                    <i class="fa-solid fa-user-gear text-purple-500"></i>
                     <span>Personal Expenses Log</span>
                   </span>
-                  <span id="personalTotalText" class="text-xs bg-purple-950 text-purple-300 border border-purple-800 font-semibold px-2.5 py-0.5 rounded-full">Total: AED 0</span>
+                  <span id="personalTotalText" class="text-xs bg-purple-500/10 text-purple-500 border border-purple-500/20 font-semibold px-2.5 py-0.5 rounded-full">Total: AED 0</span>
                 </h2>
 
                 <div class="overflow-x-auto">
                   <table class="w-full text-left border-collapse">
                     <thead>
-                      <tr class="border-b border-slate-800 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                      <tr class="border-b border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-400 uppercase tracking-wider">
                         <th class="py-3 px-4">Date</th>
                         <th class="py-3 px-4">Where Spent</th>
                         <th class="py-3 px-4">Amount Spent</th>
                         <th class="py-3 px-4 text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody id="personalExpenseTableBody" class="divide-y divide-slate-800/60 text-sm">
+                    <tbody id="personalExpenseTableBody" class="divide-y divide-slate-200 dark:divide-slate-800/60 text-sm">
                       <!-- Dynamic Rows -->
                     </tbody>
                   </table>
@@ -403,9 +458,9 @@
 
               <!-- DETAILED TRANSACTION HISTORY LOGS -->
               <div class="glass-panel p-5 rounded-2xl shadow-sm">
-                <h2 class="text-base font-bold text-white mb-4 flex items-center justify-between">
+                <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center justify-between">
                   <span class="flex items-center space-x-2">
-                    <i class="fa-solid fa-list-check text-indigo-400"></i>
+                    <i class="fa-solid fa-list-check text-indigo-500"></i>
                     <span>Master Transaction Audit Logs</span>
                   </span>
                 </h2>
@@ -413,7 +468,7 @@
                 <div class="overflow-x-auto">
                   <table class="w-full text-left border-collapse">
                     <thead>
-                      <tr class="border-b border-slate-800 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                      <tr class="border-b border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-400 uppercase tracking-wider">
                         <th class="py-3 px-4">Date</th>
                         <th class="py-3 px-4">Description / Category</th>
                         <th class="py-3 px-4">Type</th>
@@ -421,7 +476,7 @@
                         <th class="py-3 px-4 text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody id="logsTableBody" class="divide-y divide-slate-800/60 text-sm">
+                    <tbody id="logsTableBody" class="divide-y divide-slate-200 dark:divide-slate-800/60 text-sm">
                       <!-- Dynamic Logs -->
                     </tbody>
                   </table>
@@ -434,14 +489,14 @@
 
         </div>
 
-        <!-- ================= VIEW 2: PASSWORD & USER CONTROL ================= -->
+        <!-- ================= VIEW 2: PASSWORD & USER CONTROL (ADMIN ONLY) ================= -->
         <div id="userSecurityView" class="hidden space-y-6">
           <div class="max-w-2xl mx-auto space-y-6">
             
             <!-- ADMIN PASSWORD CHANGE -->
             <div class="glass-panel p-6 rounded-2xl shadow-sm">
-              <h2 class="text-lg font-bold text-white mb-2 flex items-center space-x-2">
-                <i class="fa-solid fa-shield-halved text-amber-400"></i>
+              <h2 class="text-lg font-bold dark:text-white text-slate-900 mb-2 flex items-center space-x-2">
+                <i class="fa-solid fa-shield-halved text-amber-500"></i>
                 <span>Admin Master Security Password</span>
               </h2>
               <p class="text-xs text-slate-400 mb-4">Update the primary Admin password key stored in Supabase cloud settings.</p>
@@ -449,9 +504,9 @@
               <div class="space-y-4">
                 <div>
                   <label class="block text-xs font-semibold text-slate-400 mb-1">New Admin Password</label>
-                  <input type="password" id="newAdminPin" placeholder="Enter new Admin password key..." class="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-900 text-white text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                  <input type="password" id="newAdminPin" placeholder="Enter new Admin password key..." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
                 </div>
-                <button onclick="updateAdminPassword()" class="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-xl text-sm transition flex items-center space-x-2">
+                <button onclick="updateAdminPassword()" class="btn-pro px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-xl text-sm flex items-center space-x-2">
                   <i class="fa-solid fa-floppy-disk"></i>
                   <span>Update Admin Password</span>
                 </button>
@@ -460,8 +515,8 @@
 
             <!-- ALL USER PROFILES & PASSWORDS MANAGEMENT -->
             <div class="glass-panel p-6 rounded-2xl shadow-sm">
-              <h2 class="text-lg font-bold text-white mb-2 flex items-center space-x-2">
-                <i class="fa-solid fa-users-gear text-indigo-400"></i>
+              <h2 class="text-lg font-bold dark:text-white text-slate-900 mb-2 flex items-center space-x-2">
+                <i class="fa-solid fa-users-gear text-indigo-500"></i>
                 <span>Manage All User Passwords & Profiles</span>
               </h2>
               <p class="text-xs text-slate-400 mb-4">View or change password keys for existing ledger profiles or add new users.</p>
@@ -472,13 +527,13 @@
               </div>
 
               <!-- ADD NEW USER PROFILE FORM -->
-              <div class="border-t border-slate-800 pt-4">
-                <h3 class="text-sm font-semibold text-slate-200 mb-3">Add New User Profile</h3>
+              <div class="border-t border-slate-200 dark:border-slate-800 pt-4">
+                <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-3">Add New User Profile</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <input type="text" id="newUserName" placeholder="Profile Name (e.g. Usman)" class="px-3 py-2 rounded-lg border border-slate-700 bg-slate-900 text-white text-sm">
-                  <input type="password" id="newUserPin" placeholder="Access Password Key" class="px-3 py-2 rounded-lg border border-slate-700 bg-slate-900 text-white text-sm">
+                  <input type="text" id="newUserName" placeholder="Profile Name (e.g. Usman)" class="px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm">
+                  <input type="password" id="newUserPin" placeholder="Access Password Key" class="px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm">
                 </div>
-                <button onclick="addNewUserProfile()" class="mt-3 w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl text-sm transition flex items-center justify-center space-x-2">
+                <button onclick="addNewUserProfile()" class="btn-pro mt-3 w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl text-sm flex items-center justify-center space-x-2">
                   <i class="fa-solid fa-user-plus"></i>
                   <span>Create User Profile</span>
                 </button>
@@ -488,8 +543,8 @@
 
             <!-- TERMS & CONDITIONS STATEMENT -->
             <div class="glass-panel p-6 rounded-2xl shadow-sm text-xs text-slate-400 space-y-2 leading-relaxed">
-              <h3 class="text-sm font-semibold text-slate-200 flex items-center space-x-2">
-                <i class="fa-solid fa-file-contract text-indigo-400"></i>
+              <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-200 flex items-center space-x-2">
+                <i class="fa-solid fa-file-contract text-indigo-500"></i>
                 <span>Terms & Security Architecture Statement</span>
               </h3>
               <p>• <strong>Data Isolation & Encryption:</strong> All transactions, debt ledgers, and personal expense logs are processed through encrypted HTTPS SSL protocols connected to Supabase PostgreSQL infrastructure.</p>
@@ -524,8 +579,16 @@
     let currentUser = null;
     let state = { cashflow: [], personalExpenses: [], debts: [], logs: [] };
 
+    function showLoader() {
+      document.getElementById('topLoader').style.display = 'block';
+    }
+    function hideLoader() {
+      document.getElementById('topLoader').style.display = 'none';
+    }
+
     // Fetch data from Supabase
     async function loadDataFromSupabase() {
+      showLoader();
       try {
         // Fetch Settings / Passwords
         const { data: userPins } = await supabaseClient.from('settings').select('*');
@@ -556,8 +619,11 @@
 
         renderDashboard();
         renderUserSecurityList();
+        populatePersonDropdown();
       } catch (err) {
         console.error("Error loading data from Supabase:", err);
+      } finally {
+        hideLoader();
       }
     }
 
@@ -567,7 +633,7 @@
       setTimeout(() => {
         document.getElementById('loadingScreen').classList.add('hidden');
         document.getElementById('authScreen').classList.remove('hidden');
-      }, 1500);
+      }, 1200);
     });
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -576,21 +642,29 @@
       if (document.getElementById('peDate')) document.getElementById('peDate').value = today;
     });
 
+    // Theme Switcher Toggle Fix (Point 2)
     function toggleTheme() {
       document.documentElement.classList.toggle('dark');
+    }
+
+    function toggleSpentOption() {
+      const action = document.getElementById('debtAction').value;
+      const spentBox = document.getElementById('spentOptionBox');
+      if (action === 'TAKEN') spentBox.classList.remove('hidden');
+      else spentBox.classList.add('hidden');
     }
 
     function switchTab(view) {
       if (view === 'dashboardView') {
         document.getElementById('dashboardView').classList.remove('hidden');
         document.getElementById('userSecurityView').classList.add('hidden');
-        document.getElementById('navDash').className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 transition";
-        document.getElementById('navAdminSec').className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition";
+        document.getElementById('navDash').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-emerald-500 bg-emerald-500/10 border border-emerald-500/20";
+        document.getElementById('navAdminSec').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800";
       } else {
         document.getElementById('dashboardView').classList.add('hidden');
         document.getElementById('userSecurityView').classList.remove('hidden');
-        document.getElementById('navAdminSec').className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 transition";
-        document.getElementById('navDash').className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition";
+        document.getElementById('navAdminSec').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-emerald-500 bg-emerald-500/10 border border-emerald-500/20";
+        document.getElementById('navDash').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800";
       }
     }
 
@@ -613,8 +687,9 @@
         document.getElementById('authScreen').classList.add('hidden');
         document.getElementById('appScreen').classList.remove('hidden');
         
-        document.getElementById('sidebarUserBadge').innerText = `User: ${currentUser}`;
+        document.getElementById('sidebarUserBadge').innerText = `Role: ${currentUser}`;
         
+        // POINT 1 FIX: Completely hide Password Control & Admin forms for Non-Admin (Hurairah, Aman, etc.)
         if (currentUser !== "Admin") {
           document.getElementById('guestBanner').classList.remove('hidden');
           document.getElementById('guestName').innerText = currentUser;
@@ -647,9 +722,23 @@
       document.getElementById('loginPin').value = '';
     }
 
+    function populatePersonDropdown() {
+      const select = document.getElementById('debtPersonSelect');
+      if (!select) return;
+      select.innerHTML = '';
+      for (let uName in USER_PASSWORDS) {
+        if (uName === 'Admin') continue;
+        const opt = document.createElement('option');
+        opt.value = uName;
+        opt.innerText = uName;
+        select.appendChild(opt);
+      }
+    }
+
     // Form Handlers
     async function handleAddIncomeExpense(e) {
       e.preventDefault();
+      showLoader();
       const type = document.getElementById('cfType').value;
       const category = document.getElementById('cfCategory').value;
       const amount = parseFloat(document.getElementById('cfAmount').value);
@@ -665,6 +754,7 @@
 
     async function handleAddPersonalExpense(e) {
       e.preventDefault();
+      showLoader();
       const description = document.getElementById('peDescription').value;
       const amount = parseFloat(document.getElementById('peAmount').value);
       const date = document.getElementById('peDate').value;
@@ -677,23 +767,24 @@
       await loadDataFromSupabase();
     }
 
+    // POINT 3 FIX: Loan Borrowed (Spent Check) & Paid Back Net Cash Math Logic
     async function handleManageDebt(e) {
       e.preventDefault();
       const btn = document.getElementById('updateDebtBtn');
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Updating...';
       btn.disabled = true;
+      showLoader();
 
       const person = document.getElementById('debtPersonSelect').value;
       const action = document.getElementById('debtAction').value;
       const amount = parseFloat(document.getElementById('debtAmount').value);
       const note = document.getElementById('debtNote').value || '';
       const sendWa = document.getElementById('sendWhatsAppCheck').checked;
+      const alreadySpent = document.getElementById('alreadySpentCheck').checked;
       const date = new Date().toISOString().split('T')[0];
 
-      // Safe fetch record with error handling
       let { data: debtRecord } = await supabaseClient.from('debts').select('*').eq('person', person).maybeSingle();
 
-      // FIXED: If record does not exist in Supabase yet, create it automatically first
       if (!debtRecord) {
         const { data: newRecord } = await supabaseClient.from('debts').insert([{ person, total_given: 0, total_returned: 0 }]).select().single();
         debtRecord = newRecord || { person, total_given: 0, total_returned: 0 };
@@ -708,13 +799,13 @@
         logType = "Loan Given";
       } else if (action === 'TAKEN') {
         newReturned += amount;
-        logType = "Loan Borrowed";
+        logType = alreadySpent ? "Loan Borrowed (Spent)" : "Loan Borrowed (Cash In)";
       } else if (action === 'RECEIVED') {
         newReturned += amount;
         logType = "Repayment Received";
       } else if (action === 'PAID_BACK') {
         newGiven += amount;
-        logType = "Repayment Paid Back";
+        logType = "Loan Repaid Back";
       }
 
       // Update Debt Record in Supabase
@@ -726,19 +817,20 @@
       btn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> <span>Update Debt Ledger</span>';
       btn.disabled = false;
 
-      // Professional WhatsApp Receipt Link
+      // WhatsApp Link Generation
       if (sendWa) {
-        generateWhatsAppReceiptLink(person, action, amount, newGiven, newReturned, date);
+        generateWhatsAppReceiptLink(person, action, amount, newGiven, newReturned, date, note);
       }
 
       document.getElementById('debtAmount').value = '';
       document.getElementById('debtNote').value = '';
+      document.getElementById('alreadySpentCheck').checked = false;
 
       await loadDataFromSupabase();
     }
 
     // Professional WhatsApp Message Link Generator
-    function generateWhatsAppReceiptLink(personName, action, currentAmount, totalGiven, totalReturned, dateStr) {
+    function generateWhatsAppReceiptLink(personName, action, currentAmount, totalGiven, totalReturned, dateStr, noteText) {
       const remainingBalance = totalGiven - totalReturned;
       let message = "";
 
@@ -748,15 +840,15 @@
           `• Total Amount Repaid: AED ${totalReturned}\n` +
           `• Remaining Net Balance: AED ${remainingBalance > 0 ? remainingBalance : 0}\n\n` +
           `We appreciate your prompt settlement. Have a great day!\n- HASSAN Ledger Management`;
-      } else if (action === 'GIVEN') {
-        message = `Dear ${personName},\n\nThis is a confirmation for the loan amount of AED ${currentAmount} issued on ${dateStr}.\n\n` +
-          `• Updated Total Loan Amount: AED ${totalGiven}\n` +
-          `• Total Repaid to Date: AED ${totalReturned}\n` +
-          `• Current Outstanding Balance: AED ${remainingBalance}\n\n` +
-          `Kindly review your ledger record. Thank you!\n- HASSAN Ledger Management`;
+      } else if (action === 'TAKEN') {
+        message = `Dear ${personName},\n\nThis is an acknowledgment for the loan borrowed amount of AED ${currentAmount} on ${dateStr} (${noteText}).\n\n` +
+          `• Total Borrowed Amount: AED ${totalReturned}\n` +
+          `• Total Repaid Back: AED ${totalGiven}\n` +
+          `• Current Net Payable: AED ${Math.abs(remainingBalance)}\n\n` +
+          `Thank you for your trust and support!\n- HASSAN Ledger Management`;
       } else {
         message = `Dear ${personName},\n\nLedger Update Notice (${dateStr}):\n` +
-          `Transaction Amount: AED ${currentAmount} (${action})\n` +
+          `Transaction Amount: AED ${currentAmount} (${action} - ${noteText})\n` +
           `Current Net Balance: AED ${remainingBalance}\n\n` +
           `Thank you!\n- HASSAN Ledger Management`;
       }
@@ -765,10 +857,11 @@
       window.open(whatsappUrl, '_blank');
     }
 
-    // Password Management
+    // POINT 4 FIX: Dynamic Password & User Management from Admin Panel
     async function updateAdminPassword() {
       const newPin = document.getElementById('newAdminPin').value.trim();
       if (newPin) {
+        showLoader();
         await supabaseClient.from('settings').upsert({ key: 'admin_pin', value: newPin });
         alert("Admin password key updated successfully in Supabase!");
         document.getElementById('newAdminPin').value = '';
@@ -779,6 +872,7 @@
     async function updateUserPassword(uName) {
       const newPin = prompt(`Enter NEW Password Key for ${uName}:`);
       if (newPin && newPin.trim() !== '') {
+        showLoader();
         await supabaseClient.from('settings').upsert({ key: `user_pin_${uName}`, value: newPin.trim() });
         alert(`Password for ${uName} updated successfully!`);
         await loadDataFromSupabase();
@@ -791,6 +885,7 @@
 
       if (!name || !pin) return alert("Please enter both Name and Password Key.");
 
+      showLoader();
       await supabaseClient.from('settings').upsert({ key: `user_pin_${name}`, value: pin });
       await supabaseClient.from('debts').insert([{ person: name, total_given: 0, total_returned: 0 }]);
 
@@ -803,20 +898,20 @@
 
     function renderUserSecurityList() {
       const container = document.getElementById('userListContainer');
+      if (!container) return;
       container.innerHTML = '';
 
       for (let uName in USER_PASSWORDS) {
         if (uName === 'Admin') continue;
-        const currentKey = USER_PASSWORDS[uName];
 
         const row = document.createElement('div');
-        row.className = "flex items-center justify-between p-3 bg-slate-900 border border-slate-800 rounded-xl text-sm";
+        row.className = "flex items-center justify-between p-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm";
         row.innerHTML = `
           <div>
-            <span class="font-bold text-white">${uName}</span>
-            <span class="text-xs text-slate-500 block font-mono">Password: ${currentKey}</span>
+            <span class="font-bold dark:text-white text-slate-900">${uName}</span>
+            <span class="text-xs text-slate-400 block font-mono">Password: ••••••••</span>
           </div>
-          <button onclick="updateUserPassword('${uName}')" class="px-3 py-1.5 bg-indigo-950 text-indigo-300 border border-indigo-800 hover:bg-indigo-900 text-xs rounded-lg font-medium transition">
+          <button onclick="updateUserPassword('${uName}')" class="btn-pro px-3 py-1.5 bg-indigo-500/10 text-indigo-500 border border-indigo-500/30 hover:bg-indigo-500/20 text-xs rounded-lg font-medium">
             <i class="fa-solid fa-pen"></i> Change Password
           </button>
         `;
@@ -827,6 +922,7 @@
     async function deleteLog(id) {
       if (currentUser !== 'Admin') return;
       if (confirm('Delete log entry from Supabase?')) {
+        showLoader();
         await supabaseClient.from('transactions').delete().eq('id', id);
         await loadDataFromSupabase();
       }
@@ -835,18 +931,32 @@
     async function deletePersonalExpense(id) {
       if (currentUser !== 'Admin') return;
       if (confirm('Delete personal expense from Supabase?')) {
+        showLoader();
         await supabaseClient.from('personal_expenses').delete().eq('id', id);
         await loadDataFromSupabase();
       }
     }
 
-    // Render Dashboard UI
+    // Render Dashboard UI & Corrected Calculations
     function renderDashboard() {
       let totalIncome = state.cashflow.filter(c => c.type === 'Income').reduce((a, b) => a + b.amount, 0);
       let totalExpense = state.cashflow.filter(c => c.type === 'Expense').reduce((a, b) => a + b.amount, 0);
       let totalPersonalExpense = state.personalExpenses.reduce((a, b) => a + b.amount, 0);
+
+      // Borrowed Loan Cash-In (Only if NOT already spent/bought item)
+      let borrowedCashIn = state.logs
+        .filter(l => l.type === 'Loan Borrowed (Cash In)')
+        .reduce((a, b) => a + b.amount, 0);
+
+      // Loan Repaid Back (Deduct from Net Cash Balance)
+      let loanRepaid = state.logs
+        .filter(l => l.type === 'Loan Repaid Back')
+        .reduce((a, b) => a + b.amount, 0);
+
       let totalReceivable = state.debts.reduce((a, b) => a + (b.total_given - b.total_returned), 0);
-      let netCash = totalIncome - totalExpense - totalPersonalExpense;
+      
+      // Net Cash Balance Math Formula
+      let netCash = totalIncome + borrowedCashIn - totalExpense - totalPersonalExpense - loanRepaid;
 
       document.getElementById('metricIncome').innerText = `AED ${totalIncome.toLocaleString()}`;
       document.getElementById('metricExpense').innerText = `AED ${totalExpense.toLocaleString()}`;
@@ -868,17 +978,17 @@
       visibleDebts.forEach(d => {
         const balance = d.total_given - d.total_returned;
         const row = document.createElement('tr');
-        row.className = "hover:bg-slate-900/60 transition";
+        row.className = "hover:bg-slate-500/5 transition";
         row.innerHTML = `
-          <td class="py-3 px-4 font-semibold text-white flex items-center space-x-2">
-            <span class="w-8 h-8 rounded-full bg-indigo-950 text-indigo-300 border border-indigo-800 flex items-center justify-center font-bold text-xs">${d.person.charAt(0)}</span>
+          <td class="py-3 px-4 font-semibold dark:text-white text-slate-900 flex items-center space-x-2">
+            <span class="w-8 h-8 rounded-full bg-indigo-500/10 text-indigo-500 border border-indigo-500/20 flex items-center justify-center font-bold text-xs">${d.person.charAt(0)}</span>
             <span>${d.person}</span>
           </td>
-          <td class="py-3 px-4 text-slate-300">AED ${d.total_given.toLocaleString()}</td>
-          <td class="py-3 px-4 text-emerald-400 font-medium">AED ${d.total_returned.toLocaleString()}</td>
-          <td class="py-3 px-4 font-bold ${balance > 0 ? 'text-amber-400' : 'text-slate-500'}">AED ${balance.toLocaleString()}</td>
+          <td class="py-3 px-4 text-slate-400">AED ${d.total_given.toLocaleString()}</td>
+          <td class="py-3 px-4 text-emerald-500 font-medium">AED ${d.total_returned.toLocaleString()}</td>
+          <td class="py-3 px-4 font-bold ${balance > 0 ? 'text-amber-500' : 'text-slate-400'}">AED ${balance.toLocaleString()}</td>
           <td class="py-3 px-4 text-right space-x-1">
-            ${currentUser === 'Admin' ? `<button onclick="generateWhatsAppReceiptLink('${d.person}', 'RECEIVED', 0, ${d.total_given}, ${d.total_returned}, '${new Date().toISOString().split('T')[0]}')" class="text-emerald-400 text-xs px-2.5 py-1 bg-emerald-950/80 border border-emerald-800 rounded-lg hover:bg-emerald-900 transition"><i class="fa-brands fa-whatsapp"></i> Slip Link</button>` : '-'}
+            ${currentUser === 'Admin' ? `<button onclick="generateWhatsAppReceiptLink('${d.person}', 'RECEIVED', 0, ${d.total_given}, ${d.total_returned}, '${new Date().toISOString().split('T')[0]}', 'Ledger Summary')" class="btn-pro text-emerald-500 text-xs px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-lg"><i class="fa-brands fa-whatsapp"></i> Slip Link</button>` : '-'}
           </td>
         `;
         debtTableBody.appendChild(row);
@@ -891,13 +1001,13 @@
 
       state.personalExpenses.forEach(pe => {
         const row = document.createElement('tr');
-        row.className = "hover:bg-slate-900/60 transition";
+        row.className = "hover:bg-slate-500/5 transition";
         row.innerHTML = `
           <td class="py-3 px-4 text-xs text-slate-400">${pe.date}</td>
-          <td class="py-3 px-4 font-medium text-slate-200">${pe.description}</td>
-          <td class="py-3 px-4 font-bold text-purple-400">AED ${pe.amount.toLocaleString()}</td>
+          <td class="py-3 px-4 font-medium text-slate-700 dark:text-slate-200">${pe.description}</td>
+          <td class="py-3 px-4 font-bold text-purple-500">AED ${pe.amount.toLocaleString()}</td>
           <td class="py-3 px-4 text-right">
-            ${currentUser === 'Admin' ? `<button onclick="deletePersonalExpense(${pe.id})" class="text-rose-400 hover:text-rose-300 text-xs px-2 py-1 rounded transition"><i class="fa-solid fa-trash"></i></button>` : '-'}
+            ${currentUser === 'Admin' ? `<button onclick="deletePersonalExpense(${pe.id})" class="text-rose-500 hover:text-rose-400 text-xs px-2 py-1 rounded transition"><i class="fa-solid fa-trash"></i></button>` : '-'}
           </td>
         `;
         personalExpenseTableBody.appendChild(row);
@@ -914,20 +1024,21 @@
 
       visibleLogs.forEach(log => {
         const row = document.createElement('tr');
-        row.className = "hover:bg-slate-900/60 transition";
-        let badgeColor = "bg-slate-800 text-slate-300";
-        if (log.type === 'Income') badgeColor = "bg-emerald-950 text-emerald-300 border border-emerald-800";
-        if (log.type === 'Expense') badgeColor = "bg-rose-950 text-rose-300 border border-rose-800";
-        if (log.type && log.type.includes('Given')) badgeColor = "bg-amber-950 text-amber-300 border border-amber-800";
-        if (log.type && log.type.includes('Received')) badgeColor = "bg-blue-950 text-blue-300 border border-blue-800";
+        row.className = "hover:bg-slate-500/5 transition";
+        let badgeColor = "bg-slate-500/10 text-slate-400 border border-slate-500/20";
+        if (log.type === 'Income') badgeColor = "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20";
+        if (log.type === 'Expense') badgeColor = "bg-rose-500/10 text-rose-500 border border-rose-500/20";
+        if (log.type && log.type.includes('Given')) badgeColor = "bg-amber-500/10 text-amber-500 border border-amber-500/20";
+        if (log.type && log.type.includes('Received')) badgeColor = "bg-blue-500/10 text-blue-500 border border-blue-500/20";
+        if (log.type && log.type.includes('Borrowed')) badgeColor = "bg-purple-500/10 text-purple-500 border border-purple-500/20";
 
         row.innerHTML = `
           <td class="py-3 px-4 text-xs text-slate-400">${log.date}</td>
-          <td class="py-3 px-4 font-medium text-slate-200">${log.category}</td>
+          <td class="py-3 px-4 font-medium text-slate-700 dark:text-slate-200">${log.category}</td>
           <td class="py-3 px-4"><span class="px-2.5 py-0.5 text-xs font-semibold rounded-md ${badgeColor}">${log.type}</span></td>
-          <td class="py-3 px-4 font-bold text-white">AED ${log.amount.toLocaleString()}</td>
+          <td class="py-3 px-4 font-bold dark:text-white text-slate-900">AED ${log.amount.toLocaleString()}</td>
           <td class="py-3 px-4 text-right">
-            ${currentUser === 'Admin' ? `<button onclick="deleteLog(${log.id})" class="text-rose-400 hover:text-rose-300 text-xs px-2 py-1 rounded transition"><i class="fa-solid fa-trash"></i></button>` : '-'}
+            ${currentUser === 'Admin' ? `<button onclick="deleteLog(${log.id})" class="text-rose-500 hover:text-rose-400 text-xs px-2 py-1 rounded transition"><i class="fa-solid fa-trash"></i></button>` : '-'}
           </td>
         `;
         logsTableBody.appendChild(row);
