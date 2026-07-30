@@ -5,11 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>HASSAN - Pro Financial Dashboard</title>
   
-  <!-- App Favicons -->
   <link id="app-favicon" rel="icon" type="image/jpeg" href="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=300&q=80">
   <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=300&q=80">
 
-  <!-- Tailwind CSS, Supabase & html2canvas -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -77,7 +75,7 @@
 
   <div id="topLoader" class="top-loader-line"></div>
 
-  <!-- WHATSAPP NUMBER MODAL (DASHBOARD PAR REHNE KE LIYE) -->
+  <!-- WHATSAPP NUMBER MODAL -->
   <div id="whatsappModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
     <div class="glass-panel p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl border border-slate-700">
       <div class="flex items-center justify-between border-b border-slate-700 pb-3">
@@ -109,7 +107,7 @@
         <button onclick="closeWhatsAppModal()" class="w-1/2 py-2.5 bg-slate-800 text-slate-300 font-medium rounded-xl text-xs">Cancel</button>
         <button onclick="executeWhatsAppSend()" class="w-1/2 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-xs flex items-center justify-center space-x-1">
           <i class="fa-solid fa-paper-plane"></i>
-          <span>Send Now</span>
+          <span>Send Silent</span>
         </button>
       </div>
     </div>
@@ -172,7 +170,7 @@
             <span>Monthly Reports</span>
           </button>
 
-          <button onclick="switchTab('userSecurityView')" id="navAdminSec" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <button onclick="switchTab('userSecurityView')" id="navAdminSec" class="nav-item hidden w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
             <i class="fa-solid fa-users-gear w-5 text-amber-500"></i>
             <span>Password & User Control</span>
           </button>
@@ -444,7 +442,7 @@
           </div>
         </div>
 
-        <!-- MONTHLY REPORTS -->
+        <!-- MONTHLY REPORTS WITH USER DROPDOWN FILTER -->
         <div id="monthlyReportsView" class="hidden space-y-6">
           <div class="glass-panel p-6 rounded-2xl shadow-sm space-y-6" id="monthlyReportCard">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
@@ -453,11 +451,18 @@
                   <i class="fa-solid fa-calendar-days text-indigo-500"></i>
                   <span>Monthly Financial Report</span>
                 </h2>
-                <p class="text-xs text-slate-400 mt-1">Select a month to filter transactions & download professional statement.</p>
+                <p class="text-xs text-slate-400 mt-1">Select month & user to filter statement or download.</p>
               </div>
 
-              <div class="flex items-center space-x-3">
+              <div class="flex flex-wrap items-center gap-2">
+                <!-- USER FILTER DROPDOWN -->
+                <select id="reportUserPicker" onchange="renderMonthlyReport()" class="px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                  <option value="ALL">All Users Combined</option>
+                </select>
+
+                <!-- MONTH PICKER -->
                 <input type="month" id="reportMonthPicker" onchange="renderMonthlyReport()" class="px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                
                 <button onclick="downloadReportExcel()" class="btn-pro px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-xl text-xs flex items-center space-x-1.5 shadow">
                   <i class="fa-solid fa-file-excel"></i>
                   <span>Excel</span>
@@ -500,7 +505,7 @@
           </div>
         </div>
 
-        <!-- PASSWORD & USER CONTROL -->
+        <!-- PASSWORD & USER CONTROL (STRICTLY ADMIN ONLY SECTION) -->
         <div id="userSecurityView" class="hidden space-y-6">
           <div class="max-w-2xl mx-auto space-y-6">
             <div class="glass-panel p-6 rounded-2xl shadow-sm">
@@ -569,6 +574,41 @@
     function showLoader() { document.getElementById('topLoader').style.display = 'block'; }
     function hideLoader() { document.getElementById('topLoader').style.display = 'none'; }
 
+    // WINDOWS 7 STYLE STARTUP AUDIO CHIME SYNTHESIZER
+    function playWin7StartupSound() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+
+        const notes = [
+          { f: 329.63, t: 0.0, d: 1.2 }, // E4
+          { f: 493.88, t: 0.1, d: 1.2 }, // B4
+          { f: 659.25, t: 0.25, d: 1.4 }, // E5
+          { f: 987.77, t: 0.4, d: 1.8 }  // B5
+        ];
+
+        notes.forEach(n => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(n.f, ctx.currentTime + n.t);
+
+          gain.gain.setValueAtTime(0, ctx.currentTime + n.t);
+          gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + n.t + 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + n.t + n.d);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(ctx.currentTime + n.t);
+          osc.stop(ctx.currentTime + n.t + n.d + 0.1);
+        });
+      } catch (err) {
+        console.log("Audio play error:", err);
+      }
+    }
+
     async function loadDataFromSupabase() {
       showLoader();
       try {
@@ -598,6 +638,7 @@
         renderDashboard();
         renderUserSecurityList();
         populatePersonDropdown();
+        populateReportUserDropdown();
         renderMonthlyReport();
       } catch (err) {
         console.error("Error loading data from Supabase:", err);
@@ -634,6 +675,8 @@
     }
 
     function switchTab(view) {
+      if (currentUser !== 'Admin' && view === 'userSecurityView') return;
+
       document.getElementById('dashboardView').classList.add('hidden');
       document.getElementById('monthlyReportsView').classList.add('hidden');
       document.getElementById('userSecurityView').classList.add('hidden');
@@ -649,7 +692,7 @@
         document.getElementById('monthlyReportsView').classList.remove('hidden');
         document.getElementById('navMonthly').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-indigo-500 bg-indigo-500/10 border border-indigo-500/20";
         renderMonthlyReport();
-      } else {
+      } else if (view === 'userSecurityView' && currentUser === 'Admin') {
         document.getElementById('userSecurityView').classList.remove('hidden');
         document.getElementById('navAdminSec').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-amber-500 bg-amber-500/10 border border-amber-500/20";
       }
@@ -670,6 +713,8 @@
 
       if (matchedUser) {
         currentUser = matchedUser;
+        playWin7StartupSound(); // PLAY WINDOWS 7 STARTUP AUDIO CHIME
+
         errorEl.classList.add('hidden');
         document.getElementById('authScreen').classList.add('hidden');
         document.getElementById('appScreen').classList.remove('hidden');
@@ -684,8 +729,10 @@
           document.getElementById('navMonthly').classList.add('hidden');
           document.getElementById('navAdminSec').classList.add('hidden');
           document.getElementById('personalExpensesSection').classList.add('hidden');
+          document.getElementById('userSecurityView').classList.add('hidden');
           document.getElementById('displaySection').classList.remove('lg:col-span-2');
           document.getElementById('displaySection').classList.add('lg:col-span-3');
+          switchTab('dashboardView');
         } else {
           document.getElementById('guestBanner').classList.add('hidden');
           document.getElementById('adminControls').classList.remove('hidden');
@@ -714,6 +761,19 @@
       const select = document.getElementById('debtPersonSelect');
       if (!select) return;
       select.innerHTML = '';
+      for (let uName in USER_PASSWORDS) {
+        if (uName === 'Admin') continue;
+        const opt = document.createElement('option');
+        opt.value = uName;
+        opt.innerText = uName;
+        select.appendChild(opt);
+      }
+    }
+
+    function populateReportUserDropdown() {
+      const select = document.getElementById('reportUserPicker');
+      if (!select) return;
+      select.innerHTML = '<option value="ALL">All Users Combined</option>';
       for (let uName in USER_PASSWORDS) {
         if (uName === 'Admin') continue;
         const opt = document.createElement('option');
@@ -807,7 +867,6 @@
       await loadDataFromSupabase();
     }
 
-    // MODAL WHATSAPP BACKEND SENDER (DASHBOARD PAR HI REHNE KE LIYE)
     function generateWhatsAppReceiptLink(personName, action, currentAmount, totalGiven, totalReturned, dateStr, noteText) {
       const remainingBalance = totalGiven - totalReturned;
       const receiptNo = "HSN-" + Math.floor(100000 + Math.random() * 900000);
@@ -854,25 +913,31 @@
       const fullPhone = code + num.replace(/[^0-9]/g, '');
       const waUrl = `https://api.whatsapp.com/send?phone=${fullPhone}&text=${encodeURIComponent(pendingWhatsAppMessage)}`;
       
-      // Open in background iframe or popup without leaving main dashboard focus
-      const hiddenIframe = document.createElement('iframe');
-      hiddenIframe.style.display = 'none';
-      hiddenIframe.src = waUrl;
-      document.body.appendChild(hiddenIframe);
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = waUrl;
+      document.body.appendChild(iframe);
 
       setTimeout(() => {
-        document.body.removeChild(hiddenIframe);
-      }, 2000);
+        if (iframe && iframe.parentNode) {
+          document.body.removeChild(iframe);
+        }
+      }, 2500);
 
-      window.open(waUrl, '_blank');
       closeWhatsAppModal();
     }
 
+    // MONTHLY REPORT FILTER BY MONTH AND SELECTED USER
     function renderMonthlyReport() {
       const pickerVal = document.getElementById('reportMonthPicker').value;
+      const selectedUser = document.getElementById('reportUserPicker').value; // 'ALL' or individual name
       if (!pickerVal) return;
 
-      const filteredTrans = state.logs.filter(item => item.date && item.date.startsWith(pickerVal));
+      let filteredTrans = state.logs.filter(item => item.date && item.date.startsWith(pickerVal));
+
+      if (selectedUser !== 'ALL') {
+        filteredTrans = filteredTrans.filter(item => item.category.toLowerCase().includes(selectedUser.toLowerCase()));
+      }
 
       let mIncome = filteredTrans.filter(t => t.type === 'Income' || t.type === 'Loan Borrowed (Cash In)').reduce((a, b) => a + b.amount, 0);
       let mExpense = filteredTrans.filter(t => t.type === 'Expense' || t.type === 'Loan Repaid Back').reduce((a, b) => a + b.amount, 0);
@@ -899,9 +964,14 @@
 
     function downloadReportExcel() {
       const monthStr = document.getElementById('reportMonthPicker').value || "Monthly_Report";
+      const selectedUser = document.getElementById('reportUserPicker').value;
       let csvContent = "data:text/csv;charset=utf-8,Date,Category/Description,Type,Amount (AED)\n";
 
-      const filteredTrans = state.logs.filter(item => item.date && item.date.startsWith(monthStr));
+      let filteredTrans = state.logs.filter(item => item.date && item.date.startsWith(monthStr));
+      if (selectedUser !== 'ALL') {
+        filteredTrans = filteredTrans.filter(item => item.category.toLowerCase().includes(selectedUser.toLowerCase()));
+      }
+
       filteredTrans.forEach(row => {
         csvContent += `"${row.date}","${row.category.replace(/"/g, '""')}","${row.type}","${row.amount}"\n`;
       });
@@ -909,7 +979,7 @@
       const encodedUri = encodeURI(csvContent);
       const link = document.createElement("a");
       link.setAttribute("href", encodedUri);
-      link.setAttribute("download", `HASSAN_Financial_Report_${monthStr}.csv`);
+      link.setAttribute("download", `HASSAN_Financial_Report_${selectedUser}_${monthStr}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -917,13 +987,14 @@
 
     function downloadReportImage() {
       const monthStr = document.getElementById('reportMonthPicker').value || "Monthly_Report";
+      const selectedUser = document.getElementById('reportUserPicker').value;
       const cardEl = document.getElementById('monthlyReportCard');
       showLoader();
 
       html2canvas(cardEl, { backgroundColor: '#0f172a' }).then(canvas => {
         const image = canvas.toDataURL("image/png");
         const link = document.createElement('a');
-        link.download = `HASSAN_Financial_Report_${monthStr}.png`;
+        link.download = `HASSAN_Financial_Report_${selectedUser}_${monthStr}.png`;
         link.href = image;
         link.click();
         hideLoader();
@@ -931,6 +1002,7 @@
     }
 
     async function updateAdminPassword() {
+      if (currentUser !== 'Admin') return;
       const newPin = document.getElementById('newAdminPin').value.trim();
       if (newPin) {
         showLoader();
@@ -942,6 +1014,7 @@
     }
 
     function togglePasswordVisibility(uName) {
+      if (currentUser !== 'Admin') return;
       const passSpan = document.getElementById(`passText_${uName.replace(/\s+/g, '_')}`);
       const icon = document.getElementById(`eyeIcon_${uName.replace(/\s+/g, '_')}`);
       const actualPin = USER_PASSWORDS[uName] || '••••••••';
@@ -956,6 +1029,7 @@
     }
 
     async function updateUserPassword(uName) {
+      if (currentUser !== 'Admin') return;
       const newPin = prompt(`Enter NEW Password Key for ${uName}:`);
       if (newPin && newPin.trim() !== '') {
         showLoader();
@@ -966,6 +1040,7 @@
     }
 
     async function deleteUserProfile(uName) {
+      if (currentUser !== 'Admin') return;
       if (confirm(`Are you sure you want to DELETE profile for '${uName}'?`)) {
         showLoader();
         await supabaseClient.from('settings').delete().eq('key', `user_pin_${uName}`);
@@ -977,6 +1052,7 @@
     }
 
     async function addNewUserProfile() {
+      if (currentUser !== 'Admin') return;
       const name = document.getElementById('newUserName').value.trim();
       const pin = document.getElementById('newUserPin').value.trim();
 
@@ -994,6 +1070,7 @@
     }
 
     function renderUserSecurityList() {
+      if (currentUser !== 'Admin') return;
       const container = document.getElementById('userListContainer');
       if (!container) return;
       container.innerHTML = '';
