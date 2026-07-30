@@ -36,7 +36,6 @@
       backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
-    /* Mobile responsive touch and view fixes */
     body {
       touch-action: manipulation;
     }
@@ -691,15 +690,17 @@
       const sendWa = document.getElementById('sendWhatsAppCheck').checked;
       const date = new Date().toISOString().split('T')[0];
 
-      let { data: debtRecord } = await supabaseClient.from('debts').select('*').eq('person', person).single();
+      // Safe fetch record with error handling
+      let { data: debtRecord } = await supabaseClient.from('debts').select('*').eq('person', person).maybeSingle();
 
+      // FIXED: If record does not exist in Supabase yet, create it automatically first
       if (!debtRecord) {
         const { data: newRecord } = await supabaseClient.from('debts').insert([{ person, total_given: 0, total_returned: 0 }]).select().single();
-        debtRecord = newRecord;
+        debtRecord = newRecord || { person, total_given: 0, total_returned: 0 };
       }
 
-      let newGiven = debtRecord.total_given;
-      let newReturned = debtRecord.total_returned;
+      let newGiven = debtRecord.total_given || 0;
+      let newReturned = debtRecord.total_returned || 0;
       let logType = "";
 
       if (action === 'GIVEN') {
