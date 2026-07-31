@@ -159,7 +159,7 @@
     </div>
   </div>
 
-  <!-- HIGH QUALITY DYNAMIC INVOICE VIEW MODAL -->
+  <!-- INVOICE VIEW MODAL -->
   <div id="receiptSearchResultModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
     <div class="glass-panel p-6 rounded-2xl max-w-lg w-full space-y-4 shadow-2xl border border-slate-700 text-left relative z-10">
       <div class="flex items-center justify-between border-b border-slate-700 pb-3">
@@ -204,8 +204,8 @@
 
         <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800 space-y-1 text-[11px]">
           <p class="font-bold text-sky-400 border-b border-slate-800 pb-1 mb-1">ACCOUNT SUMMARY STATEMENT</p>
-          <div class="flex justify-between"><span class="text-slate-400">Total Given / Issued:</span><span id="rGivenText" class="font-semibold text-white">AED 0</span></div>
-          <div class="flex justify-between"><span class="text-slate-400">Total Repaid / Cleared:</span><span id="rReturnedText" class="font-semibold text-emerald-400">AED 0</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Total Loan Received (from Client):</span><span id="rGivenText" class="font-semibold text-white">AED 0</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Total Repaid Back (to Client):</span><span id="rReturnedText" class="font-semibold text-emerald-400">AED 0</span></div>
           <div class="flex justify-between border-t border-slate-800 pt-1 mt-1"><span class="font-bold text-white">Net Outstanding Balance:</span><span id="rBalanceText" class="font-bold text-amber-400">AED 0</span></div>
         </div>
 
@@ -283,21 +283,23 @@
             <span>Overview Metrics</span>
           </button>
 
-          <!-- ADMIN ONLY TABS -->
-          <button onclick="switchTab('userStatementsView')" id="navUserStatements" class="nav-item hidden w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
-            <i class="fa-solid fa-user-clock w-5 text-emerald-500"></i>
-            <span>User Statements</span>
-          </button>
+          <!-- STRICT ADMIN ONLY TABS (HIDDEN FOR ALL OTHER USERS) -->
+          <div id="adminMenuSection" class="hidden space-y-2">
+            <button onclick="switchTab('userStatementsView')" id="navUserStatements" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+              <i class="fa-solid fa-user-clock w-5 text-emerald-500"></i>
+              <span>User Statements</span>
+            </button>
 
-          <button onclick="switchTab('monthlyReportsView')" id="navMonthly" class="nav-item hidden w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
-            <i class="fa-solid fa-calendar-days w-5 text-indigo-500"></i>
-            <span>Monthly Reports</span>
-          </button>
+            <button onclick="switchTab('monthlyReportsView')" id="navMonthly" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+              <i class="fa-solid fa-calendar-days w-5 text-indigo-500"></i>
+              <span>Monthly Reports</span>
+            </button>
 
-          <button onclick="switchTab('userSecurityView')" id="navAdminSec" class="nav-item hidden w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
-            <i class="fa-solid fa-users-gear w-5 text-amber-500"></i>
-            <span>Password & User Control</span>
-          </button>
+            <button onclick="switchTab('userSecurityView')" id="navAdminSec" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+              <i class="fa-solid fa-users-gear w-5 text-amber-500"></i>
+              <span>Password & User Control</span>
+            </button>
+          </div>
         </nav>
       </div>
 
@@ -341,10 +343,10 @@
         <div class="glass-panel p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
           <div class="flex items-center space-x-3 w-full sm:w-auto">
             <i class="fa-solid fa-magnifying-glass text-sky-400 text-lg"></i>
-            <span class="text-xs font-semibold text-slate-300">Search Receipt Document:</span>
+            <span class="text-xs font-semibold text-slate-300">Search Invoice / Receipt Document:</span>
           </div>
           <div class="flex items-center space-x-2 w-full sm:w-auto">
-            <input type="text" id="receiptSearchInput" placeholder="Enter Receipt No (e.g. HSN-863950)..." class="w-full sm:w-72 px-3.5 py-2 rounded-xl border border-slate-700 bg-slate-900 text-white text-xs font-mono focus:ring-2 focus:ring-sky-500">
+            <input type="text" id="receiptSearchInput" placeholder="Enter Receipt No (e.g. HSN-863950 or 12)..." class="w-full sm:w-72 px-3.5 py-2 rounded-xl border border-slate-700 bg-slate-900 text-white text-xs font-mono focus:ring-2 focus:ring-sky-500">
             <button onclick="searchReceiptByNumber()" class="btn-pro px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white font-medium rounded-xl text-xs flex items-center space-x-1.5 shrink-0">
               <i class="fa-solid fa-search"></i>
               <span>Search</span>
@@ -365,7 +367,6 @@
         <!-- DASHBOARD OVERVIEW -->
         <div id="dashboardView" class="space-y-6">
           
-          <!-- CLICKABLE METRICS CARDS -->
           <div id="adminMetrics" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             
             <div onclick="openMetricDetail('Income')" class="glass-panel p-5 rounded-2xl shadow-sm flex items-center justify-between cursor-pointer hover:border-emerald-500 transition">
@@ -483,14 +484,14 @@
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Action Type</label>
                     <select id="debtAction" onchange="toggleSpentOption()" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500">
-                      <option value="GIVEN">Loan Given</option>
-                      <option value="TAKEN">Loan Borrowed</option>
-                      <option value="RECEIVED">Repayment Received</option>
-                      <option value="PAID_BACK">Repayment Paid Back</option>
+                      <option value="TAKEN">Loan Borrowed (Hurairah gave me)</option>
+                      <option value="PAID_BACK">Repayment Paid Back (I repaid Hurairah)</option>
+                      <option value="GIVEN">Loan Given (I issued loan)</option>
+                      <option value="RECEIVED">Repayment Received (Client repaid me)</option>
                     </select>
                   </div>
 
-                  <div id="spentOptionBox" class="hidden p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 space-y-1">
+                  <div id="spentOptionBox" class="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 space-y-1">
                     <label class="inline-flex items-center space-x-2 text-xs text-amber-600 dark:text-amber-300 cursor-pointer">
                       <input type="checkbox" id="alreadySpentCheck" class="rounded border-slate-700 text-amber-500 focus:ring-amber-500 bg-slate-900">
                       <span class="font-semibold">Already Spent / Bought Item? (e.g. iPhone)</span>
@@ -528,7 +529,7 @@
             </div>
 
             <div id="displaySection" class="lg:col-span-2 space-y-6">
-              <!-- Active Debt Ledgers -->
+              <!-- Active Debt Ledgers (WITH CLEAR COLUMN HEADINGS) -->
               <div class="glass-panel p-5 rounded-2xl shadow-sm">
                 <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center justify-between">
                   <span class="flex items-center space-x-2"><i class="fa-solid fa-users text-sky-400"></i><span>Active Debt Ledgers</span></span>
@@ -539,9 +540,9 @@
                     <thead>
                       <tr class="border-b border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-400 uppercase tracking-wider">
                         <th class="py-3 px-4">Person</th>
-                        <th class="py-3 px-4">Total Given</th>
-                        <th class="py-3 px-4">Total Received</th>
-                        <th class="py-3 px-4">Net Balance</th>
+                        <th class="py-3 px-4">Total Repaid<br><span class="text-[9px] text-slate-500 font-normal">(You paid to client)</span></th>
+                        <th class="py-3 px-4">Total Received<br><span class="text-[9px] text-slate-500 font-normal">(Client gave to you)</span></th>
+                        <th class="py-3 px-4">Net Payable Balance</th>
                         <th class="py-3 px-4 text-right">Actions</th>
                       </tr>
                     </thead>
@@ -571,7 +572,7 @@
                 </div>
               </div>
 
-              <!-- Master Audit Logs Table WITH VIEW INVOICE OPTION -->
+              <!-- Audit Logs Table WITH VIEW INVOICE OPTION -->
               <div class="glass-panel p-5 rounded-2xl shadow-sm">
                 <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center justify-between">
                   <span class="flex items-center space-x-2"><i class="fa-solid fa-list-check text-sky-400"></i><span>Master Transaction Audit Logs</span></span>
@@ -595,7 +596,7 @@
           </div>
         </div>
 
-        <!-- VIEW 2: USER STATEMENTS HISTORY TAB -->
+        <!-- USER STATEMENTS HISTORY TAB -->
         <div id="userStatementsView" class="hidden space-y-6">
           <div class="glass-panel p-6 rounded-2xl shadow-sm space-y-6">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
@@ -629,7 +630,7 @@
           </div>
         </div>
 
-        <!-- VIEW 3: MONTHLY REPORTS -->
+        <!-- MONTHLY REPORTS -->
         <div id="monthlyReportsView" class="hidden space-y-6">
           <div class="glass-panel p-6 rounded-2xl shadow-sm space-y-6" id="monthlyReportCard">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
@@ -690,7 +691,7 @@
           </div>
         </div>
 
-        <!-- VIEW 4: PASSWORD & USER CONTROL -->
+        <!-- PASSWORD & USER CONTROL -->
         <div id="userSecurityView" class="hidden space-y-6">
           <div class="max-w-2xl mx-auto space-y-6">
             <div class="glass-panel p-6 rounded-2xl shadow-sm">
@@ -936,18 +937,18 @@
       document.getElementById('userSecurityView').classList.add('hidden');
 
       document.getElementById('navDash').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800";
-      document.getElementById('navUserStatements').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800";
-      document.getElementById('navMonthly').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800";
-      document.getElementById('navAdminSec').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800";
+      if (document.getElementById('navUserStatements')) document.getElementById('navUserStatements').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800";
+      if (document.getElementById('navMonthly')) document.getElementById('navMonthly').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800";
+      if (document.getElementById('navAdminSec')) document.getElementById('navAdminSec').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800";
 
       if (view === 'dashboardView') {
         document.getElementById('dashboardView').classList.remove('hidden');
         document.getElementById('navDash').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-sky-400 bg-sky-500/10 border border-sky-500/20";
-      } else if (view === 'userStatementsView') {
+      } else if (view === 'userStatementsView' && currentUser === 'Admin') {
         document.getElementById('userStatementsView').classList.remove('hidden');
         document.getElementById('navUserStatements').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-emerald-500 bg-emerald-500/10 border border-emerald-500/20";
         renderUserStatements();
-      } else if (view === 'monthlyReportsView') {
+      } else if (view === 'monthlyReportsView' && currentUser === 'Admin') {
         document.getElementById('monthlyReportsView').classList.remove('hidden');
         document.getElementById('navMonthly').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-indigo-500 bg-indigo-500/10 border border-indigo-500/20";
         renderMonthlyReport();
@@ -980,17 +981,15 @@
         
         document.getElementById('sidebarUserBadge').innerText = `Role: ${currentUser}`;
         
-        // STRICT USER PRIVACY HIDING (Password & Reports Tabs hidden for Non-Admin)
+        // STRICT PRIVACY FILTER: NON-ADMIN ACCOUNTS CANNOT SEE OTHER TABS
+        const adminSection = document.getElementById('adminMenuSection');
         if (currentUser !== "Admin") {
           document.getElementById('guestBanner').classList.remove('hidden');
           document.getElementById('guestName').innerText = currentUser;
           document.getElementById('adminControls').classList.add('hidden');
           document.getElementById('adminMetrics').classList.add('hidden');
-          document.getElementById('navAdminSec').classList.add('hidden');
-          document.getElementById('navUserStatements').classList.add('hidden');
-          document.getElementById('navMonthly').classList.add('hidden');
           document.getElementById('personalExpensesSection').classList.add('hidden');
-          document.getElementById('userSecurityView').classList.add('hidden');
+          if (adminSection) adminSection.classList.add('hidden');
           document.getElementById('displaySection').classList.remove('lg:col-span-2');
           document.getElementById('displaySection').classList.add('lg:col-span-3');
           switchTab('dashboardView');
@@ -998,10 +997,8 @@
           document.getElementById('guestBanner').classList.add('hidden');
           document.getElementById('adminControls').classList.remove('hidden');
           document.getElementById('adminMetrics').classList.remove('hidden');
-          document.getElementById('navAdminSec').classList.remove('hidden');
-          document.getElementById('navUserStatements').classList.remove('hidden');
-          document.getElementById('navMonthly').classList.remove('hidden');
           document.getElementById('personalExpensesSection').classList.remove('hidden');
+          if (adminSection) adminSection.classList.remove('hidden');
           document.getElementById('displaySection').classList.remove('lg:col-span-3');
           document.getElementById('displaySection').classList.add('lg:col-span-2');
         }
@@ -1104,6 +1101,7 @@
       await loadDataFromSupabase();
     }
 
+    // ACCURATE CASE-INSENSITIVE DEBT FORM HANDLER WITH DIRECT BALANCE MATH
     async function handleManageDebt(e) {
       e.preventDefault();
       const btn = document.getElementById('updateDebtBtn');
@@ -1119,7 +1117,9 @@
       const sendWa = document.getElementById('sendWhatsAppCheck').checked;
       const alreadySpent = document.getElementById('alreadySpentCheck').checked;
 
-      let { data: debtRecord } = await supabaseClient.from('debts').select('*').eq('person', person).maybeSingle();
+      // Flexibly match person record in Supabase
+      let { data: debtRecords } = await supabaseClient.from('debts').select('*');
+      let debtRecord = debtRecords ? debtRecords.find(d => d.person.toLowerCase().includes(person.toLowerCase()) || person.toLowerCase().includes(d.person.toLowerCase())) : null;
 
       if (!debtRecord) {
         const { data: newRecord } = await supabaseClient.from('debts').insert([{ person, total_given: 0, total_returned: 0 }]).select().single();
@@ -1131,20 +1131,20 @@
       let logType = "";
 
       if (action === 'GIVEN') {
-        newGiven += amount;
+        newReturned += amount; // I gave loan to client (Client owes me)
         logType = "Loan Given";
       } else if (action === 'TAKEN') {
-        newReturned += amount;
+        newGiven += amount; // Client gave loan to me (I owe client)
         logType = alreadySpent ? "Loan Borrowed (Spent)" : "Loan Borrowed (Cash In)";
       } else if (action === 'RECEIVED') {
-        newReturned += amount;
+        newGiven += amount; // Client repaid loan to me
         logType = "Repayment Received";
       } else if (action === 'PAID_BACK') {
-        newGiven += amount;
+        newReturned += amount; // I repaid loan to client
         logType = "Loan Repaid Back";
       }
 
-      await supabaseClient.from('debts').update({ total_given: newGiven, total_returned: newReturned }).eq('person', person);
+      await supabaseClient.from('debts').update({ total_given: newGiven, total_returned: newReturned }).eq('id', debtRecord.id);
       await supabaseClient.from('transactions').insert([{ date, category: `${person} (${logType}: ${note})`, type: logType, amount }]);
 
       btn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> <span>Update Debt Ledger</span>';
@@ -1162,7 +1162,7 @@
     }
 
     function generateWhatsAppReceiptLink(personName, action, currentAmount, totalGiven, totalReturned, dateStr, noteText) {
-      const remainingBalance = totalGiven - totalReturned;
+      const remainingBalance = totalReturned - totalGiven;
       const receiptNo = "HSN-" + Math.floor(100000 + Math.random() * 900000);
       let actionTitle = action === 'RECEIVED' ? 'PAYMENT RECEIVED' : (action === 'TAKEN' ? 'LOAN BORROWED' : (action === 'GIVEN' ? 'LOAN ISSUED / GIVEN' : 'LOAN REPAID BACK'));
 
@@ -1187,8 +1187,8 @@
         `*Note / Particulars:* ${noteText || 'Ledger Summary'}\n` +
         `----------------------------------\n` +
         `📊 *ACCOUNT SUMMARY STATEMENT*\n` +
-        `• Total Amount Given/Issued: AED ${totalGiven.toLocaleString()}\n` +
-        `• Total Amount Repaid/Cleared: AED ${totalReturned.toLocaleString()}\n` +
+        `• Total Amount Borrowed (From Client): AED ${totalGiven.toLocaleString()}\n` +
+        `• Total Amount Repaid Back (To Client): AED ${totalReturned.toLocaleString()}\n` +
         `• *Current Net Outstanding Balance:* AED ${Math.abs(remainingBalance).toLocaleString()}\n` +
         `==================================\n` +
         `🙏 *THANK YOU!*`;
@@ -1251,7 +1251,7 @@
         items = state.personalExpenses.map(p => ({ date: p.date, category: p.description, amount: p.amount }));
       } else if (metricType === 'Receivable') {
         titleEl.innerHTML = '<i class="fa-solid fa-hand-holding-dollar text-amber-400"></i><span>Active Receivables Detail</span>';
-        items = state.debts.map(d => ({ date: 'Active Ledger', category: d.person, amount: (d.total_given - d.total_returned) }));
+        items = state.debts.map(d => ({ date: 'Active Ledger', category: d.person, amount: (d.total_returned - d.total_given) }));
       } else if (metricType === 'NetCash') {
         titleEl.innerHTML = '<i class="fa-solid fa-scale-balanced text-sky-400"></i><span>Net Cash Movement Log</span>';
         items = state.logs;
@@ -1272,10 +1272,6 @@
       document.getElementById('metricDetailModal').classList.remove('hidden');
     }
 
-    function closeMetricDetailModal() {
-      document.getElementById('metricDetailModal').classList.add('hidden');
-    }
-
     function viewInvoiceForLog(logId) {
       const matchLog = state.logs.find(l => l.id === logId);
       if (!matchLog) return;
@@ -1291,7 +1287,7 @@
       let debtRec = state.debts.find(d => matchLog.category.toLowerCase().includes(d.person.toLowerCase()));
       let given = debtRec ? debtRec.total_given : 0;
       let returned = debtRec ? debtRec.total_returned : 0;
-      let bal = debtRec ? (given - returned) : 0;
+      let bal = returned - given;
 
       document.getElementById('rGivenText').innerText = `AED ${given.toLocaleString()}`;
       document.getElementById('rReturnedText').innerText = `AED ${returned.toLocaleString()}`;
@@ -1330,11 +1326,17 @@
       });
     }
 
+    // ACCURATE SEARCH BY NUMERICAL ID OR HSN CODE
     function searchReceiptByNumber() {
       const searchNum = document.getElementById('receiptSearchInput').value.trim();
-      if (!searchNum) return alert("Please enter a Receipt Number to search (e.g. HSN-863950).");
+      if (!searchNum) return alert("Please enter a Receipt Number to search (e.g. HSN-863950 or 12).");
 
-      const matchLog = state.logs.find(l => l.category && l.category.toLowerCase().includes(searchNum.toLowerCase()));
+      let matchLog = state.logs.find(l => {
+        const calculatedCode = "HSN-" + (100000 + l.id * 17);
+        return calculatedCode.toLowerCase() === searchNum.toLowerCase() || 
+               l.id.toString() === searchNum ||
+               (l.category && l.category.toLowerCase().includes(searchNum.toLowerCase()));
+      });
 
       if (!matchLog) {
         return alert(`No receipt record found for '${searchNum}'.`);
@@ -1533,7 +1535,7 @@
       }
     }
 
-    // CASCADE DEPOSIT / DEBT LEDGER DYNAMIC ADJUSTMENT ON DELETE
+    // DYNAMIC CASCADE DEPOSIT / DEBT LEDGER ADJUSTMENT ON DELETE
     async function deleteLog(id) {
       if (currentUser !== 'Admin') return;
       
@@ -1543,7 +1545,6 @@
       if (confirm(`Delete record '${logToDelete.category}' of AED ${logToDelete.amount}?`)) {
         showLoader();
 
-        // 1. Identify if deleting a Debt transaction (Loan Given/Returned)
         let matchedPerson = null;
         for (let pName in USER_PASSWORDS) {
           if (pName !== 'Admin' && logToDelete.category.toLowerCase().includes(pName.toLowerCase())) {
@@ -1553,23 +1554,23 @@
         }
 
         if (matchedPerson) {
-          let { data: debtRec } = await supabaseClient.from('debts').select('*').eq('person', matchedPerson).maybeSingle();
+          let { data: debtRecords } = await supabaseClient.from('debts').select('*');
+          let debtRec = debtRecords ? debtRecords.find(d => d.person.toLowerCase().includes(matchedPerson.toLowerCase())) : null;
+
           if (debtRec) {
             let given = debtRec.total_given || 0;
             let returned = debtRec.total_returned || 0;
 
-            if (logToDelete.type && logToDelete.type.includes('Given')) {
-              given = Math.max(0, given - logToDelete.amount);
-            } else if (logToDelete.type && (logToDelete.type.includes('Borrowed') || logToDelete.type.includes('Received'))) {
+            if (logToDelete.type && (logToDelete.type.includes('Given') || logToDelete.type.includes('Repaid Back'))) {
               returned = Math.max(0, returned - logToDelete.amount);
+            } else if (logToDelete.type && (logToDelete.type.includes('Borrowed') || logToDelete.type.includes('Received'))) {
+              given = Math.max(0, given - logToDelete.amount);
             }
 
-            // Sync updated debt balances back to Supabase
-            await supabaseClient.from('debts').update({ total_given: given, total_returned: returned }).eq('person', matchedPerson);
+            await supabaseClient.from('debts').update({ total_given: given, total_returned: returned }).eq('id', debtRec.id);
           }
         }
 
-        // 2. Delete transaction log
         await supabaseClient.from('transactions').delete().eq('id', id);
         await loadDataFromSupabase();
       }
@@ -1584,7 +1585,7 @@
       }
     }
 
-    // DYNAMIC ACCURATE DASHBOARD COMPUTATION
+    // ACCURATE DYNAMIC METRIC CALCULATIONS
     function renderDashboard() {
       const curMonth = new Date().toISOString().slice(0, 7);
 
@@ -1604,7 +1605,7 @@
         .filter(l => l.type === 'Loan Given' && l.date && l.date.startsWith(curMonth))
         .reduce((a, b) => a + b.amount, 0);
 
-      let totalReceivable = state.debts.reduce((a, b) => a + (b.total_given - b.total_returned), 0);
+      let totalReceivable = state.debts.reduce((a, b) => a + (b.total_returned - b.total_given), 0);
       let netCash = totalIncome + borrowedCashIn - totalExpense - totalPersonalExpense - loanRepaid - currentMonthLoanGiven;
 
       document.getElementById('metricIncome').innerText = `AED ${totalIncome.toLocaleString()}`;
@@ -1618,12 +1619,13 @@
 
       let visibleDebts = state.debts;
       if (currentUser !== 'Admin') {
-        visibleDebts = state.debts.filter(d => d.person.toLowerCase() === currentUser.toLowerCase());
+        visibleDebts = state.debts.filter(d => d.person.toLowerCase().includes(currentUser.toLowerCase()) || currentUser.toLowerCase().includes(d.person.toLowerCase()));
       }
 
       document.getElementById('debtCount').innerText = `${visibleDebts.length} Persons`;
 
       visibleDebts.forEach(d => {
+        // Balance = Total Received (from Hurairah) - Total Repaid Back (to Hurairah)
         const balance = d.total_given - d.total_returned;
         const row = document.createElement('tr');
         row.className = "hover:bg-slate-500/5 transition";
@@ -1632,9 +1634,12 @@
             <span class="w-8 h-8 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20 flex items-center justify-center font-bold text-xs">${d.person.charAt(0)}</span>
             <span>${d.person}</span>
           </td>
-          <td class="py-3 px-4 text-slate-400">AED ${d.total_given.toLocaleString()}</td>
           <td class="py-3 px-4 text-emerald-500 font-medium">AED ${d.total_returned.toLocaleString()}</td>
-          <td class="py-3 px-4 font-bold ${balance > 0 ? 'text-amber-500' : 'text-slate-400'}">AED ${balance.toLocaleString()}</td>
+          <td class="py-3 px-4 text-slate-400 font-medium">AED ${d.total_given.toLocaleString()}</td>
+          <td class="py-3 px-4 font-bold ${balance > 0 ? 'text-amber-500' : 'text-emerald-400'}">
+            AED ${balance.toLocaleString()} 
+            <span class="text-[9px] font-normal block text-slate-400">${balance > 0 ? '(Aapne wapis karne hain)' : '(Settle / Cleared)'}</span>
+          </td>
           <td class="py-3 px-4 text-right space-x-1">
             ${currentUser === 'Admin' ? `<button onclick="generateWhatsAppReceiptLink('${d.person}', 'RECEIVED', 0, ${d.total_given}, ${d.total_returned}, '${new Date().toISOString().split('T')[0]}', 'Ledger Summary')" class="btn-pro text-emerald-500 text-xs px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-lg"><i class="fa-brands fa-whatsapp"></i> Slip PDF Link</button>` : '-'}
           </td>
