@@ -10,6 +10,7 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script>
     tailwind.config = {
@@ -81,7 +82,7 @@
       <div class="flex items-center justify-between border-b border-slate-700 pb-3">
         <h3 class="text-base font-bold text-emerald-500 flex items-center space-x-2">
           <i class="fa-brands fa-whatsapp text-lg"></i>
-          <span>Send WhatsApp Receipt</span>
+          <span>Send PDF Receipt to WhatsApp</span>
         </h3>
         <button onclick="closeWhatsAppModal()" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
       </div>
@@ -107,7 +108,49 @@
         <button onclick="closeWhatsAppModal()" class="w-1/2 py-2.5 bg-slate-800 text-slate-300 font-medium rounded-xl text-xs">Cancel</button>
         <button onclick="executeWhatsAppSend()" class="w-1/2 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-xs flex items-center justify-center space-x-1">
           <i class="fa-brands fa-whatsapp"></i>
-          <span>Open WhatsApp</span>
+          <span>Send PDF & Open</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECEIPT DISPLAY & SEARCH RESULT MODAL -->
+  <div id="receiptSearchResultModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+    <div class="glass-panel p-6 rounded-2xl max-w-md w-full space-y-4 shadow-2xl border border-slate-700 text-left">
+      <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+        <h3 class="text-sm font-bold text-indigo-400 flex items-center space-x-2">
+          <i class="fa-solid fa-file-invoice"></i>
+          <span>Receipt View / Download PDF</span>
+        </h3>
+        <button onclick="closeReceiptSearchModal()" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- TEMPLATE CONTENT TO RENDER AS PDF / PREVIEW -->
+      <div id="receiptTemplateContainer" class="p-5 bg-slate-900 border border-slate-700 rounded-xl text-xs font-mono space-y-2 text-slate-200">
+        <p class="text-center font-bold text-sm text-emerald-400">==================================</p>
+        <p class="text-center font-bold text-sm text-white">🧾 HASSAN FINANCIAL LEDGER RECEIPT</p>
+        <p class="text-center font-bold text-sm text-emerald-400">==================================</p>
+        <p><strong>Receipt No:</strong> <span id="rNumText">HSN-000000</span></p>
+        <p><strong>Date:</strong> <span id="rDateText">2026-07-31</span></p>
+        <p><strong>Client Profile:</strong> <span id="rClientText">User Name</span></p>
+        <p class="text-slate-500">----------------------------------</p>
+        <p><strong>Transaction Type:</strong> <span id="rTypeText" class="text-amber-400 font-bold">PAYMENT RECEIVED</span></p>
+        <p><strong>Amount:</strong> <span id="rAmountText" class="text-emerald-400 font-bold">AED 0</span></p>
+        <p><strong>Note / Particulars:</strong> <span id="rNoteText">Ledger Summary</span></p>
+        <p class="text-slate-500">----------------------------------</p>
+        <p class="font-bold text-indigo-300">📊 ACCOUNT SUMMARY STATEMENT</p>
+        <p>• Total Amount Given/Issued: <span id="rGivenText">AED 0</span></p>
+        <p>• Total Amount Repaid/Cleared: <span id="rReturnedText">AED 0</span></p>
+        <p>• <strong>Current Net Outstanding Balance:</strong> <span id="rBalanceText" class="text-amber-400 font-bold">AED 0</span></p>
+        <p class="text-center font-bold text-sm text-emerald-400">==================================</p>
+        <p class="text-center font-bold text-xs text-emerald-300">🙏 THANK YOU!</p>
+        <p class="text-center text-[10px] text-slate-400">We appreciate your prompt settlement & continued trust.</p>
+      </div>
+
+      <div class="flex space-x-2 pt-2">
+        <button onclick="downloadReceiptAsPDF()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-xs flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-file-pdf"></i>
+          <span>Download Official PDF Document</span>
         </button>
       </div>
     </div>
@@ -211,7 +254,21 @@
 
       <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 overflow-y-auto">
 
-        <!-- GUEST BANNER FOR NON-ADMIN -->
+        <!-- SEARCH RECEIPT BAR (AVAILABLE FOR ALL USERS - USER RESTRICTED) -->
+        <div class="glass-panel p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div class="flex items-center space-x-3 w-full sm:w-auto">
+            <i class="fa-solid fa-magnifying-glass text-indigo-400 text-lg"></i>
+            <span class="text-xs font-semibold text-slate-300">Search Receipt Document:</span>
+          </div>
+          <div class="flex items-center space-x-2 w-full sm:w-auto">
+            <input type="text" id="receiptSearchInput" placeholder="Enter Receipt No (e.g. HSN-863950)..." class="w-full sm:w-72 px-3.5 py-2 rounded-xl border border-slate-700 bg-slate-900 text-white text-xs font-mono focus:ring-2 focus:ring-indigo-500">
+            <button onclick="searchReceiptByNumber()" class="btn-pro px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl text-xs flex items-center space-x-1.5 shrink-0">
+              <i class="fa-solid fa-search"></i>
+              <span>Search</span>
+            </button>
+          </div>
+        </div>
+
         <div id="guestBanner" class="hidden bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-4 flex items-center justify-between">
           <div class="flex items-center space-x-3">
             <i class="fa-solid fa-user-shield text-indigo-500 text-xl"></i>
@@ -325,7 +382,7 @@
                 </form>
               </div>
 
-              <!-- Manage Debt Form (WITH DATE BOX) -->
+              <!-- Manage Debt Form -->
               <div class="glass-panel p-5 rounded-2xl shadow-sm">
                 <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center space-x-2">
                   <i class="fa-solid fa-hand-holding-hand text-amber-500"></i>
@@ -360,7 +417,6 @@
                     <input type="number" id="debtAmount" required placeholder="0" min="1" step="any" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
                   </div>
 
-                  <!-- DATE SELECTION BOX FOR LOANS -->
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Transaction Date</label>
                     <input type="date" id="debtDate" required class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
@@ -735,7 +791,6 @@
           document.getElementById('guestName').innerText = currentUser;
           document.getElementById('adminControls').classList.add('hidden');
           document.getElementById('adminMetrics').classList.add('hidden');
-          document.getElementById('navMonthly').classList.add('hidden');
           document.getElementById('navAdminSec').classList.add('hidden');
           document.getElementById('personalExpensesSection').classList.add('hidden');
           document.getElementById('userSecurityView').classList.add('hidden');
@@ -746,7 +801,6 @@
           document.getElementById('guestBanner').classList.add('hidden');
           document.getElementById('adminControls').classList.remove('hidden');
           document.getElementById('adminMetrics').classList.remove('hidden');
-          document.getElementById('navMonthly').classList.remove('hidden');
           document.getElementById('navAdminSec').classList.remove('hidden');
           document.getElementById('personalExpensesSection').classList.remove('hidden');
           document.getElementById('displaySection').classList.remove('lg:col-span-3');
@@ -782,12 +836,22 @@
     function populateReportUserDropdown() {
       const select = document.getElementById('reportUserPicker');
       if (!select) return;
-      select.innerHTML = '<option value="ALL">All Users Combined</option>';
-      for (let uName in USER_PASSWORDS) {
-        if (uName === 'Admin') continue;
+      select.innerHTML = '';
+
+      if (currentUser === 'Admin') {
+        select.innerHTML = '<option value="ALL">All Users Combined</option>';
+        for (let uName in USER_PASSWORDS) {
+          if (uName === 'Admin') continue;
+          const opt = document.createElement('option');
+          opt.value = uName;
+          opt.innerText = uName;
+          select.appendChild(opt);
+        }
+      } else {
+        // STRICT PRIVACY: Other users only see themselves in dropdown
         const opt = document.createElement('option');
-        opt.value = uName;
-        opt.innerText = uName;
+        opt.value = currentUser;
+        opt.innerText = currentUser;
         select.appendChild(opt);
       }
     }
@@ -819,7 +883,6 @@
       await loadDataFromSupabase();
     }
 
-    // MANAGE DEBT WITH SPECIFIC TRANSACTION DATE
     async function handleManageDebt(e) {
       e.preventDefault();
       const btn = document.getElementById('updateDebtBtn');
@@ -877,15 +940,23 @@
       await loadDataFromSupabase();
     }
 
-    // WHATSAPP TRIGGER FIX (ONE-CLICK DIRECT ACCURATE SEND)
+    // GENERATE EXACT CUSTOM FORMAT RECEIPT AND DOWNLOAD AS PDF
     function generateWhatsAppReceiptLink(personName, action, currentAmount, totalGiven, totalReturned, dateStr, noteText) {
       const remainingBalance = totalGiven - totalReturned;
       const receiptNo = "HSN-" + Math.floor(100000 + Math.random() * 900000);
-      let actionTitle = action === 'RECEIVED' ? 'PAYMENT RECEIVED' : (action === 'TAKEN' ? 'LOAN ACKNOWLEDGMENT' : 'LEDGER UPDATE');
+      let actionTitle = action === 'RECEIVED' ? 'PAYMENT RECEIVED' : (action === 'TAKEN' ? 'LOAN BORROWED' : (action === 'GIVEN' ? 'LOAN ISSUED / GIVEN' : 'LOAN REPAID BACK'));
+
+      document.getElementById('rNumText').innerText = receiptNo;
+      document.getElementById('rDateText').innerText = dateStr;
+      document.getElementById('rClientText').innerText = personName;
+      document.getElementById('rTypeText').innerText = actionTitle;
+      document.getElementById('rAmountText').innerText = `AED ${currentAmount.toLocaleString()}`;
+      document.getElementById('rNoteText').innerText = noteText || 'Ledger Summary Entry';
+      document.getElementById('rGivenText').innerText = `AED ${totalGiven.toLocaleString()}`;
+      document.getElementById('rReturnedText').innerText = `AED ${totalReturned.toLocaleString()}`;
+      document.getElementById('rBalanceText').innerText = `AED ${Math.abs(remainingBalance).toLocaleString()}`;
 
       pendingWhatsAppMessage = 
-        `==================================\n` +
-        `🧾 *HASSAN FINANCIAL LEDGER RECEIPT*\n` +
         `==================================\n` +
         `*Receipt No:* ${receiptNo}\n` +
         `*Date:* ${dateStr}\n` +
@@ -893,46 +964,100 @@
         `----------------------------------\n` +
         `*Transaction Type:* ${actionTitle}\n` +
         `*Amount:* AED ${currentAmount.toLocaleString()}\n` +
-        `*Note / Particulars:* ${noteText || 'Standard Ledger Entry'}\n` +
+        `*Note / Particulars:* ${noteText || 'Ledger Summary'}\n` +
         `----------------------------------\n` +
         `📊 *ACCOUNT SUMMARY STATEMENT*\n` +
         `• Total Amount Given/Issued: AED ${totalGiven.toLocaleString()}\n` +
         `• Total Amount Repaid/Cleared: AED ${totalReturned.toLocaleString()}\n` +
-        `• *Current Net Outstanding Balance:* AED ${remainingBalance.toLocaleString()}\n` +
+        `• *Current Net Outstanding Balance:* AED ${Math.abs(remainingBalance).toLocaleString()}\n` +
         `==================================\n` +
-        `🙏 *THANK YOU!*\n` +
-        `We appreciate your prompt settlement & continued trust.\n\n` +
-        `_HASSAN Financial Services & Ledger Management_`;
+        `🙏 *THANK YOU!*`;
 
       document.getElementById('whatsappModal').classList.remove('hidden');
     }
 
     function closeWhatsAppModal() {
       document.getElementById('whatsappModal').classList.add('hidden');
-      pendingWhatsAppMessage = "";
     }
 
     function executeWhatsAppSend() {
       const code = document.getElementById('waCountryCode').value;
       const num = document.getElementById('waPhoneNumber').value.trim();
 
-      if (!num) {
-        alert("Please enter WhatsApp Phone Number.");
-        return;
-      }
+      if (!num) return alert("Please enter WhatsApp Phone Number.");
 
       const fullPhone = code + num.replace(/[^0-9]/g, '');
       const waUrl = `https://api.whatsapp.com/send?phone=${fullPhone}&text=${encodeURIComponent(pendingWhatsAppMessage)}`;
       
-      // Direct Trigger - Browser / Mobile app will handle smoothly
+      downloadReceiptAsPDF();
       window.open(waUrl, '_blank');
       closeWhatsAppModal();
     }
 
+    function downloadReceiptAsPDF() {
+      const element = document.getElementById('receiptTemplateContainer');
+      const receiptNo = document.getElementById('rNumText').innerText;
+      
+      const opt = {
+        margin:       0.5,
+        filename:     `HASSAN_Receipt_${receiptNo}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, backgroundColor: '#0f172a' },
+        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(element).save();
+    }
+
+    // RECEIPT SEARCH BAR FUNCTION (WITH USER PRIVACY RESTRICTION)
+    function searchReceiptByNumber() {
+      const searchNum = document.getElementById('receiptSearchInput').value.trim();
+      if (!searchNum) return alert("Please enter a Receipt Number to search (e.g. HSN-863950).");
+
+      const matchLog = state.logs.find(l => l.category && l.category.toLowerCase().includes(searchNum.toLowerCase()));
+
+      if (!matchLog) {
+        return alert(`No receipt record found for '${searchNum}'.`);
+      }
+
+      // PRIVACY CHECK FOR NON-ADMIN
+      if (currentUser !== 'Admin' && !matchLog.category.toLowerCase().includes(currentUser.toLowerCase())) {
+        return alert("ACCESS DENIED: Record Not Related To You.");
+      }
+
+      // Populate Receipt Modal
+      document.getElementById('rNumText').innerText = searchNum.toUpperCase();
+      document.getElementById('rDateText').innerText = matchLog.date;
+      document.getElementById('rClientText').innerText = matchLog.category.split(' ')[0] || currentUser;
+      document.getElementById('rTypeText').innerText = matchLog.type || 'TRANSACTION';
+      document.getElementById('rAmountText').innerText = `AED ${matchLog.amount.toLocaleString()}`;
+      document.getElementById('rNoteText').innerText = matchLog.category;
+
+      let debtRec = state.debts.find(d => matchLog.category.toLowerCase().includes(d.person.toLowerCase()));
+      let given = debtRec ? debtRec.total_given : 0;
+      let returned = debtRec ? debtRec.total_returned : 0;
+      let bal = debtRec ? (given - returned) : 0;
+
+      document.getElementById('rGivenText').innerText = `AED ${given.toLocaleString()}`;
+      document.getElementById('rReturnedText').innerText = `AED ${returned.toLocaleString()}`;
+      document.getElementById('rBalanceText').innerText = `AED ${Math.abs(bal).toLocaleString()}`;
+
+      document.getElementById('receiptSearchResultModal').classList.remove('hidden');
+    }
+
+    function closeReceiptSearchModal() {
+      document.getElementById('receiptSearchResultModal').classList.add('hidden');
+    }
+
+    // MONTHLY REPORT FILTER BY MONTH AND STRICT USER PRIVACY
     function renderMonthlyReport() {
       const pickerVal = document.getElementById('reportMonthPicker').value;
-      const selectedUser = document.getElementById('reportUserPicker').value;
+      let selectedUser = document.getElementById('reportUserPicker').value;
       if (!pickerVal) return;
+
+      if (currentUser !== 'Admin') {
+        selectedUser = currentUser;
+      }
 
       let filteredTrans = state.logs.filter(item => item.date && item.date.startsWith(pickerVal));
 
@@ -965,7 +1090,9 @@
 
     function downloadReportExcel() {
       const monthStr = document.getElementById('reportMonthPicker').value || "Monthly_Report";
-      const selectedUser = document.getElementById('reportUserPicker').value;
+      let selectedUser = document.getElementById('reportUserPicker').value;
+      if (currentUser !== 'Admin') selectedUser = currentUser;
+
       let csvContent = "data:text/csv;charset=utf-8,Date,Category/Description,Type,Amount (AED)\n";
 
       let filteredTrans = state.logs.filter(item => item.date && item.date.startsWith(monthStr));
@@ -988,7 +1115,9 @@
 
     function downloadReportImage() {
       const monthStr = document.getElementById('reportMonthPicker').value || "Monthly_Report";
-      const selectedUser = document.getElementById('reportUserPicker').value;
+      let selectedUser = document.getElementById('reportUserPicker').value;
+      if (currentUser !== 'Admin') selectedUser = currentUser;
+
       const cardEl = document.getElementById('monthlyReportCard');
       showLoader();
 
@@ -1168,7 +1297,7 @@
           <td class="py-3 px-4 text-emerald-500 font-medium">AED ${d.total_returned.toLocaleString()}</td>
           <td class="py-3 px-4 font-bold ${balance > 0 ? 'text-amber-500' : 'text-slate-400'}">AED ${balance.toLocaleString()}</td>
           <td class="py-3 px-4 text-right space-x-1">
-            ${currentUser === 'Admin' ? `<button onclick="generateWhatsAppReceiptLink('${d.person}', 'RECEIVED', 0, ${d.total_given}, ${d.total_returned}, '${new Date().toISOString().split('T')[0]}', 'Ledger Summary')" class="btn-pro text-emerald-500 text-xs px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-lg"><i class="fa-brands fa-whatsapp"></i> Slip Link</button>` : '-'}
+            ${currentUser === 'Admin' ? `<button onclick="generateWhatsAppReceiptLink('${d.person}', 'RECEIVED', 0, ${d.total_given}, ${d.total_returned}, '${new Date().toISOString().split('T')[0]}', 'Ledger Summary')" class="btn-pro text-emerald-500 text-xs px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-lg"><i class="fa-brands fa-whatsapp"></i> Slip PDF Link</button>` : '-'}
           </td>
         `;
         debtTableBody.appendChild(row);
