@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>HASSAN - Pro Financial Dashboard</title>
   
+  <!-- App Favicons -->
   <link id="app-favicon" rel="icon" type="image/jpeg" href="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=300&q=80">
   <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=300&q=80">
 
@@ -26,17 +27,17 @@
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* Day / Night Smooth Transition */
     html, body, aside, main, header, div, table, tr, td, th {
       transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
                   color 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
-                  border-color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-                  box-shadow 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                  border-color 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
 
+    /* Top Glowing Animated Loader Line */
     .top-loader-line {
-      position: fixed;
-      top: 0; left: 0; height: 3px; width: 100%;
-      background: linear-gradient(90deg, #10b981, #6366f1, #f59e0b, #ec4899);
+      position: fixed; top: 0; left: 0; height: 3px; width: 100%;
+      background: linear-gradient(90deg, #00f2fe, #4facfe, #00c6ff, #0072ff);
       background-size: 200% 100%;
       animation: loadingStream 1.5s infinite linear;
       z-index: 9999; display: none;
@@ -45,30 +46,45 @@
       0% { background-position: 100% 0; }
       100% { background-position: -100% 0; }
     }
-    .animate-logo-pulse { animation: pulseLogo 1.6s infinite ease-in-out; }
-    @keyframes pulseLogo {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.08); opacity: 0.85; }
+
+    /* Infinity Neon Pulsing Animation */
+    .infinity-glow {
+      filter: drop-shadow(0 0 12px #38bdf8) drop-shadow(0 0 25px #0284c7);
+      animation: infinityPulse 2.5s infinite ease-in-out;
+    }
+    @keyframes infinityPulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px #38bdf8) drop-shadow(0 0 20px #0284c7); }
+      50% { transform: scale(1.06); filter: drop-shadow(0 0 18px #38bdf8) drop-shadow(0 0 35px #0ea5e9); }
     }
 
+    /* Background Floating Particles for Login UI */
+    .login-bg-grid {
+      background-image: radial-gradient(rgba(56, 189, 248, 0.15) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+
+    /* Dark Glass Panel */
     .dark .glass-panel {
       background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(56, 189, 248, 0.15);
       color: #f8fafc;
     }
     html:not(.dark) .glass-panel {
       background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(14px);
+      backdrop-filter: blur(16px);
       border: 1px solid rgba(0, 0, 0, 0.08);
       color: #0f172a;
     }
 
+    /* Left Menu Sticky Scroll Lock */
+    .sidebar-fixed {
+      position: sticky; top: 0; height: 100vh;
+    }
+
     .btn-pro { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
-    .btn-pro:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35); }
+    .btn-pro:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 20px rgba(56, 189, 248, 0.3); }
     .btn-pro:active { transform: translateY(0) scale(0.98); }
-    .nav-item { transition: all 0.25s ease; }
-    .nav-item:hover { transform: translateX(5px); }
     body { touch-action: manipulation; }
   </style>
 </head>
@@ -82,7 +98,7 @@
       <div class="flex items-center justify-between border-b border-slate-700 pb-3">
         <h3 class="text-base font-bold text-emerald-500 flex items-center space-x-2">
           <i class="fa-brands fa-whatsapp text-lg"></i>
-          <span>Send PDF Receipt to WhatsApp</span>
+          <span>Send PDF Invoice via WhatsApp</span>
         </h3>
         <button onclick="closeWhatsAppModal()" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
       </div>
@@ -108,18 +124,18 @@
         <button onclick="closeWhatsAppModal()" class="w-1/2 py-2.5 bg-slate-800 text-slate-300 font-medium rounded-xl text-xs">Cancel</button>
         <button onclick="executeWhatsAppSend()" class="w-1/2 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-xs flex items-center justify-center space-x-1">
           <i class="fa-brands fa-whatsapp"></i>
-          <span>Send PDF & Open</span>
+          <span>Open & Send</span>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- POPUP MODAL FOR OVERVIEW METRICS CLICK DETAILS -->
+  <!-- OVERVIEW METRIC DETAIL BREAKDOWN MODAL -->
   <div id="metricDetailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
     <div class="glass-panel p-6 rounded-2xl max-w-xl w-full space-y-4 shadow-2xl border border-slate-700 text-left">
       <div class="flex items-center justify-between border-b border-slate-700 pb-3">
         <h3 class="text-base font-bold text-white flex items-center space-x-2" id="metricDetailTitle">
-          <i class="fa-solid fa-circle-info text-indigo-400"></i>
+          <i class="fa-solid fa-circle-info text-sky-400"></i>
           <span>Metric Breakdown</span>
         </h3>
         <button onclick="closeMetricDetailModal()" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
@@ -130,57 +146,80 @@
           <thead>
             <tr class="border-b border-slate-700 text-slate-400 uppercase">
               <th class="py-2 px-3">Date</th>
-              <th class="py-2 px-3">Category / Description</th>
+              <th class="py-2 px-3">Particulars / Category</th>
               <th class="py-2 px-3 text-right">Amount</th>
             </tr>
           </thead>
-          <tbody id="metricDetailTableBody" class="divide-y divide-slate-800 text-slate-200">
-            <!-- Dynamic Rows -->
-          </tbody>
+          <tbody id="metricDetailTableBody" class="divide-y divide-slate-800 text-slate-200"></tbody>
         </table>
       </div>
 
       <div class="text-right pt-2 border-t border-slate-700">
-        <span class="text-xs font-semibold text-slate-400">Total: </span>
+        <span class="text-xs font-semibold text-slate-400">Total Calculation: </span>
         <span class="text-sm font-bold text-emerald-400" id="metricDetailTotal">AED 0</span>
       </div>
     </div>
   </div>
 
-  <!-- RECEIPT SEARCH RESULT MODAL -->
-  <div id="receiptSearchResultModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
-    <div class="glass-panel p-6 rounded-2xl max-w-md w-full space-y-4 shadow-2xl border border-slate-700 text-left">
+  <!-- HIGH QUALITY INVOICE PDF PREVIEW MODAL -->
+  <div id="receiptSearchResultModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
+    <div class="glass-panel p-6 rounded-2xl max-w-lg w-full space-y-4 shadow-2xl border border-slate-700 text-left">
       <div class="flex items-center justify-between border-b border-slate-700 pb-3">
-        <h3 class="text-sm font-bold text-indigo-400 flex items-center space-x-2">
+        <h3 class="text-sm font-bold text-sky-400 flex items-center space-x-2">
           <i class="fa-solid fa-file-invoice"></i>
-          <span>Receipt View / Download PDF</span>
+          <span>Official Financial Invoice Statement</span>
         </h3>
         <button onclick="closeReceiptSearchModal()" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
-      <div id="receiptTemplateContainer" class="p-5 bg-slate-900 border border-slate-700 rounded-xl text-xs font-mono space-y-2 text-slate-200">
-        <p class="text-center font-bold text-sm text-emerald-400">==================================</p>
-        <p class="text-center font-bold text-sm text-white">🧾 HASSAN FINANCIAL LEDGER RECEIPT</p>
-        <p class="text-center font-bold text-sm text-emerald-400">==================================</p>
-        <p><strong>Receipt No:</strong> <span id="rNumText">HSN-000000</span></p>
-        <p><strong>Date:</strong> <span id="rDateText">2026-07-31</span></p>
-        <p><strong>Client Profile:</strong> <span id="rClientText">User Name</span></p>
-        <p class="text-slate-500">----------------------------------</p>
-        <p><strong>Transaction Type:</strong> <span id="rTypeText" class="text-amber-400 font-bold">PAYMENT RECEIVED</span></p>
-        <p><strong>Amount:</strong> <span id="rAmountText" class="text-emerald-400 font-bold">AED 0</span></p>
-        <p><strong>Note / Particulars:</strong> <span id="rNoteText">Ledger Summary</span></p>
-        <p class="text-slate-500">----------------------------------</p>
-        <p class="font-bold text-indigo-300">📊 ACCOUNT SUMMARY STATEMENT</p>
-        <p>• Total Amount Given/Issued: <span id="rGivenText">AED 0</span></p>
-        <p>• Total Amount Repaid/Cleared: <span id="rReturnedText">AED 0</span></p>
-        <p>• <strong>Current Net Outstanding Balance:</strong> <span id="rBalanceText" class="text-amber-400 font-bold">AED 0</span></p>
-        <p class="text-center font-bold text-sm text-emerald-400">==================================</p>
-        <p class="text-center font-bold text-xs text-emerald-300">🙏 THANK YOU!</p>
-        <p class="text-center text-[10px] text-slate-400">We appreciate your prompt settlement & continued trust.</p>
+      <!-- INVOICE TEMPLATE WITH INFINITY NEON LOGO -->
+      <div id="receiptTemplateContainer" class="p-6 bg-slate-900 border border-sky-500/30 rounded-2xl text-xs space-y-4 text-slate-200 shadow-xl">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+          <div class="flex items-center space-x-3">
+            <svg class="w-10 h-10 infinity-glow text-sky-400" viewBox="0 0 100 50" fill="none" stroke="currentColor" stroke-width="6">
+              <path d="M 30,25 C 10,5 0,25 0,25 C 0,25 10,45 30,25 C 50,5 70,5 80,25 C 90,45 100,25 100,25 C 100,25 90,5 80,25 C 70,45 50,45 30,25 Z"/>
+            </svg>
+            <div>
+              <h2 class="text-base font-bold text-white tracking-widest">HASSAN</h2>
+              <p class="text-[10px] text-sky-400">FINANCIAL MANAGEMENT SERVICES</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold rounded-lg text-[10px]" id="rStatusBadge">VERIFIED STATEMENT</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 text-[11px] border-b border-slate-800 pb-3">
+          <p><strong class="text-slate-400">Invoice No:</strong> <span id="rNumText" class="text-white font-mono font-bold">HSN-000000</span></p>
+          <p class="text-right"><strong class="text-slate-400">Date:</strong> <span id="rDateText" class="text-white">2026-07-31</span></p>
+          <p><strong class="text-slate-400">Client Profile:</strong> <span id="rClientText" class="text-sky-300 font-semibold">User Name</span></p>
+          <p class="text-right"><strong class="text-slate-400">Currency:</strong> <span class="text-white font-bold">AED</span></p>
+        </div>
+
+        <div class="space-y-2">
+          <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1">
+            <p class="text-[10px] uppercase tracking-wider text-slate-400">Transaction Type</p>
+            <p class="text-sm font-bold text-amber-400" id="rTypeText">PAYMENT RECEIVED</p>
+            <p class="text-[11px] text-slate-300 mt-1"><strong class="text-slate-400">Particulars:</strong> <span id="rNoteText">Ledger Summary</span></p>
+            <p class="text-base font-extrabold text-emerald-400 mt-2" id="rAmountText">AED 0</p>
+          </div>
+        </div>
+
+        <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800 space-y-1 text-[11px]">
+          <p class="font-bold text-sky-400 border-b border-slate-800 pb-1 mb-1">ACCOUNT SUMMARY STATEMENT</p>
+          <div class="flex justify-between"><span class="text-slate-400">Total Given / Issued:</span><span id="rGivenText" class="font-semibold text-white">AED 0</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Total Repaid / Cleared:</span><span id="rReturnedText" class="font-semibold text-emerald-400">AED 0</span></div>
+          <div class="flex justify-between border-t border-slate-800 pt-1 mt-1"><span class="font-bold text-white">Net Outstanding Balance:</span><span id="rBalanceText" class="font-bold text-amber-400">AED 0</span></div>
+        </div>
+
+        <div class="pt-2 text-center text-[10px] text-slate-400 border-t border-slate-800">
+          <p class="font-bold text-emerald-400 mb-0.5">🙏 THANK YOU FOR YOUR TRUST & SETTLEMENT!</p>
+          <p>Official Digital Receipt generated via Hassan Secure Supabase Engine.</p>
+        </div>
       </div>
 
       <div class="flex space-x-2 pt-2">
-        <button onclick="downloadReceiptAsPDF()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-xs flex items-center justify-center space-x-2">
+        <button onclick="downloadReceiptAsPDF()" class="w-full py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-xl text-xs flex items-center justify-center space-x-2 btn-pro">
           <i class="fa-solid fa-file-pdf"></i>
           <span>Download Official PDF Document</span>
         </button>
@@ -188,31 +227,37 @@
     </div>
   </div>
 
-  <!-- LOADING SCREEN -->
+  <!-- SPLASH ANIMATED INITIAL LOADING SCREEN -->
   <div id="loadingScreen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950">
     <div class="relative flex flex-col items-center">
-      <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=300&q=80" alt="Plant HD Logo" class="w-28 h-28 object-cover rounded-full bg-slate-800 p-1 shadow-2xl animate-logo-pulse border-2 border-emerald-500">
+      <svg class="w-24 h-24 infinity-glow text-sky-400" viewBox="0 0 100 50" fill="none" stroke="currentColor" stroke-width="5">
+        <path d="M 30,25 C 10,5 0,25 0,25 C 0,25 10,45 30,25 C 50,5 70,5 80,25 C 90,45 100,25 100,25 C 100,25 90,5 80,25 C 70,45 50,45 30,25 Z"/>
+      </svg>
       <h2 class="text-white text-xl font-bold tracking-widest mt-5">HASSAN</h2>
-      <p class="text-emerald-400 text-xs tracking-wider mt-1">Connecting to Secure Supabase Engine...</p>
+      <p class="text-sky-400 text-xs tracking-wider mt-1">Connecting to Secure Supabase Engine...</p>
     </div>
   </div>
 
-  <!-- AUTH SCREEN -->
-  <div id="authScreen" class="hidden fixed inset-0 z-40 flex items-center justify-center p-4 bg-slate-950/95">
-    <div class="glass-panel rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md text-center">
-      <div class="inline-block p-1 rounded-full bg-slate-800 mb-4 shadow-lg border border-slate-700">
-        <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=300&q=80" alt="HASSAN Logo" class="w-20 h-20 object-cover rounded-full">
+  <!-- ADVANCE ANIMATED LOGIN SCREEN -->
+  <div id="authScreen" class="hidden fixed inset-0 z-40 flex items-center justify-center p-4 bg-slate-950 login-bg-grid">
+    <div class="glass-panel rounded-3xl shadow-2xl p-8 w-full max-w-md text-center border border-sky-500/20">
+      
+      <div class="inline-block p-4 rounded-full bg-slate-900 mb-4 shadow-xl border border-sky-500/30">
+        <svg class="w-16 h-16 infinity-glow text-sky-400" viewBox="0 0 100 50" fill="none" stroke="currentColor" stroke-width="5">
+          <path d="M 30,25 C 10,5 0,25 0,25 C 0,25 10,45 30,25 C 50,5 70,5 80,25 C 90,45 100,25 100,25 C 100,25 90,5 80,25 C 70,45 50,45 30,25 Z"/>
+        </svg>
       </div>
-      <h2 class="text-2xl font-bold dark:text-white text-slate-900">Protected Access</h2>
-      <p class="text-xs text-slate-400 mt-1 mb-6">Enter Security Password Key</p>
+      
+      <h2 class="text-2xl font-extrabold dark:text-white text-slate-900 tracking-wide">HASSAN FINANCIALS</h2>
+      <p class="text-xs text-sky-400 mt-1 mb-6">Enter Security Password Key</p>
 
       <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
         <div class="text-left">
-          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Access Password</label>
-          <input type="password" id="loginPin" required placeholder="Enter password..." class="w-full px-4 py-3 rounded-xl border border-slate-700 bg-slate-900 text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none text-center font-mono text-lg">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Access Password Key</label>
+          <input type="password" id="loginPin" required placeholder="Enter password..." class="w-full px-4 py-3 rounded-2xl border border-slate-700 bg-slate-900/90 text-white focus:ring-2 focus:ring-sky-500 focus:outline-none text-center font-mono text-lg shadow-inner">
         </div>
         <div id="loginError" class="text-rose-500 text-xs hidden font-medium">Invalid Password Key. Access Denied.</div>
-        <button type="submit" class="btn-pro w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl shadow-lg flex items-center justify-center space-x-2">
+        <button type="submit" class="btn-pro w-full py-3 px-4 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-bold rounded-2xl shadow-lg flex items-center justify-center space-x-2">
           <span>Unlock Account</span>
           <i class="fa-solid fa-key text-sm"></i>
         </button>
@@ -220,39 +265,41 @@
     </div>
   </div>
 
-  <!-- MAIN APP SCREEN -->
+  <!-- MAIN DASHBOARD SCREEN WITH STICKY SIDEBAR -->
   <div id="appScreen" class="hidden min-h-screen flex flex-col md:flex-row">
     
-    <!-- LEFT SIDEBAR -->
-    <aside id="sidebarMenu" class="hidden md:flex md:w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-col justify-between shrink-0">
+    <!-- LEFT FIXED STICKY SIDEBAR MENU -->
+    <aside id="sidebarMenu" class="hidden md:flex md:w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-col justify-between shrink-0 sidebar-fixed">
       <div>
         <div class="p-5 flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800">
-          <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=300&q=80" alt="Logo" class="w-11 h-11 object-cover rounded-full border border-emerald-500/50 p-0.5 shadow-md">
+          <svg class="w-9 h-9 infinity-glow text-sky-400" viewBox="0 0 100 50" fill="none" stroke="currentColor" stroke-width="6">
+            <path d="M 30,25 C 10,5 0,25 0,25 C 0,25 10,45 30,25 C 50,5 70,5 80,25 C 90,45 100,25 100,25 C 100,25 90,5 80,25 C 70,45 50,45 30,25 Z"/>
+          </svg>
           <div>
             <h1 class="text-base font-bold dark:text-white text-slate-900 leading-tight">HASSAN</h1>
-            <p class="text-xs text-emerald-500 font-semibold" id="sidebarUserBadge">Role: Admin</p>
+            <p class="text-xs text-sky-400 font-semibold" id="sidebarUserBadge">Role: Admin</p>
           </div>
         </div>
 
         <nav class="p-4 space-y-2">
-          <button onclick="switchTab('dashboardView')" id="navDash" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-emerald-500 bg-emerald-500/10 border border-emerald-500/20">
+          <button onclick="switchTab('dashboardView')" id="navDash" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-sky-400 bg-sky-500/10 border border-sky-500/20">
             <i class="fa-solid fa-chart-pie w-5"></i>
             <span>Overview Metrics</span>
           </button>
 
-          <!-- NEW TAB 1: USER STATEMENTS HISTORY -->
+          <!-- TAB 2: USER STATEMENTS HISTORY -->
           <button onclick="switchTab('userStatementsView')" id="navUserStatements" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
             <i class="fa-solid fa-user-clock w-5 text-emerald-500"></i>
             <span>User Statements</span>
           </button>
 
-          <!-- TAB 2: MONTHLY REPORTS -->
+          <!-- TAB 3: MONTHLY REPORTS -->
           <button onclick="switchTab('monthlyReportsView')" id="navMonthly" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
             <i class="fa-solid fa-calendar-days w-5 text-indigo-500"></i>
             <span>Monthly Reports</span>
           </button>
 
-          <!-- TAB 3: PASSWORD CONTROL (ADMIN ONLY) -->
+          <!-- TAB 4: PASSWORD CONTROL (ADMIN ONLY) -->
           <button onclick="switchTab('userSecurityView')" id="navAdminSec" class="nav-item hidden w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
             <i class="fa-solid fa-users-gear w-5 text-amber-500"></i>
             <span>Password & User Control</span>
@@ -276,11 +323,13 @@
       </div>
     </aside>
 
-    <!-- RIGHT MAIN CONTENT -->
+    <!-- RIGHT MAIN CONTENT (SCROLLABLE AREA) -->
     <div class="flex-1 flex flex-col min-w-0">
       <header class="md:hidden sticky top-0 z-30 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 h-16 flex items-center justify-between">
         <div class="flex items-center space-x-3">
-          <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=300&q=80" alt="Logo" class="w-9 h-9 object-cover rounded-full border border-emerald-500">
+          <svg class="w-7 h-7 infinity-glow text-sky-400" viewBox="0 0 100 50" fill="none" stroke="currentColor" stroke-width="6">
+            <path d="M 30,25 C 10,5 0,25 0,25 C 0,25 10,45 30,25 C 50,5 70,5 80,25 C 90,45 100,25 100,25 C 100,25 90,5 80,25 C 70,45 50,45 30,25 Z"/>
+          </svg>
           <span class="font-bold dark:text-white text-slate-900 text-sm">HASSAN EXPENSE</span>
         </div>
         <div class="flex items-center space-x-3">
@@ -297,24 +346,24 @@
         <!-- SEARCH RECEIPT BAR -->
         <div class="glass-panel p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
           <div class="flex items-center space-x-3 w-full sm:w-auto">
-            <i class="fa-solid fa-magnifying-glass text-indigo-400 text-lg"></i>
+            <i class="fa-solid fa-magnifying-glass text-sky-400 text-lg"></i>
             <span class="text-xs font-semibold text-slate-300">Search Receipt Document:</span>
           </div>
           <div class="flex items-center space-x-2 w-full sm:w-auto">
-            <input type="text" id="receiptSearchInput" placeholder="Enter Receipt No (e.g. HSN-863950)..." class="w-full sm:w-72 px-3.5 py-2 rounded-xl border border-slate-700 bg-slate-900 text-white text-xs font-mono focus:ring-2 focus:ring-indigo-500">
-            <button onclick="searchReceiptByNumber()" class="btn-pro px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl text-xs flex items-center space-x-1.5 shrink-0">
+            <input type="text" id="receiptSearchInput" placeholder="Enter Receipt No (e.g. HSN-863950)..." class="w-full sm:w-72 px-3.5 py-2 rounded-xl border border-slate-700 bg-slate-900 text-white text-xs font-mono focus:ring-2 focus:ring-sky-500">
+            <button onclick="searchReceiptByNumber()" class="btn-pro px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white font-medium rounded-xl text-xs flex items-center space-x-1.5 shrink-0">
               <i class="fa-solid fa-search"></i>
               <span>Search</span>
             </button>
           </div>
         </div>
 
-        <div id="guestBanner" class="hidden bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-4 flex items-center justify-between">
+        <div id="guestBanner" class="hidden bg-sky-500/10 border border-sky-500/30 rounded-xl p-4 flex items-center justify-between">
           <div class="flex items-center space-x-3">
-            <i class="fa-solid fa-user-shield text-indigo-500 text-xl"></i>
+            <i class="fa-solid fa-user-shield text-sky-400 text-xl"></i>
             <div>
-              <h3 class="font-semibold dark:text-indigo-200 text-indigo-900 text-sm">Personal Ledger View</h3>
-              <p class="text-xs text-indigo-500">Logged in as <span id="guestName" class="font-bold">User</span>.</p>
+              <h3 class="font-semibold dark:text-sky-200 text-sky-900 text-sm">Personal Ledger View</h3>
+              <p class="text-xs text-sky-400">Logged in as <span id="guestName" class="font-bold">User</span>.</p>
             </div>
           </div>
         </div>
@@ -322,7 +371,7 @@
         <!-- DASHBOARD OVERVIEW -->
         <div id="dashboardView" class="space-y-6">
           
-          <!-- CLICKABLE METRICS CARDS FOR DETAIL POPUP -->
+          <!-- CLICKABLE METRICS CARDS -->
           <div id="adminMetrics" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             
             <div onclick="openMetricDetail('Income')" class="glass-panel p-5 rounded-2xl shadow-sm flex items-center justify-between cursor-pointer hover:border-emerald-500 transition">
@@ -357,12 +406,12 @@
               <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center text-lg"><i class="fa-solid fa-hand-holding-dollar"></i></div>
             </div>
 
-            <div onclick="openMetricDetail('NetCash')" class="glass-panel p-5 rounded-2xl shadow-sm flex items-center justify-between cursor-pointer hover:border-indigo-500 transition">
+            <div onclick="openMetricDetail('NetCash')" class="glass-panel p-5 rounded-2xl shadow-sm flex items-center justify-between cursor-pointer hover:border-sky-500 transition">
               <div>
                 <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Net Cash Balance ↗</p>
-                <h3 class="text-xl font-bold text-indigo-500 mt-1" id="metricNet">AED 0</h3>
+                <h3 class="text-xl font-bold text-sky-400 mt-1" id="metricNet">AED 0</h3>
               </div>
-              <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center text-lg"><i class="fa-solid fa-scale-balanced"></i></div>
+              <div class="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center text-lg"><i class="fa-solid fa-scale-balanced"></i></div>
             </div>
           </div>
 
@@ -371,28 +420,28 @@
               <!-- Add Income / Expense -->
               <div class="glass-panel p-5 rounded-2xl shadow-sm">
                 <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center space-x-2">
-                  <i class="fa-solid fa-plus-circle text-indigo-500"></i>
+                  <i class="fa-solid fa-plus-circle text-sky-400"></i>
                   <span>Add Income / General Expense</span>
                 </h2>
                 <form onsubmit="handleAddIncomeExpense(event)" class="space-y-3">
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Type</label>
-                    <select id="cfType" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                    <select id="cfType" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500">
                       <option value="Income">Income (Salary / Bonus / Business)</option>
                       <option value="Expense">General Expense (Rent / Bills / Ration)</option>
                     </select>
                   </div>
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Category / Description</label>
-                    <input type="text" id="cfCategory" required placeholder="e.g., Monthly Salary, Room Rent" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                    <input type="text" id="cfCategory" required placeholder="e.g., Monthly Salary, Room Rent" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500">
                   </div>
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Amount (AED)</label>
-                    <input type="number" id="cfAmount" required placeholder="0" min="1" step="any" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                    <input type="number" id="cfAmount" required placeholder="0" min="1" step="any" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500">
                   </div>
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Date</label>
-                    <input type="date" id="cfDate" required class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                    <input type="date" id="cfDate" required class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500">
                   </div>
                   <button type="submit" class="btn-pro w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg text-sm flex items-center justify-center space-x-1">
                     <i class="fa-solid fa-check"></i><span>Save Entry</span>
@@ -434,12 +483,12 @@
                 <form onsubmit="handleManageDebt(event)" class="space-y-3">
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Select Person</label>
-                    <select id="debtPersonSelect" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500"></select>
+                    <select id="debtPersonSelect" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500"></select>
                   </div>
 
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Action Type</label>
-                    <select id="debtAction" onchange="toggleSpentOption()" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                    <select id="debtAction" onchange="toggleSpentOption()" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500">
                       <option value="GIVEN">Loan Given</option>
                       <option value="TAKEN">Loan Borrowed</option>
                       <option value="RECEIVED">Repayment Received</option>
@@ -457,17 +506,17 @@
 
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Amount (AED)</label>
-                    <input type="number" id="debtAmount" required placeholder="0" min="1" step="any" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                    <input type="number" id="debtAmount" required placeholder="0" min="1" step="any" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500">
                   </div>
 
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Transaction Date</label>
-                    <input type="date" id="debtDate" required class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                    <input type="date" id="debtDate" required class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500">
                   </div>
 
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Note / Remark</label>
-                    <input type="text" id="debtNote" placeholder="e.g., iPhone purchase, Installment" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                    <input type="text" id="debtNote" placeholder="e.g., iPhone purchase, Installment" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500">
                   </div>
 
                   <div class="pt-1">
@@ -488,8 +537,8 @@
               <!-- Active Debt Ledgers -->
               <div class="glass-panel p-5 rounded-2xl shadow-sm">
                 <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center justify-between">
-                  <span class="flex items-center space-x-2"><i class="fa-solid fa-users text-indigo-500"></i><span>Active Debt Ledgers</span></span>
-                  <span id="debtCount" class="text-xs bg-indigo-500/10 text-indigo-500 border border-indigo-500/20 font-semibold px-2.5 py-0.5 rounded-full">0 Persons</span>
+                  <span class="flex items-center space-x-2"><i class="fa-solid fa-users text-sky-400"></i><span>Active Debt Ledgers</span></span>
+                  <span id="debtCount" class="text-xs bg-sky-500/10 text-sky-400 border border-sky-500/20 font-semibold px-2.5 py-0.5 rounded-full">0 Persons</span>
                 </h2>
                 <div class="overflow-x-auto">
                   <table class="w-full text-left border-collapse">
@@ -531,7 +580,7 @@
               <!-- Audit Logs -->
               <div class="glass-panel p-5 rounded-2xl shadow-sm">
                 <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center justify-between">
-                  <span class="flex items-center space-x-2"><i class="fa-solid fa-list-check text-indigo-500"></i><span>Master Transaction Audit Logs</span></span>
+                  <span class="flex items-center space-x-2"><i class="fa-solid fa-list-check text-sky-400"></i><span>Master Transaction Audit Logs</span></span>
                 </h2>
                 <div class="overflow-x-auto">
                   <table class="w-full text-left border-collapse">
@@ -696,6 +745,14 @@
   </div>
 
   <script>
+    // SECURITY ENFORCEMENT: DISABLE DEV TOOLS KEY CUTS AND RIGHT CLICK
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    document.onkeydown = function(e) {
+      if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) {
+        return false;
+      }
+    }
+
     const SUPABASE_URL = "https://gwulouepjydhdjzfmhfo.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3dWxvdWVwanlkaGRqemZtaGZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU0MzM0NzIsImV4cCI6MjEwMTAwOTQ3Mn0.1X8y-3y4vx5lUAmMXBOdcsb-mOAp9SYJHeCtGl4FZpY";
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -834,7 +891,7 @@
 
       if (view === 'dashboardView') {
         document.getElementById('dashboardView').classList.remove('hidden');
-        document.getElementById('navDash').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-emerald-500 bg-emerald-500/10 border border-emerald-500/20";
+        document.getElementById('navDash').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-sky-400 bg-sky-500/10 border border-sky-500/20";
       } else if (view === 'userStatementsView') {
         document.getElementById('userStatementsView').classList.remove('hidden');
         document.getElementById('navUserStatements').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-emerald-500 bg-emerald-500/10 border border-emerald-500/20";
@@ -1106,8 +1163,8 @@
       const receiptNo = document.getElementById('rNumText').innerText;
       
       const opt = {
-        margin:       0.5,
-        filename:     `HASSAN_Receipt_${receiptNo}.pdf`,
+        margin:       0.4,
+        filename:     `HASSAN_Invoice_${receiptNo}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2, backgroundColor: '#0f172a' },
         jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
@@ -1116,7 +1173,6 @@
       html2pdf().set(opt).from(element).save();
     }
 
-    // OVERVIEW METRIC CLICK DRILL-DOWN MODAL
     function openMetricDetail(metricType) {
       if (currentUser !== 'Admin') return;
 
@@ -1129,19 +1185,19 @@
       let total = 0;
 
       if (metricType === 'Income') {
-        titleEl.innerHTML = '<i class="fa-solid fa-money-bill-trend-up text-emerald-400"></i><span>Total Income Detail</span>';
+        titleEl.innerHTML = '<i class="fa-solid fa-money-bill-trend-up text-emerald-400"></i><span>Total Income Breakdown</span>';
         items = state.logs.filter(l => l.type === 'Income' || l.type === 'Loan Borrowed (Cash In)');
       } else if (metricType === 'Expense') {
-        titleEl.innerHTML = '<i class="fa-solid fa-receipt text-rose-400"></i><span>General Expenses Detail</span>';
+        titleEl.innerHTML = '<i class="fa-solid fa-receipt text-rose-400"></i><span>General Expenses Breakdown</span>';
         items = state.logs.filter(l => l.type === 'Expense');
       } else if (metricType === 'PersonalExpense') {
-        titleEl.innerHTML = '<i class="fa-solid fa-user-gear text-purple-400"></i><span>Personal Expenses Log</span>';
+        titleEl.innerHTML = '<i class="fa-solid fa-user-gear text-purple-400"></i><span>Personal Expenses Log Detail</span>';
         items = state.personalExpenses.map(p => ({ date: p.date, category: p.description, amount: p.amount }));
       } else if (metricType === 'Receivable') {
         titleEl.innerHTML = '<i class="fa-solid fa-hand-holding-dollar text-amber-400"></i><span>Active Receivables Detail</span>';
-        items = state.debts.map(d => ({ date: 'Active', category: d.person, amount: (d.total_given - d.total_returned) }));
+        items = state.debts.map(d => ({ date: 'Active Ledger', category: d.person, amount: (d.total_given - d.total_returned) }));
       } else if (metricType === 'NetCash') {
-        titleEl.innerHTML = '<i class="fa-solid fa-scale-balanced text-indigo-400"></i><span>Net Cash Movement Log</span>';
+        titleEl.innerHTML = '<i class="fa-solid fa-scale-balanced text-sky-400"></i><span>Net Cash Movement Log</span>';
         items = state.logs;
       }
 
@@ -1164,10 +1220,9 @@
       document.getElementById('metricDetailModal').classList.add('hidden');
     }
 
-    // RENDER USER STATEMENTS HISTORY
     function renderUserStatements() {
       let selectedUser = document.getElementById('stmtUserPicker').value;
-      const monthVal = document.getElementById('stmtMonthPicker').value; // e.g., 2026-07
+      const monthVal = document.getElementById('stmtMonthPicker').value;
 
       if (currentUser !== 'Admin') selectedUser = currentUser;
 
@@ -1188,7 +1243,7 @@
         row.innerHTML = `
           <td class="py-3 px-4 text-xs text-slate-400">${log.date}</td>
           <td class="py-3 px-4 font-medium text-slate-700 dark:text-slate-200">${log.category}</td>
-          <td class="py-3 px-4"><span class="px-2 py-0.5 text-xs font-semibold rounded bg-slate-500/10 text-indigo-400">${log.type}</span></td>
+          <td class="py-3 px-4"><span class="px-2 py-0.5 text-xs font-semibold rounded bg-slate-500/10 text-sky-400">${log.type}</span></td>
           <td class="py-3 px-4 font-bold dark:text-white text-slate-900">AED ${log.amount.toLocaleString()}</td>
         `;
         tbody.appendChild(row);
@@ -1396,13 +1451,13 @@
             <span class="font-bold dark:text-white text-slate-900">${uName}</span>
             <div class="flex items-center space-x-2 mt-0.5">
               <span class="text-xs text-slate-400 font-mono" id="passText_${safeId}">••••••••</span>
-              <button onclick="togglePasswordVisibility('${uName}')" class="text-slate-400 hover:text-indigo-500 text-xs">
+              <button onclick="togglePasswordVisibility('${uName}')" class="text-slate-400 hover:text-sky-500 text-xs">
                 <i class="fa-solid fa-eye" id="eyeIcon_${safeId}"></i>
               </button>
             </div>
           </div>
           <div class="flex items-center space-x-2">
-            <button onclick="updateUserPassword('${uName}')" class="btn-pro px-2.5 py-1.5 bg-indigo-500/10 text-indigo-500 border border-indigo-500/30 hover:bg-indigo-500/20 text-xs rounded-lg font-medium">
+            <button onclick="updateUserPassword('${uName}')" class="btn-pro px-2.5 py-1.5 bg-sky-500/10 text-sky-400 border border-sky-500/30 hover:bg-sky-500/20 text-xs rounded-lg font-medium">
               <i class="fa-solid fa-pen"></i> Edit
             </button>
             <button onclick="deleteUserProfile('${uName}')" class="btn-pro px-2.5 py-1.5 bg-rose-500/10 text-rose-500 border border-rose-500/30 hover:bg-rose-500/20 text-xs rounded-lg font-medium">
@@ -1432,21 +1487,33 @@
       }
     }
 
+    // MAIN DASHBOARD CALCULATIONS (WITH STRICT DATE & PAST MONTH LOAN MATH LOGIC)
     function renderDashboard() {
+      const curMonth = new Date().toISOString().slice(0, 7); // e.g. "2026-07"
+
       let totalIncome = state.cashflow.filter(c => c.type === 'Income').reduce((a, b) => a + b.amount, 0);
       let totalExpense = state.cashflow.filter(c => c.type === 'Expense').reduce((a, b) => a + b.amount, 0);
       let totalPersonalExpense = state.personalExpenses.reduce((a, b) => a + b.amount, 0);
 
+      // Borrowed Loan Cash-In (Current Month Only)
       let borrowedCashIn = state.logs
         .filter(l => l.type === 'Loan Borrowed (Cash In)')
         .reduce((a, b) => a + b.amount, 0);
 
+      // Loan Repaid Back (Deduct from Net Cash)
       let loanRepaid = state.logs
         .filter(l => l.type === 'Loan Repaid Back')
         .reduce((a, b) => a + b.amount, 0);
 
+      // LOAN GIVEN (Only deduct if transaction date belongs to CURRENT MONTH)
+      let currentMonthLoanGiven = state.logs
+        .filter(l => l.type === 'Loan Given' && l.date && l.date.startsWith(curMonth))
+        .reduce((a, b) => a + b.amount, 0);
+
       let totalReceivable = state.debts.reduce((a, b) => a + (b.total_given - b.total_returned), 0);
-      let netCash = totalIncome + borrowedCashIn - totalExpense - totalPersonalExpense - loanRepaid;
+
+      // DYNAMIC ACCURATE NET CASH FORMULA
+      let netCash = totalIncome + borrowedCashIn - totalExpense - totalPersonalExpense - loanRepaid - currentMonthLoanGiven;
 
       document.getElementById('metricIncome').innerText = `AED ${totalIncome.toLocaleString()}`;
       document.getElementById('metricExpense').innerText = `AED ${totalExpense.toLocaleString()}`;
@@ -1470,7 +1537,7 @@
         row.className = "hover:bg-slate-500/5 transition";
         row.innerHTML = `
           <td class="py-3 px-4 font-semibold dark:text-white text-slate-900 flex items-center space-x-2">
-            <span class="w-8 h-8 rounded-full bg-indigo-500/10 text-indigo-500 border border-indigo-500/20 flex items-center justify-center font-bold text-xs">${d.person.charAt(0)}</span>
+            <span class="w-8 h-8 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20 flex items-center justify-center font-bold text-xs">${d.person.charAt(0)}</span>
             <span>${d.person}</span>
           </td>
           <td class="py-3 px-4 text-slate-400">AED ${d.total_given.toLocaleString()}</td>
