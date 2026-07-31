@@ -26,19 +26,15 @@
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Smooth Theme Transition */
     html, body, aside, main, header, div, table, tr, td, th {
-      transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
-                  color 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
-                  border-color 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease !important;
     }
 
-    /* Top Glowing Animated Loader Line */
     .top-loader-line {
       position: fixed; top: 0; left: 0; height: 3px; width: 100%;
       background: linear-gradient(90deg, #00f2fe, #4facfe, #00c6ff, #0072ff);
       background-size: 200% 100%;
-      animation: loadingStream 1.5s infinite linear;
+      animation: loadingStream 1.2s infinite linear;
       z-index: 9999; display: none;
     }
     @keyframes loadingStream {
@@ -46,48 +42,42 @@
       100% { background-position: -100% 0; }
     }
 
-    /* Infinity Neon Pulsing Animation */
     .infinity-glow {
-      filter: drop-shadow(0 0 10px #38bdf8) drop-shadow(0 0 20px #0284c7);
+      filter: drop-shadow(0 0 8px #38bdf8);
       animation: infinityPulse 2.5s infinite ease-in-out;
     }
     @keyframes infinityPulse {
-      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px #38bdf8) drop-shadow(0 0 16px #0284c7); }
-      50% { transform: scale(1.05); filter: drop-shadow(0 0 16px #38bdf8) drop-shadow(0 0 30px #0ea5e9); }
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
     }
 
-    /* Floating Bubbles Interactive Animation Canvas */
     #particleCanvas {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none; z-index: 0; opacity: 0.4;
+      pointer-events: none; z-index: 0; opacity: 0.3;
     }
 
-    /* Dark Glass Panel */
     .dark .glass-panel {
       background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(12px);
       border: 1px solid rgba(56, 189, 248, 0.15);
       color: #f8fafc;
     }
     html:not(.dark) .glass-panel {
       background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(12px);
       border: 1px solid rgba(0, 0, 0, 0.08);
       color: #0f172a;
     }
 
     .sidebar-fixed { position: sticky; top: 0; height: 100vh; }
-    .btn-pro { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
-    .btn-pro:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 20px rgba(56, 189, 248, 0.3); }
-    .btn-pro:active { transform: translateY(0) scale(0.98); }
+    .btn-pro { transition: all 0.2s ease; cursor: pointer; }
+    .btn-pro:hover { transform: translateY(-1px); }
     body { touch-action: manipulation; }
   </style>
 </head>
 <body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen relative overflow-x-hidden">
 
-  <!-- BACKGROUND FLOATING BUBBLES CANVAS -->
   <canvas id="particleCanvas"></canvas>
-
   <div id="topLoader" class="top-loader-line"></div>
 
   <!-- WHATSAPP NUMBER MODAL -->
@@ -128,7 +118,7 @@
     </div>
   </div>
 
-  <!-- METRIC DETAIL BREAKDOWN MODAL -->
+  <!-- METRIC DETAIL BREAKDOWN MODAL WITH FIXED CLOSE BUTTON -->
   <div id="metricDetailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
     <div class="glass-panel p-6 rounded-2xl max-w-xl w-full space-y-4 shadow-2xl border border-slate-700 text-left relative z-10">
       <div class="flex items-center justify-between border-b border-slate-700 pb-3">
@@ -136,7 +126,7 @@
           <i class="fa-solid fa-circle-info text-sky-400"></i>
           <span>Metric Breakdown</span>
         </h3>
-        <button onclick="closeMetricDetailModal()" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
+        <button onclick="closeMetricDetailModal()" class="px-2 py-1 bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white rounded-lg text-xs transition"><i class="fa-solid fa-xmark"></i> Close</button>
       </div>
 
       <div class="max-h-80 overflow-y-auto space-y-2">
@@ -152,9 +142,12 @@
         </table>
       </div>
 
-      <div class="text-right pt-2 border-t border-slate-700">
-        <span class="text-xs font-semibold text-slate-400">Total Calculation: </span>
-        <span class="text-sm font-bold text-emerald-400" id="metricDetailTotal">AED 0</span>
+      <div class="flex items-center justify-between pt-2 border-t border-slate-700">
+        <button onclick="closeMetricDetailModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 rounded-xl">Close Window</button>
+        <div>
+          <span class="text-xs font-semibold text-slate-400">Total Calculation: </span>
+          <span class="text-sm font-bold text-emerald-400" id="metricDetailTotal">AED 0</span>
+        </div>
       </div>
     </div>
   </div>
@@ -204,8 +197,8 @@
 
         <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800 space-y-1 text-[11px]">
           <p class="font-bold text-sky-400 border-b border-slate-800 pb-1 mb-1">ACCOUNT SUMMARY STATEMENT</p>
-          <div class="flex justify-between"><span class="text-slate-400">Total Loan Received (from Client):</span><span id="rGivenText" class="font-semibold text-white">AED 0</span></div>
-          <div class="flex justify-between"><span class="text-slate-400">Total Repaid Back (to Client):</span><span id="rReturnedText" class="font-semibold text-emerald-400">AED 0</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Total Borrowed / Received:</span><span id="rGivenText" class="font-semibold text-white">AED 0</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Total Repaid Back / Issued:</span><span id="rReturnedText" class="font-semibold text-emerald-400">AED 0</span></div>
           <div class="flex justify-between border-t border-slate-800 pt-1 mt-1"><span class="font-bold text-white">Net Outstanding Balance:</span><span id="rBalanceText" class="font-bold text-amber-400">AED 0</span></div>
         </div>
 
@@ -283,8 +276,15 @@
             <span>Overview Metrics</span>
           </button>
 
-          <!-- STRICT ADMIN ONLY TABS (HIDDEN FOR ALL OTHER USERS) -->
+          <!-- STRICT ADMIN ONLY TABS -->
           <div id="adminMenuSection" class="hidden space-y-2">
+            
+            <!-- NEW TAB: SETTLED / CLEARED LEDGERS -->
+            <button onclick="switchTab('settledLedgersView')" id="navSettled" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+              <i class="fa-solid fa-square-check w-5 text-emerald-400"></i>
+              <span>Settled Ledgers</span>
+            </button>
+
             <button onclick="switchTab('userStatementsView')" id="navUserStatements" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
               <i class="fa-solid fa-user-clock w-5 text-emerald-500"></i>
               <span>User Statements</span>
@@ -368,7 +368,6 @@
         <div id="dashboardView" class="space-y-6">
           
           <div id="adminMetrics" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            
             <div onclick="openMetricDetail('Income')" class="glass-panel p-5 rounded-2xl shadow-sm flex items-center justify-between cursor-pointer hover:border-emerald-500 transition">
               <div>
                 <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Income ↗</p>
@@ -484,10 +483,10 @@
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Action Type</label>
                     <select id="debtAction" onchange="toggleSpentOption()" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500">
-                      <option value="TAKEN">Loan Borrowed (Hurairah gave me)</option>
-                      <option value="PAID_BACK">Repayment Paid Back (I repaid Hurairah)</option>
-                      <option value="GIVEN">Loan Given (I issued loan)</option>
-                      <option value="RECEIVED">Repayment Received (Client repaid me)</option>
+                      <option value="TAKEN">Loan Borrowed (Hurairah gave loan to me)</option>
+                      <option value="PAID_BACK">Repayment Paid Back (I repaid to Hurairah)</option>
+                      <option value="GIVEN">Loan Given (I issued loan to client)</option>
+                      <option value="RECEIVED">Repayment Received (Client repaid to me)</option>
                     </select>
                   </div>
 
@@ -529,7 +528,7 @@
             </div>
 
             <div id="displaySection" class="lg:col-span-2 space-y-6">
-              <!-- Active Debt Ledgers (WITH CLEAR COLUMN HEADINGS) -->
+              <!-- ACTIVE DEBT LEDGERS -->
               <div class="glass-panel p-5 rounded-2xl shadow-sm">
                 <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center justify-between">
                   <span class="flex items-center space-x-2"><i class="fa-solid fa-users text-sky-400"></i><span>Active Debt Ledgers</span></span>
@@ -540,9 +539,9 @@
                     <thead>
                       <tr class="border-b border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-400 uppercase tracking-wider">
                         <th class="py-3 px-4">Person</th>
-                        <th class="py-3 px-4">Total Repaid<br><span class="text-[9px] text-slate-500 font-normal">(You paid to client)</span></th>
-                        <th class="py-3 px-4">Total Received<br><span class="text-[9px] text-slate-500 font-normal">(Client gave to you)</span></th>
-                        <th class="py-3 px-4">Net Payable Balance</th>
+                        <th class="py-3 px-4" id="colLabelGiven">Total Repaid<br><span class="text-[9px] text-slate-500 font-normal" id="subLabelGiven">(You paid to client)</span></th>
+                        <th class="py-3 px-4" id="colLabelReturned">Total Received<br><span class="text-[9px] text-slate-500 font-normal" id="subLabelReturned">(Client gave to you)</span></th>
+                        <th class="py-3 px-4" id="colLabelNet">Net Payable Balance</th>
                         <th class="py-3 px-4 text-right">Actions</th>
                       </tr>
                     </thead>
@@ -592,6 +591,36 @@
                   </table>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NEW TAB: SETTLED / CLEARED LEDGERS -->
+        <div id="settledLedgersView" class="hidden space-y-6">
+          <div class="glass-panel p-6 rounded-2xl shadow-sm space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+              <div>
+                <h2 class="text-xl font-bold dark:text-white text-slate-900 flex items-center space-x-2">
+                  <i class="fa-solid fa-square-check text-emerald-400"></i>
+                  <span>Settled & Cleared Client Ledgers</span>
+                </h2>
+                <p class="text-xs text-slate-400 mt-1">Clients whose net debt balance is completely 0 AED (Fully Cleared).</p>
+              </div>
+              <span id="settledCount" class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full font-bold">0 Clients</span>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="border-b border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <th class="py-3 px-4">Client Name</th>
+                    <th class="py-3 px-4">Total Borrowed / Received</th>
+                    <th class="py-3 px-4">Total Repaid Back</th>
+                    <th class="py-3 px-4">Settled Status</th>
+                  </tr>
+                </thead>
+                <tbody id="settledTableBody" class="divide-y divide-slate-200 dark:divide-slate-800/60 text-sm"></tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -892,6 +921,7 @@
         populateStmtUserDropdown();
         renderMonthlyReport();
         renderUserStatements();
+        renderSettledLedgers();
       } catch (err) {
         console.error("Error loading data from Supabase:", err);
       } finally {
@@ -929,14 +959,16 @@
     }
 
     function switchTab(view) {
-      if (currentUser !== 'Admin' && (view === 'userSecurityView' || view === 'monthlyReportsView' || view === 'userStatementsView')) return;
+      if (currentUser !== 'Admin' && (view === 'userSecurityView' || view === 'monthlyReportsView' || view === 'userStatementsView' || view === 'settledLedgersView')) return;
 
       document.getElementById('dashboardView').classList.add('hidden');
+      document.getElementById('settledLedgersView').classList.add('hidden');
       document.getElementById('userStatementsView').classList.add('hidden');
       document.getElementById('monthlyReportsView').classList.add('hidden');
       document.getElementById('userSecurityView').classList.add('hidden');
 
       document.getElementById('navDash').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800";
+      if (document.getElementById('navSettled')) document.getElementById('navSettled').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800";
       if (document.getElementById('navUserStatements')) document.getElementById('navUserStatements').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800";
       if (document.getElementById('navMonthly')) document.getElementById('navMonthly').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800";
       if (document.getElementById('navAdminSec')) document.getElementById('navAdminSec').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800";
@@ -944,6 +976,10 @@
       if (view === 'dashboardView') {
         document.getElementById('dashboardView').classList.remove('hidden');
         document.getElementById('navDash').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-sky-400 bg-sky-500/10 border border-sky-500/20";
+      } else if (view === 'settledLedgersView' && currentUser === 'Admin') {
+        document.getElementById('settledLedgersView').classList.remove('hidden');
+        document.getElementById('navSettled').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-emerald-400 bg-emerald-500/10 border border-emerald-500/20";
+        renderSettledLedgers();
       } else if (view === 'userStatementsView' && currentUser === 'Admin') {
         document.getElementById('userStatementsView').classList.remove('hidden');
         document.getElementById('navUserStatements').className = "nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-emerald-500 bg-emerald-500/10 border border-emerald-500/20";
@@ -989,7 +1025,7 @@
           document.getElementById('adminControls').classList.add('hidden');
           document.getElementById('adminMetrics').classList.add('hidden');
           document.getElementById('personalExpensesSection').classList.add('hidden');
-          if (adminSection) adminSection.classList.add('hidden');
+          if (adminSection) adminSection.style.display = 'none';
           document.getElementById('displaySection').classList.remove('lg:col-span-2');
           document.getElementById('displaySection').classList.add('lg:col-span-3');
           switchTab('dashboardView');
@@ -998,7 +1034,7 @@
           document.getElementById('adminControls').classList.remove('hidden');
           document.getElementById('adminMetrics').classList.remove('hidden');
           document.getElementById('personalExpensesSection').classList.remove('hidden');
-          if (adminSection) adminSection.classList.remove('hidden');
+          if (adminSection) adminSection.style.display = 'block';
           document.getElementById('displaySection').classList.remove('lg:col-span-3');
           document.getElementById('displaySection').classList.add('lg:col-span-2');
         }
@@ -1117,7 +1153,6 @@
       const sendWa = document.getElementById('sendWhatsAppCheck').checked;
       const alreadySpent = document.getElementById('alreadySpentCheck').checked;
 
-      // Flexibly match person record in Supabase
       let { data: debtRecords } = await supabaseClient.from('debts').select('*');
       let debtRecord = debtRecords ? debtRecords.find(d => d.person.toLowerCase().includes(person.toLowerCase()) || person.toLowerCase().includes(d.person.toLowerCase())) : null;
 
@@ -1131,16 +1166,16 @@
       let logType = "";
 
       if (action === 'GIVEN') {
-        newReturned += amount; // I gave loan to client (Client owes me)
+        newReturned += amount; 
         logType = "Loan Given";
       } else if (action === 'TAKEN') {
-        newGiven += amount; // Client gave loan to me (I owe client)
+        newGiven += amount; // Hurairah gave loan to me
         logType = alreadySpent ? "Loan Borrowed (Spent)" : "Loan Borrowed (Cash In)";
       } else if (action === 'RECEIVED') {
-        newGiven += amount; // Client repaid loan to me
+        newGiven += amount;
         logType = "Repayment Received";
       } else if (action === 'PAID_BACK') {
-        newReturned += amount; // I repaid loan to client
+        newReturned += amount; // I repaid back to Hurairah
         logType = "Loan Repaid Back";
       }
 
@@ -1162,7 +1197,7 @@
     }
 
     function generateWhatsAppReceiptLink(personName, action, currentAmount, totalGiven, totalReturned, dateStr, noteText) {
-      const remainingBalance = totalReturned - totalGiven;
+      const remainingBalance = totalGiven - totalReturned;
       const receiptNo = "HSN-" + Math.floor(100000 + Math.random() * 900000);
       let actionTitle = action === 'RECEIVED' ? 'PAYMENT RECEIVED' : (action === 'TAKEN' ? 'LOAN BORROWED' : (action === 'GIVEN' ? 'LOAN ISSUED / GIVEN' : 'LOAN REPAID BACK'));
 
@@ -1251,7 +1286,7 @@
         items = state.personalExpenses.map(p => ({ date: p.date, category: p.description, amount: p.amount }));
       } else if (metricType === 'Receivable') {
         titleEl.innerHTML = '<i class="fa-solid fa-hand-holding-dollar text-amber-400"></i><span>Active Receivables Detail</span>';
-        items = state.debts.map(d => ({ date: 'Active Ledger', category: d.person, amount: (d.total_returned - d.total_given) }));
+        items = state.debts.map(d => ({ date: 'Active Ledger', category: d.person, amount: (d.total_given - d.total_returned) }));
       } else if (metricType === 'NetCash') {
         titleEl.innerHTML = '<i class="fa-solid fa-scale-balanced text-sky-400"></i><span>Net Cash Movement Log</span>';
         items = state.logs;
@@ -1272,6 +1307,10 @@
       document.getElementById('metricDetailModal').classList.remove('hidden');
     }
 
+    function closeMetricDetailModal() {
+      document.getElementById('metricDetailModal').classList.add('hidden');
+    }
+
     function viewInvoiceForLog(logId) {
       const matchLog = state.logs.find(l => l.id === logId);
       if (!matchLog) return;
@@ -1287,7 +1326,7 @@
       let debtRec = state.debts.find(d => matchLog.category.toLowerCase().includes(d.person.toLowerCase()));
       let given = debtRec ? debtRec.total_given : 0;
       let returned = debtRec ? debtRec.total_returned : 0;
-      let bal = returned - given;
+      let bal = given - returned;
 
       document.getElementById('rGivenText').innerText = `AED ${given.toLocaleString()}`;
       document.getElementById('rReturnedText').innerText = `AED ${returned.toLocaleString()}`;
@@ -1321,6 +1360,28 @@
           <td class="py-3 px-4 font-medium text-slate-700 dark:text-slate-200">${log.category}</td>
           <td class="py-3 px-4"><span class="px-2 py-0.5 text-xs font-semibold rounded bg-slate-500/10 text-sky-400">${log.type}</span></td>
           <td class="py-3 px-4 font-bold dark:text-white text-slate-900">AED ${log.amount.toLocaleString()}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // SETTLED / CLEARED LEDGERS RENDERER (BALANCE = 0)
+    function renderSettledLedgers() {
+      const tbody = document.getElementById('settledTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const settledDebts = state.debts.filter(d => (d.total_given - d.total_returned) === 0 && d.total_given > 0);
+      document.getElementById('settledCount').innerText = `${settledDebts.length} Clients`;
+
+      settledDebts.forEach(d => {
+        const row = document.createElement('tr');
+        row.className = "hover:bg-slate-500/5 transition";
+        row.innerHTML = `
+          <td class="py-3 px-4 font-bold text-white">${d.person}</td>
+          <td class="py-3 px-4 text-slate-300">AED ${d.total_given.toLocaleString()}</td>
+          <td class="py-3 px-4 text-emerald-400">AED ${d.total_returned.toLocaleString()}</td>
+          <td class="py-3 px-4"><span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full font-bold text-xs">Fully Cleared (0 AED)</span></td>
         `;
         tbody.appendChild(row);
       });
@@ -1585,7 +1646,7 @@
       }
     }
 
-    // ACCURATE DYNAMIC METRIC CALCULATIONS
+    // ACCURATE DYNAMIC METRIC CALCULATIONS & DYNAMIC PERSPECTIVE HEADINGS
     function renderDashboard() {
       const curMonth = new Date().toISOString().slice(0, 7);
 
@@ -1605,7 +1666,7 @@
         .filter(l => l.type === 'Loan Given' && l.date && l.date.startsWith(curMonth))
         .reduce((a, b) => a + b.amount, 0);
 
-      let totalReceivable = state.debts.reduce((a, b) => a + (b.total_returned - b.total_given), 0);
+      let totalReceivable = state.debts.reduce((a, b) => a + (b.total_given - b.total_returned), 0);
       let netCash = totalIncome + borrowedCashIn - totalExpense - totalPersonalExpense - loanRepaid - currentMonthLoanGiven;
 
       document.getElementById('metricIncome').innerText = `AED ${totalIncome.toLocaleString()}`;
@@ -1614,31 +1675,49 @@
       document.getElementById('metricReceivable').innerText = `AED ${totalReceivable.toLocaleString()}`;
       document.getElementById('metricNet').innerText = `AED ${netCash.toLocaleString()}`;
 
+      // Dynamic Column Headings based on Admin vs Client View Perspective
+      const colLabelGiven = document.getElementById('colLabelGiven');
+      const colLabelReturned = document.getElementById('colLabelReturned');
+
+      if (currentUser === 'Admin') {
+        if (colLabelGiven) colLabelGiven.innerHTML = `Total Repaid<br><span class="text-[9px] text-slate-500 font-normal">(Aapne client ko wapis kiya)</span>`;
+        if (colLabelReturned) colLabelReturned.innerHTML = `Total Received<br><span class="text-[9px] text-slate-500 font-normal">(Client ne aapko diya)</span>`;
+      } else {
+        if (colLabelGiven) colLabelGiven.innerHTML = `Total Received<br><span class="text-[9px] text-slate-500 font-normal">(Hassan ne aapko wapis kiya)</span>`;
+        if (colLabelReturned) colLabelReturned.innerHTML = `Total Issued<br><span class="text-[9px] text-slate-500 font-normal">(Aapne Hassan ko udhaar diya)</span>`;
+      }
+
       const debtTableBody = document.getElementById('debtTableBody');
       debtTableBody.innerHTML = '';
 
-      let visibleDebts = state.debts;
+      // Active Debts Filter: Balance != 0
+      let activeDebts = state.debts.filter(d => (d.total_given - d.total_returned) !== 0);
+
       if (currentUser !== 'Admin') {
-        visibleDebts = state.debts.filter(d => d.person.toLowerCase().includes(currentUser.toLowerCase()) || currentUser.toLowerCase().includes(d.person.toLowerCase()));
+        activeDebts = activeDebts.filter(d => d.person.toLowerCase().includes(currentUser.toLowerCase()) || currentUser.toLowerCase().includes(d.person.toLowerCase()));
       }
 
-      document.getElementById('debtCount').innerText = `${visibleDebts.length} Persons`;
+      document.getElementById('debtCount').innerText = `${activeDebts.length} Persons`;
 
-      visibleDebts.forEach(d => {
-        // Balance = Total Received (from Hurairah) - Total Repaid Back (to Hurairah)
-        const balance = d.total_given - d.total_returned;
+      activeDebts.forEach(d => {
+        const balance = (d.total_given || 0) - (d.total_returned || 0);
         const row = document.createElement('tr');
         row.className = "hover:bg-slate-500/5 transition";
+
+        let statusText = balance > 0 
+          ? (currentUser === 'Admin' ? '(Aapne Client ko Wapis Karne Hain)' : '(Hassan ne Aapko Wapis Karne Hain)')
+          : (currentUser === 'Admin' ? '(Client ne Aapko Dene Hain)' : '(Aapne Hassan ko Dene Hain)');
+
         row.innerHTML = `
           <td class="py-3 px-4 font-semibold dark:text-white text-slate-900 flex items-center space-x-2">
             <span class="w-8 h-8 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20 flex items-center justify-center font-bold text-xs">${d.person.charAt(0)}</span>
             <span>${d.person}</span>
           </td>
-          <td class="py-3 px-4 text-emerald-500 font-medium">AED ${d.total_returned.toLocaleString()}</td>
-          <td class="py-3 px-4 text-slate-400 font-medium">AED ${d.total_given.toLocaleString()}</td>
+          <td class="py-3 px-4 text-emerald-500 font-medium">AED ${(d.total_returned || 0).toLocaleString()}</td>
+          <td class="py-3 px-4 text-slate-400 font-medium">AED ${(d.total_given || 0).toLocaleString()}</td>
           <td class="py-3 px-4 font-bold ${balance > 0 ? 'text-amber-500' : 'text-emerald-400'}">
             AED ${balance.toLocaleString()} 
-            <span class="text-[9px] font-normal block text-slate-400">${balance > 0 ? '(Aapne wapis karne hain)' : '(Settle / Cleared)'}</span>
+            <span class="text-[9px] font-normal block text-slate-400">${statusText}</span>
           </td>
           <td class="py-3 px-4 text-right space-x-1">
             ${currentUser === 'Admin' ? `<button onclick="generateWhatsAppReceiptLink('${d.person}', 'RECEIVED', 0, ${d.total_given}, ${d.total_returned}, '${new Date().toISOString().split('T')[0]}', 'Ledger Summary')" class="btn-pro text-emerald-500 text-xs px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-lg"><i class="fa-brands fa-whatsapp"></i> Slip PDF Link</button>` : '-'}
