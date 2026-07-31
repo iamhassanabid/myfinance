@@ -27,7 +27,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     html, body, aside, main, header, div, table, tr, td, th {
-      transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease !important;
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease !important;
     }
 
     .top-loader-line {
@@ -71,8 +71,8 @@
 
     .sidebar-fixed { position: sticky; top: 0; height: 100vh; }
     .btn-pro { transition: all 0.2s ease; cursor: pointer; }
-    .btn-pro:hover { transform: translateY(-1px); }
-    body { touch-action: manipulation; }
+    .btn-pro:active { transform: scale(0.97); }
+    body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   </style>
 </head>
 <body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen relative overflow-x-hidden">
@@ -81,20 +81,20 @@
   <div id="topLoader" class="top-loader-line"></div>
 
   <!-- WHATSAPP NUMBER MODAL -->
-  <div id="whatsappModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-    <div class="glass-panel p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl border border-slate-700 relative z-10">
+  <div id="whatsappModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-sm">
+    <div class="glass-panel p-5 sm:p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl border border-slate-700 relative z-10">
       <div class="flex items-center justify-between border-b border-slate-700 pb-3">
-        <h3 class="text-base font-bold text-emerald-500 flex items-center space-x-2">
+        <h3 class="text-sm sm:text-base font-bold text-emerald-500 flex items-center space-x-2">
           <i class="fa-brands fa-whatsapp text-lg"></i>
           <span>Send PDF Invoice via WhatsApp</span>
         </h3>
-        <button onclick="closeWhatsAppModal()" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
+        <button onclick="closeWhatsAppModal()" class="text-slate-400 hover:text-white text-sm p-1"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <div class="space-y-3 text-left">
         <div>
           <label class="block text-xs font-semibold text-slate-400 mb-1">Country Code</label>
-          <select id="waCountryCode" class="w-full px-3 py-2 rounded-xl border border-slate-700 bg-slate-900 text-white text-sm">
+          <select id="waCountryCode" class="w-full px-3 py-2.5 rounded-xl border border-slate-700 bg-slate-900 text-white text-sm">
             <option value="971">🇦🇪 UAE (+971)</option>
             <option value="92">🇵🇰 Pakistan (+92)</option>
             <option value="966">🇸🇦 Saudi Arabia (+966)</option>
@@ -104,7 +104,7 @@
 
         <div>
           <label class="block text-xs font-semibold text-slate-400 mb-1">WhatsApp Mobile Number</label>
-          <input type="tel" id="waPhoneNumber" placeholder="e.g. 501234567" class="w-full px-3 py-2 rounded-xl border border-slate-700 bg-slate-900 text-white text-sm focus:ring-2 focus:ring-emerald-500">
+          <input type="tel" id="waPhoneNumber" placeholder="e.g. 501234567" class="w-full px-3 py-2.5 rounded-xl border border-slate-700 bg-slate-900 text-white text-sm focus:ring-2 focus:ring-emerald-500">
         </div>
       </div>
 
@@ -119,23 +119,23 @@
   </div>
 
   <!-- METRIC DETAIL BREAKDOWN MODAL -->
-  <div id="metricDetailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
-    <div class="glass-panel p-6 rounded-2xl max-w-xl w-full space-y-4 shadow-2xl border border-slate-700 text-left relative z-10">
+  <div id="metricDetailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md">
+    <div class="glass-panel p-5 sm:p-6 rounded-2xl max-w-xl w-full space-y-4 shadow-2xl border border-slate-700 text-left relative z-10">
       <div class="flex items-center justify-between border-b border-slate-700 pb-3">
-        <h3 class="text-base font-bold text-white flex items-center space-x-2" id="metricDetailTitle">
+        <h3 class="text-sm sm:text-base font-bold text-white flex items-center space-x-2" id="metricDetailTitle">
           <i class="fa-solid fa-circle-info text-sky-400"></i>
           <span>Metric Breakdown</span>
         </h3>
         <button onclick="closeMetricDetailModal()" class="px-2.5 py-1 bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white rounded-lg text-xs transition"><i class="fa-solid fa-xmark"></i> Close</button>
       </div>
 
-      <div class="max-h-80 overflow-y-auto space-y-2">
+      <div class="max-h-64 sm:max-h-80 overflow-y-auto space-y-2">
         <table class="w-full text-left border-collapse text-xs">
           <thead>
             <tr class="border-b border-slate-700 text-slate-400 uppercase">
-              <th class="py-2 px-3">Date</th>
-              <th class="py-2 px-3">Particulars / Category</th>
-              <th class="py-2 px-3 text-right">Amount</th>
+              <th class="py-2 px-2 sm:px-3">Date</th>
+              <th class="py-2 px-2 sm:px-3">Particulars / Category</th>
+              <th class="py-2 px-2 sm:px-3 text-right">Amount</th>
             </tr>
           </thead>
           <tbody id="metricDetailTableBody" class="divide-y divide-slate-800 text-slate-200"></tbody>
@@ -143,72 +143,72 @@
       </div>
 
       <div class="flex items-center justify-between pt-2 border-t border-slate-700">
-        <button onclick="closeMetricDetailModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 rounded-xl">Close Window</button>
+        <button onclick="closeMetricDetailModal()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 rounded-xl">Close Window</button>
         <div>
-          <span class="text-xs font-semibold text-slate-400">Total Calculation: </span>
-          <span class="text-sm font-bold text-emerald-400" id="metricDetailTotal">AED 0</span>
+          <span class="text-xs font-semibold text-slate-400">Total: </span>
+          <span class="text-xs sm:text-sm font-bold text-emerald-400" id="metricDetailTotal">AED 0</span>
         </div>
       </div>
     </div>
   </div>
 
   <!-- INVOICE VIEW MODAL -->
-  <div id="receiptSearchResultModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
-    <div class="glass-panel p-6 rounded-2xl max-w-lg w-full space-y-4 shadow-2xl border border-slate-700 text-left relative z-10">
+  <div id="receiptSearchResultModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/90 backdrop-blur-md">
+    <div class="glass-panel p-4 sm:p-6 rounded-2xl max-w-lg w-full space-y-4 shadow-2xl border border-slate-700 text-left relative z-10 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-slate-700 pb-3">
-        <h3 class="text-sm font-bold text-sky-400 flex items-center space-x-2">
+        <h3 class="text-xs sm:text-sm font-bold text-sky-400 flex items-center space-x-2">
           <i class="fa-solid fa-file-invoice"></i>
           <span>Official Financial Invoice Statement</span>
         </h3>
-        <button onclick="closeReceiptSearchModal()" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
+        <button onclick="closeReceiptSearchModal()" class="text-slate-400 hover:text-white text-sm p-1"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
-      <div id="receiptTemplateContainer" class="p-6 bg-slate-900 border border-sky-500/30 rounded-2xl text-xs space-y-4 text-slate-200 shadow-xl">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-          <div class="flex items-center space-x-3">
-            <svg class="w-10 h-10 infinity-glow text-sky-400" viewBox="0 0 100 50" fill="none" stroke="currentColor" stroke-width="6">
+      <div id="receiptTemplateContainer" class="p-4 sm:p-6 bg-slate-900 border border-sky-500/30 rounded-2xl text-xs space-y-4 text-slate-200 shadow-xl">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div class="flex items-center space-x-2 sm:space-x-3">
+            <svg class="w-8 h-8 sm:w-10 sm:h-10 infinity-glow text-sky-400" viewBox="0 0 100 50" fill="none" stroke="currentColor" stroke-width="6">
               <path d="M 30,25 C 10,5 0,25 0,25 C 0,25 10,45 30,25 C 50,5 70,5 80,25 C 90,45 100,25 100,25 C 100,25 90,5 80,25 C 70,45 50,45 30,25 Z"/>
             </svg>
             <div>
-              <h2 class="text-base font-bold text-white tracking-widest">HASSAN</h2>
-              <p class="text-[10px] text-sky-400">FINANCIAL MANAGEMENT SERVICES</p>
+              <h2 class="text-sm sm:text-base font-bold text-white tracking-widest">HASSAN</h2>
+              <p class="text-[9px] sm:text-[10px] text-sky-400">FINANCIAL MANAGEMENT SERVICES</p>
             </div>
           </div>
           <div class="text-right">
-            <span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold rounded-lg text-[10px]" id="rStatusBadge">VERIFIED STATEMENT</span>
+            <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold rounded-lg text-[9px] sm:text-[10px]" id="rStatusBadge">VERIFIED</span>
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-2 text-[11px] border-b border-slate-800 pb-3">
-          <p><strong class="text-slate-400">Invoice No:</strong> <span id="rNumText" class="text-white font-mono font-bold">HSN-000000</span></p>
-          <p class="text-right"><strong class="text-slate-400">Date:</strong> <span id="rDateText" class="text-white">2026-07-31</span></p>
-          <p><strong class="text-slate-400">Client Profile:</strong> <span id="rClientText" class="text-sky-300 font-semibold">User Name</span></p>
-          <p class="text-right"><strong class="text-slate-400">Currency:</strong> <span class="text-white font-bold">AED</span></p>
+        <div class="grid grid-cols-2 gap-2 text-[10px] sm:text-[11px] border-b border-slate-800 pb-3">
+          <p><strong class="text-slate-400">Invoice No:</strong> <span id="rNumText" class="text-white font-mono font-bold block sm:inline">HSN-000000</span></p>
+          <p class="text-right"><strong class="text-slate-400">Date:</strong> <span id="rDateText" class="text-white block sm:inline">2026-07-31</span></p>
+          <p><strong class="text-slate-400">Client Profile:</strong> <span id="rClientText" class="text-sky-300 font-semibold block sm:inline">User Name</span></p>
+          <p class="text-right"><strong class="text-slate-400">Currency:</strong> <span class="text-white font-bold block sm:inline">AED</span></p>
         </div>
 
         <div class="space-y-2">
           <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1">
-            <p class="text-[10px] uppercase tracking-wider text-slate-400">Transaction Type</p>
-            <p class="text-sm font-bold text-amber-400" id="rTypeText">PAYMENT RECEIVED</p>
-            <p class="text-[11px] text-slate-300 mt-1"><strong class="text-slate-400">Particulars:</strong> <span id="rNoteText">Ledger Summary</span></p>
-            <p class="text-base font-extrabold text-emerald-400 mt-2" id="rAmountText">AED 0</p>
+            <p class="text-[9px] sm:text-[10px] uppercase tracking-wider text-slate-400">Transaction Type</p>
+            <p class="text-xs sm:text-sm font-bold text-amber-400" id="rTypeText">PAYMENT RECEIVED</p>
+            <p class="text-[10px] sm:text-[11px] text-slate-300 mt-1"><strong class="text-slate-400">Particulars:</strong> <span id="rNoteText">Ledger Summary</span></p>
+            <p class="text-sm sm:text-base font-extrabold text-emerald-400 mt-2" id="rAmountText">AED 0</p>
           </div>
         </div>
 
-        <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800 space-y-1 text-[11px]">
+        <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800 space-y-1 text-[10px] sm:text-[11px]">
           <p class="font-bold text-sky-400 border-b border-slate-800 pb-1 mb-1">ACCOUNT SUMMARY STATEMENT</p>
           <div class="flex justify-between"><span class="text-slate-400">Total Credit Received:</span><span id="rGivenText" class="font-semibold text-white">AED 0</span></div>
           <div class="flex justify-between"><span class="text-slate-400">Total Debit Repaid:</span><span id="rReturnedText" class="font-semibold text-emerald-400">AED 0</span></div>
           <div class="flex justify-between border-t border-slate-800 pt-1 mt-1"><span class="font-bold text-white">Net Outstanding Balance:</span><span id="rBalanceText" class="font-bold text-amber-400">AED 0</span></div>
         </div>
 
-        <div class="pt-2 text-center text-[10px] text-slate-400 border-t border-slate-800">
+        <div class="pt-2 text-center text-[9px] sm:text-[10px] text-slate-400 border-t border-slate-800">
           <p class="font-bold text-emerald-400 mb-0.5">THANK YOU FOR YOUR BUSINESS</p>
           <p>Official Digital Statement generated via Hassan Financial Ledger.</p>
         </div>
       </div>
 
-      <div class="flex space-x-2 pt-2">
+      <div class="flex space-x-2 pt-1">
         <button onclick="downloadReceiptAsPDF()" class="w-full py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-xl text-xs flex items-center justify-center space-x-2 btn-pro">
           <i class="fa-solid fa-file-pdf"></i>
           <span>Download Official PDF Document</span>
@@ -218,37 +218,37 @@
   </div>
 
   <!-- INITIAL SPLASH SCREEN -->
-  <div id="loadingScreen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950">
-    <div class="relative flex flex-col items-center">
-      <svg class="w-24 h-24 infinity-glow text-sky-400" viewBox="0 0 100 50" fill="none" stroke="currentColor" stroke-width="5">
+  <div id="loadingScreen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950 p-4">
+    <div class="relative flex flex-col items-center text-center">
+      <svg class="w-20 h-20 sm:w-24 sm:h-24 infinity-glow text-sky-400" viewBox="0 0 100 50" fill="none" stroke="currentColor" stroke-width="5">
         <path d="M 30,25 C 10,5 0,25 0,25 C 0,25 10,45 30,25 C 50,5 70,5 80,25 C 90,45 100,25 100,25 C 100,25 90,5 80,25 C 70,45 50,45 30,25 Z"/>
       </svg>
-      <h2 class="text-white text-xl font-bold tracking-widest mt-5">HASSAN</h2>
+      <h2 class="text-white text-lg sm:text-xl font-bold tracking-widest mt-4">HASSAN</h2>
       <p class="text-sky-400 text-xs tracking-wider mt-1">Connecting to Secure Engine...</p>
     </div>
   </div>
 
   <!-- AUTH SCREEN -->
   <div id="authScreen" class="hidden fixed inset-0 z-40 flex items-center justify-center p-4 bg-slate-950">
-    <div class="glass-panel rounded-3xl shadow-2xl p-8 w-full max-w-md text-center border border-sky-500/20 relative z-10">
-      <div class="inline-block p-4 rounded-full bg-slate-900 mb-4 shadow-xl border border-sky-500/30">
-        <svg class="w-16 h-16 infinity-glow text-sky-400" viewBox="0 0 100 50" fill="none" stroke="currentColor" stroke-width="5">
+    <div class="glass-panel rounded-3xl shadow-2xl p-6 sm:p-8 w-full max-w-md text-center border border-sky-500/20 relative z-10">
+      <div class="inline-block p-3 sm:p-4 rounded-full bg-slate-900 mb-4 shadow-xl border border-sky-500/30">
+        <svg class="w-12 h-12 sm:w-16 sm:h-16 infinity-glow text-sky-400" viewBox="0 0 100 50" fill="none" stroke="currentColor" stroke-width="5">
           <path d="M 30,25 C 10,5 0,25 0,25 C 0,25 10,45 30,25 C 50,5 70,5 80,25 C 90,45 100,25 100,25 C 100,25 90,5 80,25 C 70,45 50,45 30,25 Z"/>
         </svg>
       </div>
       
-      <h2 class="text-2xl font-extrabold dark:text-white text-slate-900 tracking-wide">HASSAN FINANCIALS</h2>
-      <p class="text-xs text-sky-400 mt-1 mb-6">Enter Security Password Key</p>
+      <h2 class="text-xl sm:text-2xl font-extrabold dark:text-white text-slate-900 tracking-wide">HASSAN FINANCIALS</h2>
+      <p class="text-xs text-sky-400 mt-1 mb-5">Enter Security Password Key</p>
 
       <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
         <div class="text-left">
           <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Access Password Key</label>
-          <input type="password" id="loginPin" required placeholder="Enter password..." class="w-full px-4 py-3 rounded-2xl border border-slate-700 bg-slate-900/90 text-white focus:ring-2 focus:ring-sky-500 focus:outline-none text-center font-mono text-lg shadow-inner">
+          <input type="password" id="loginPin" required placeholder="Enter password..." class="w-full px-4 py-3 rounded-2xl border border-slate-700 bg-slate-900/90 text-white focus:ring-2 focus:ring-sky-500 focus:outline-none text-center font-mono text-base sm:text-lg shadow-inner">
         </div>
         <div id="loginError" class="text-rose-500 text-xs hidden font-medium">Invalid Password Key. Access Denied.</div>
-        <button type="submit" class="btn-pro w-full py-3 px-4 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-bold rounded-2xl shadow-lg flex items-center justify-center space-x-2">
+        <button type="submit" class="btn-pro w-full py-3 px-4 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-bold rounded-2xl shadow-lg flex items-center justify-center space-x-2 text-sm sm:text-base">
           <span>Unlock Account</span>
-          <i class="fa-solid fa-key text-sm"></i>
+          <i class="fa-solid fa-key text-xs sm:text-sm"></i>
         </button>
       </form>
     </div>
@@ -257,7 +257,7 @@
   <!-- MAIN APP CONTAINER -->
   <div id="appScreen" class="hidden min-h-screen flex flex-col md:flex-row relative z-10">
     
-    <!-- LEFT FIXED SIDEBAR MENU -->
+    <!-- LEFT SIDEBAR MENU -->
     <aside id="sidebarMenu" class="hidden md:flex md:w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-col justify-between shrink-0 sidebar-fixed">
       <div>
         <div class="p-5 flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800">
@@ -320,167 +320,167 @@
     <!-- RIGHT SCROLLABLE CONTENT -->
     <div class="flex-1 flex flex-col min-w-0">
       <header class="md:hidden sticky top-0 z-30 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 h-16 flex items-center justify-between">
-        <div class="flex items-center space-x-3">
+        <div class="flex items-center space-x-2.5">
           <svg class="w-7 h-7 infinity-glow text-sky-400" viewBox="0 0 100 50" fill="none" stroke="currentColor" stroke-width="6">
             <path d="M 30,25 C 10,5 0,25 0,25 C 0,25 10,45 30,25 C 50,5 70,5 80,25 C 90,45 100,25 100,25 C 100,25 90,5 80,25 C 70,45 50,45 30,25 Z"/>
           </svg>
-          <span class="font-bold dark:text-white text-slate-900 text-sm">HASSAN EXPENSE</span>
+          <span class="font-bold dark:text-white text-slate-900 text-xs sm:text-sm">HASSAN EXPENSE</span>
         </div>
-        <div class="flex items-center space-x-3">
-          <button onclick="toggleTheme()" class="p-1 text-slate-600 dark:text-slate-300">
+        <div class="flex items-center space-x-2">
+          <button onclick="toggleTheme()" class="p-2 text-slate-600 dark:text-slate-300">
             <i class="fa-solid fa-moon dark:hidden"></i>
             <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
           </button>
-          <button onclick="logout()" class="p-1 text-rose-500"><i class="fa-solid fa-right-from-bracket"></i></button>
+          <button onclick="logout()" class="p-2 text-rose-500"><i class="fa-solid fa-right-from-bracket"></i></button>
         </div>
       </header>
 
-      <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 overflow-y-auto">
+      <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6 overflow-y-auto">
 
         <!-- SEARCH RECEIPT BAR -->
-        <div class="glass-panel p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div class="flex items-center space-x-3 w-full sm:w-auto">
-            <i class="fa-solid fa-magnifying-glass text-sky-400 text-lg"></i>
-            <span class="text-xs font-semibold text-slate-300">Search Invoice / Receipt Document:</span>
+        <div class="glass-panel p-3.5 sm:p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3">
+          <div class="flex items-center space-x-2.5 w-full sm:w-auto">
+            <i class="fa-solid fa-magnifying-glass text-sky-400 text-base sm:text-lg"></i>
+            <span class="text-xs font-semibold text-slate-300">Search Invoice Document:</span>
           </div>
           <div class="flex items-center space-x-2 w-full sm:w-auto">
-            <input type="text" id="receiptSearchInput" placeholder="Enter Receipt No (e.g. HSN-863950 or 12)..." class="w-full sm:w-72 px-3.5 py-2 rounded-xl border border-slate-700 bg-slate-900 text-white text-xs font-mono focus:ring-2 focus:ring-sky-500">
-            <button onclick="searchReceiptByNumber()" class="btn-pro px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white font-medium rounded-xl text-xs flex items-center space-x-1.5 shrink-0">
+            <input type="text" id="receiptSearchInput" placeholder="Enter Receipt No (e.g. HSN-863950)..." class="w-full sm:w-72 px-3 py-2 rounded-xl border border-slate-700 bg-slate-900 text-white text-xs font-mono focus:ring-2 focus:ring-sky-500">
+            <button onclick="searchReceiptByNumber()" class="btn-pro px-3.5 py-2 bg-sky-600 hover:bg-sky-700 text-white font-medium rounded-xl text-xs flex items-center space-x-1 shrink-0">
               <i class="fa-solid fa-search"></i>
               <span>Search</span>
             </button>
           </div>
         </div>
 
-        <div id="guestBanner" class="hidden bg-sky-500/10 border border-sky-500/30 rounded-xl p-4 flex items-center justify-between">
+        <div id="guestBanner" class="hidden bg-sky-500/10 border border-sky-500/30 rounded-xl p-3.5 sm:p-4 flex items-center justify-between">
           <div class="flex items-center space-x-3">
-            <i class="fa-solid fa-user-shield text-sky-400 text-xl"></i>
+            <i class="fa-solid fa-user-shield text-sky-400 text-lg sm:text-xl"></i>
             <div>
-              <h3 class="font-semibold dark:text-sky-200 text-sky-900 text-sm">Personal Ledger View</h3>
-              <p class="text-xs text-sky-400">Logged in as <span id="guestName" class="font-bold">User</span>.</p>
+              <h3 class="font-semibold dark:text-sky-200 text-sky-900 text-xs sm:text-sm">Personal Ledger View</h3>
+              <p class="text-[11px] sm:text-xs text-sky-400">Logged in as <span id="guestName" class="font-bold">User</span>.</p>
             </div>
           </div>
         </div>
 
         <!-- DASHBOARD OVERVIEW -->
-        <div id="dashboardView" class="space-y-6">
+        <div id="dashboardView" class="space-y-4 sm:space-y-6">
           
-          <div id="adminMetrics" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            <div onclick="openMetricDetail('Income')" class="glass-panel p-5 rounded-2xl shadow-sm flex items-center justify-between cursor-pointer hover:border-emerald-500 transition">
+          <div id="adminMetrics" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+            <div onclick="openMetricDetail('Income')" class="glass-panel p-3.5 sm:p-5 rounded-2xl shadow-sm flex items-center justify-between cursor-pointer hover:border-emerald-500 transition">
               <div>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Income ↗</p>
-                <h3 class="text-xl font-bold text-emerald-500 mt-1" id="metricIncome">AED 0</h3>
+                <p class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Income ↗</p>
+                <h3 class="text-sm sm:text-xl font-bold text-emerald-500 mt-0.5 sm:mt-1" id="metricIncome">AED 0</h3>
               </div>
-              <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-lg"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+              <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-sm sm:text-lg shrink-0"><i class="fa-solid fa-money-bill-trend-up"></i></div>
             </div>
 
-            <div onclick="openMetricDetail('Expense')" class="glass-panel p-5 rounded-2xl shadow-sm flex items-center justify-between cursor-pointer hover:border-rose-500 transition">
+            <div onclick="openMetricDetail('Expense')" class="glass-panel p-3.5 sm:p-5 rounded-2xl shadow-sm flex items-center justify-between cursor-pointer hover:border-rose-500 transition">
               <div>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">General Expenses ↗</p>
-                <h3 class="text-xl font-bold text-rose-500 mt-1" id="metricExpense">AED 0</h3>
+                <p class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">General Exp ↗</p>
+                <h3 class="text-sm sm:text-xl font-bold text-rose-500 mt-0.5 sm:mt-1" id="metricExpense">AED 0</h3>
               </div>
-              <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-500 flex items-center justify-center text-lg"><i class="fa-solid fa-receipt"></i></div>
+              <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-rose-500/10 text-rose-500 flex items-center justify-center text-sm sm:text-lg shrink-0"><i class="fa-solid fa-receipt"></i></div>
             </div>
 
-            <div onclick="openMetricDetail('PersonalExpense')" class="glass-panel p-5 rounded-2xl shadow-sm flex items-center justify-between cursor-pointer hover:border-purple-500 transition">
+            <div onclick="openMetricDetail('PersonalExpense')" class="glass-panel p-3.5 sm:p-5 rounded-2xl shadow-sm flex items-center justify-between cursor-pointer hover:border-purple-500 transition">
               <div>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Personal Expenses ↗</p>
-                <h3 class="text-xl font-bold text-purple-500 mt-1" id="metricPersonalExpense">AED 0</h3>
+                <p class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">Personal Exp ↗</p>
+                <h3 class="text-sm sm:text-xl font-bold text-purple-500 mt-0.5 sm:mt-1" id="metricPersonalExpense">AED 0</h3>
               </div>
-              <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center text-lg"><i class="fa-solid fa-user-gear"></i></div>
+              <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center text-sm sm:text-lg shrink-0"><i class="fa-solid fa-user-gear"></i></div>
             </div>
 
-            <div onclick="openMetricDetail('Receivable')" class="glass-panel p-5 rounded-2xl shadow-sm flex items-center justify-between cursor-pointer hover:border-amber-500 transition">
+            <div onclick="openMetricDetail('Receivable')" class="glass-panel p-3.5 sm:p-5 rounded-2xl shadow-sm flex items-center justify-between cursor-pointer hover:border-amber-500 transition">
               <div>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Receivables ↗</p>
-                <h3 class="text-xl font-bold text-amber-500 mt-1" id="metricReceivable">AED 0</h3>
+                <p class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">Receivables ↗</p>
+                <h3 class="text-sm sm:text-xl font-bold text-amber-500 mt-0.5 sm:mt-1" id="metricReceivable">AED 0</h3>
               </div>
-              <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center text-lg"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+              <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center text-sm sm:text-lg shrink-0"><i class="fa-solid fa-hand-holding-dollar"></i></div>
             </div>
 
-            <div onclick="openMetricDetail('NetCash')" class="glass-panel p-5 rounded-2xl shadow-sm flex items-center justify-between cursor-pointer hover:border-sky-500 transition">
+            <div onclick="openMetricDetail('NetCash')" class="glass-panel p-3.5 sm:p-5 rounded-2xl shadow-sm col-span-2 sm:col-span-1 flex items-center justify-between cursor-pointer hover:border-sky-500 transition">
               <div>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Net Cash Balance ↗</p>
-                <h3 class="text-xl font-bold text-sky-400 mt-1" id="metricNet">AED 0</h3>
+                <p class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">Net Cash Balance ↗</p>
+                <h3 class="text-sm sm:text-xl font-bold text-sky-400 mt-0.5 sm:mt-1" id="metricNet">AED 0</h3>
               </div>
-              <div class="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center text-lg"><i class="fa-solid fa-scale-balanced"></i></div>
+              <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center text-sm sm:text-lg shrink-0"><i class="fa-solid fa-scale-balanced"></i></div>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div id="adminControls" class="lg:col-span-1 space-y-6">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+            <div id="adminControls" class="lg:col-span-1 space-y-4 sm:space-y-6">
               <!-- Add Income / Expense -->
-              <div class="glass-panel p-5 rounded-2xl shadow-sm">
-                <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center space-x-2">
+              <div class="glass-panel p-4 sm:p-5 rounded-2xl shadow-sm">
+                <h2 class="text-sm sm:text-base font-bold dark:text-white text-slate-900 mb-3 sm:mb-4 flex items-center space-x-2">
                   <i class="fa-solid fa-plus-circle text-sky-400"></i>
                   <span>Add Income / General Expense</span>
                 </h2>
                 <form onsubmit="handleAddIncomeExpense(event)" class="space-y-3">
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Type</label>
-                    <select id="cfType" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500">
+                    <select id="cfType" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs sm:text-sm focus:ring-2 focus:ring-sky-500">
                       <option value="Income">Income (Salary / Bonus / Business)</option>
                       <option value="Expense">General Expense (Rent / Bills / Ration)</option>
                     </select>
                   </div>
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Category / Description</label>
-                    <input type="text" id="cfCategory" required placeholder="e.g., Monthly Salary, Room Rent" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500">
+                    <input type="text" id="cfCategory" required placeholder="e.g., Monthly Salary, Room Rent" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs sm:text-sm focus:ring-2 focus:ring-sky-500">
                   </div>
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Amount (AED)</label>
-                    <input type="number" id="cfAmount" required placeholder="0" min="1" step="any" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500">
+                    <input type="number" id="cfAmount" required placeholder="0" min="1" step="any" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs sm:text-sm focus:ring-2 focus:ring-sky-500">
                   </div>
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Date</label>
-                    <input type="date" id="cfDate" required class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500">
+                    <input type="date" id="cfDate" required class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs sm:text-sm focus:ring-2 focus:ring-sky-500">
                   </div>
-                  <button type="submit" class="btn-pro w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg text-sm flex items-center justify-center space-x-1">
+                  <button type="submit" class="btn-pro w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg text-xs sm:text-sm flex items-center justify-center space-x-1">
                     <i class="fa-solid fa-check"></i><span>Save Entry</span>
                   </button>
                 </form>
               </div>
 
               <!-- Log Personal Expense -->
-              <div class="glass-panel p-5 rounded-2xl shadow-sm">
-                <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center space-x-2">
+              <div class="glass-panel p-4 sm:p-5 rounded-2xl shadow-sm">
+                <h2 class="text-sm sm:text-base font-bold dark:text-white text-slate-900 mb-3 sm:mb-4 flex items-center space-x-2">
                   <i class="fa-solid fa-user-gear text-purple-500"></i>
                   <span>Log Personal Expense</span>
                 </h2>
                 <form onsubmit="handleAddPersonalExpense(event)" class="space-y-3">
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Where spent?</label>
-                    <input type="text" id="peDescription" required placeholder="e.g., Snacks, Coffee, Taxi" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-purple-500">
+                    <input type="text" id="peDescription" required placeholder="e.g., Snacks, Coffee, Taxi" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs sm:text-sm focus:ring-2 focus:ring-purple-500">
                   </div>
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Amount Spent (AED)</label>
-                    <input type="number" id="peAmount" required placeholder="e.g., 50" min="0.1" step="any" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-purple-500">
+                    <input type="number" id="peAmount" required placeholder="e.g., 50" min="0.1" step="any" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs sm:text-sm focus:ring-2 focus:ring-purple-500">
                   </div>
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Date</label>
-                    <input type="date" id="peDate" required class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-purple-500">
+                    <input type="date" id="peDate" required class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs sm:text-sm focus:ring-2 focus:ring-purple-500">
                   </div>
-                  <button type="submit" class="btn-pro w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg text-sm flex items-center justify-center space-x-1">
+                  <button type="submit" class="btn-pro w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg text-xs sm:text-sm flex items-center justify-center space-x-1">
                     <i class="fa-solid fa-receipt"></i><span>Record Personal Expense</span>
                   </button>
                 </form>
               </div>
 
-              <!-- MANAGE DEBT FORM WITH CLEAN UNIVERSAL ENGLISH OPTIONS -->
-              <div class="glass-panel p-5 rounded-2xl shadow-sm">
-                <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center space-x-2">
+              <!-- Manage Debt Form -->
+              <div class="glass-panel p-4 sm:p-5 rounded-2xl shadow-sm">
+                <h2 class="text-sm sm:text-base font-bold dark:text-white text-slate-900 mb-3 sm:mb-4 flex items-center space-x-2">
                   <i class="fa-solid fa-hand-holding-hand text-amber-500"></i>
                   <span>Manage Debt (4 Action Options)</span>
                 </h2>
                 <form onsubmit="handleManageDebt(event)" class="space-y-3">
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Select Person</label>
-                    <select id="debtPersonSelect" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500"></select>
+                    <select id="debtPersonSelect" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs sm:text-sm focus:ring-2 focus:ring-sky-500"></select>
                   </div>
 
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Action Type</label>
-                    <select id="debtAction" onchange="toggleSpentOption()" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500">
+                    <select id="debtAction" onchange="toggleSpentOption()" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs sm:text-sm focus:ring-2 focus:ring-sky-500">
                       <option value="TAKEN">Loan Borrowed (Borrow Credit)</option>
                       <option value="PAID_BACK">Repayment Paid Back (Settle Borrowed)</option>
                       <option value="GIVEN">Loan Given (Issue Credit)</option>
@@ -491,24 +491,24 @@
                   <div id="spentOptionBox" class="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 space-y-1">
                     <label class="inline-flex items-center space-x-2 text-xs text-amber-600 dark:text-amber-300 cursor-pointer">
                       <input type="checkbox" id="alreadySpentCheck" class="rounded border-slate-700 text-amber-500 focus:ring-amber-500 bg-slate-900">
-                      <span class="font-semibold">Already Spent / Bought Item? (e.g. iPhone)</span>
+                      <span class="font-semibold">Already Spent / Bought Item?</span>
                     </label>
                     <p class="text-[10px] text-slate-500 dark:text-slate-400">If checked, loan will be recorded in ledger but WILL NOT increase Net Cash Balance.</p>
                   </div>
 
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Amount (AED)</label>
-                    <input type="number" id="debtAmount" required placeholder="0" min="1" step="any" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500">
+                    <input type="number" id="debtAmount" required placeholder="0" min="1" step="any" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs sm:text-sm focus:ring-2 focus:ring-sky-500">
                   </div>
 
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Transaction Date</label>
-                    <input type="date" id="debtDate" required class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500">
+                    <input type="date" id="debtDate" required class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs sm:text-sm focus:ring-2 focus:ring-sky-500">
                   </div>
 
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Note / Remark</label>
-                    <input type="text" id="debtNote" placeholder="e.g., iPhone purchase, Installment" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sky-500">
+                    <input type="text" id="debtNote" placeholder="e.g., iPhone purchase, Installment" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs sm:text-sm focus:ring-2 focus:ring-sky-500">
                   </div>
 
                   <div class="pt-1">
@@ -518,74 +518,74 @@
                     </label>
                   </div>
 
-                  <button type="submit" id="updateDebtBtn" class="btn-pro w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg text-sm flex items-center justify-center space-x-1">
+                  <button type="submit" id="updateDebtBtn" class="btn-pro w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg text-xs sm:text-sm flex items-center justify-center space-x-1">
                     <i class="fa-solid fa-arrows-rotate"></i><span>Update Debt Ledger</span>
                   </button>
                 </form>
               </div>
             </div>
 
-            <div id="displaySection" class="lg:col-span-2 space-y-6">
-              <!-- ACTIVE DEBT LEDGERS WITH CLEAN PROFESSIONAL HEADERS -->
-              <div class="glass-panel p-5 rounded-2xl shadow-sm">
-                <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center justify-between">
+            <div id="displaySection" class="lg:col-span-2 space-y-4 sm:space-y-6">
+              <!-- Active Debt Ledgers -->
+              <div class="glass-panel p-4 sm:p-5 rounded-2xl shadow-sm">
+                <h2 class="text-sm sm:text-base font-bold dark:text-white text-slate-900 mb-3 sm:mb-4 flex items-center justify-between">
                   <span class="flex items-center space-x-2"><i class="fa-solid fa-users text-sky-400"></i><span>Active Debt Ledgers</span></span>
-                  <span id="debtCount" class="text-xs bg-sky-500/10 text-sky-400 border border-sky-500/20 font-semibold px-2.5 py-0.5 rounded-full">0 Persons</span>
+                  <span id="debtCount" class="text-xs bg-sky-500/10 text-sky-400 border border-sky-500/20 font-semibold px-2 py-0.5 rounded-full">0 Persons</span>
                 </h2>
-                <div class="overflow-x-auto">
-                  <table class="w-full text-left border-collapse">
+                <div class="overflow-x-auto -mx-1">
+                  <table class="w-full text-left border-collapse min-w-[500px]">
                     <thead>
-                      <tr class="border-b border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                        <th class="py-3 px-4">Person</th>
-                        <th class="py-3 px-4">Total Repaid (Credit)</th>
-                        <th class="py-3 px-4">Total Issued (Debit)</th>
-                        <th class="py-3 px-4">Net Outstanding Balance</th>
-                        <th class="py-3 px-4 text-right">Actions</th>
+                      <tr class="border-b border-slate-200 dark:border-slate-800 text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                        <th class="py-2.5 px-3">Person</th>
+                        <th class="py-2.5 px-3">Total Repaid (Credit)</th>
+                        <th class="py-2.5 px-3">Total Issued (Debit)</th>
+                        <th class="py-2.5 px-3">Net Balance</th>
+                        <th class="py-2.5 px-3 text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody id="debtTableBody" class="divide-y divide-slate-200 dark:divide-slate-800/60 text-sm"></tbody>
+                    <tbody id="debtTableBody" class="divide-y divide-slate-200 dark:divide-slate-800/60 text-xs sm:text-sm"></tbody>
                   </table>
                 </div>
               </div>
 
               <!-- Personal Expenses Log -->
-              <div id="personalExpensesSection" class="glass-panel p-5 rounded-2xl shadow-sm">
-                <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center justify-between">
+              <div id="personalExpensesSection" class="glass-panel p-4 sm:p-5 rounded-2xl shadow-sm">
+                <h2 class="text-sm sm:text-base font-bold dark:text-white text-slate-900 mb-3 sm:mb-4 flex items-center justify-between">
                   <span class="flex items-center space-x-2"><i class="fa-solid fa-user-gear text-purple-500"></i><span>Personal Expenses Log</span></span>
-                  <span id="personalTotalText" class="text-xs bg-purple-500/10 text-purple-500 border border-purple-500/20 font-semibold px-2.5 py-0.5 rounded-full">Total: AED 0</span>
+                  <span id="personalTotalText" class="text-xs bg-purple-500/10 text-purple-500 border border-purple-500/20 font-semibold px-2 py-0.5 rounded-full">Total: AED 0</span>
                 </h2>
-                <div class="overflow-x-auto">
-                  <table class="w-full text-left border-collapse">
+                <div class="overflow-x-auto -mx-1">
+                  <table class="w-full text-left border-collapse min-w-[450px]">
                     <thead>
-                      <tr class="border-b border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                        <th class="py-3 px-4">Date</th>
-                        <th class="py-3 px-4">Where Spent</th>
-                        <th class="py-3 px-4">Amount Spent</th>
-                        <th class="py-3 px-4 text-right">Actions</th>
+                      <tr class="border-b border-slate-200 dark:border-slate-800 text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                        <th class="py-2.5 px-3">Date</th>
+                        <th class="py-2.5 px-3">Where Spent</th>
+                        <th class="py-2.5 px-3">Amount</th>
+                        <th class="py-2.5 px-3 text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody id="personalExpenseTableBody" class="divide-y divide-slate-200 dark:divide-slate-800/60 text-sm"></tbody>
+                    <tbody id="personalExpenseTableBody" class="divide-y divide-slate-200 dark:divide-slate-800/60 text-xs sm:text-sm"></tbody>
                   </table>
                 </div>
               </div>
 
-              <!-- Audit Logs Table WITH VIEW INVOICE OPTION -->
-              <div class="glass-panel p-5 rounded-2xl shadow-sm">
-                <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center justify-between">
-                  <span class="flex items-center space-x-2"><i class="fa-solid fa-list-check text-sky-400"></i><span>Master Transaction Audit Logs</span></span>
+              <!-- Master Audit Logs Table -->
+              <div class="glass-panel p-4 sm:p-5 rounded-2xl shadow-sm">
+                <h2 class="text-sm sm:text-base font-bold dark:text-white text-slate-900 mb-3 sm:mb-4 flex items-center justify-between">
+                  <span class="flex items-center space-x-2"><i class="fa-solid fa-list-check text-sky-400"></i><span>Master Audit Logs</span></span>
                 </h2>
-                <div class="overflow-x-auto">
-                  <table class="w-full text-left border-collapse">
+                <div class="overflow-x-auto -mx-1">
+                  <table class="w-full text-left border-collapse min-w-[550px]">
                     <thead>
-                      <tr class="border-b border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                        <th class="py-3 px-4">Date</th>
-                        <th class="py-3 px-4">Description / Category</th>
-                        <th class="py-3 px-4">Type</th>
-                        <th class="py-3 px-4">Amount</th>
-                        <th class="py-3 px-4 text-right">Actions</th>
+                      <tr class="border-b border-slate-200 dark:border-slate-800 text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                        <th class="py-2.5 px-3">Date</th>
+                        <th class="py-2.5 px-3">Description / Category</th>
+                        <th class="py-2.5 px-3">Type</th>
+                        <th class="py-2.5 px-3">Amount</th>
+                        <th class="py-2.5 px-3 text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody id="logsTableBody" class="divide-y divide-slate-200 dark:divide-slate-800/60 text-sm"></tbody>
+                    <tbody id="logsTableBody" class="divide-y divide-slate-200 dark:divide-slate-800/60 text-xs sm:text-sm"></tbody>
                   </table>
                 </div>
               </div>
@@ -593,167 +593,167 @@
           </div>
         </div>
 
-        <!-- SETTLED / CLEARED LEDGERS TAB -->
-        <div id="settledLedgersView" class="hidden space-y-6">
-          <div class="glass-panel p-6 rounded-2xl shadow-sm space-y-6">
-            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+        <!-- SETTLED LEDGERS TAB -->
+        <div id="settledLedgersView" class="hidden space-y-4 sm:space-y-6">
+          <div class="glass-panel p-4 sm:p-6 rounded-2xl shadow-sm space-y-4 sm:space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
               <div>
-                <h2 class="text-xl font-bold dark:text-white text-slate-900 flex items-center space-x-2">
+                <h2 class="text-base sm:text-xl font-bold dark:text-white text-slate-900 flex items-center space-x-2">
                   <i class="fa-solid fa-square-check text-emerald-400"></i>
                   <span>Settled & Cleared Client Ledgers</span>
                 </h2>
-                <p class="text-xs text-slate-400 mt-1">Clients whose net debt balance is completely 0 AED (Fully Cleared).</p>
+                <p class="text-[10px] sm:text-xs text-slate-400 mt-0.5">Clients whose net debt balance is completely 0 AED.</p>
               </div>
-              <span id="settledCount" class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full font-bold">0 Clients</span>
+              <span id="settledCount" class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full font-bold">0 Clients</span>
             </div>
 
-            <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse">
+            <div class="overflow-x-auto -mx-1">
+              <table class="w-full text-left border-collapse min-w-[450px]">
                 <thead>
-                  <tr class="border-b border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                    <th class="py-3 px-4">Client Name</th>
-                    <th class="py-3 px-4">Total Credit Received</th>
-                    <th class="py-3 px-4">Total Debit Repaid</th>
-                    <th class="py-3 px-4">Settled Status</th>
+                  <tr class="border-b border-slate-200 dark:border-slate-800 text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <th class="py-2.5 px-3">Client Name</th>
+                    <th class="py-2.5 px-3">Total Credit Received</th>
+                    <th class="py-2.5 px-3">Total Debit Repaid</th>
+                    <th class="py-2.5 px-3">Settled Status</th>
                   </tr>
                 </thead>
-                <tbody id="settledTableBody" class="divide-y divide-slate-200 dark:divide-slate-800/60 text-sm"></tbody>
+                <tbody id="settledTableBody" class="divide-y divide-slate-200 dark:divide-slate-800/60 text-xs sm:text-sm"></tbody>
               </table>
             </div>
           </div>
         </div>
 
         <!-- USER STATEMENTS HISTORY TAB -->
-        <div id="userStatementsView" class="hidden space-y-6">
-          <div class="glass-panel p-6 rounded-2xl shadow-sm space-y-6">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+        <div id="userStatementsView" class="hidden space-y-4 sm:space-y-6">
+          <div class="glass-panel p-4 sm:p-6 rounded-2xl shadow-sm space-y-4 sm:space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
               <div>
-                <h2 class="text-xl font-bold dark:text-white text-slate-900 flex items-center space-x-2">
+                <h2 class="text-base sm:text-xl font-bold dark:text-white text-slate-900 flex items-center space-x-2">
                   <i class="fa-solid fa-user-clock text-emerald-500"></i>
-                  <span>Individual User Statements & History</span>
+                  <span>User Statements & History</span>
                 </h2>
-                <p class="text-xs text-slate-400 mt-1">Filter all historical transactions by person, month, and year.</p>
+                <p class="text-[10px] sm:text-xs text-slate-400 mt-0.5">Filter all historical transactions by person & month.</p>
               </div>
 
               <div class="flex flex-wrap items-center gap-2">
-                <select id="stmtUserPicker" onchange="renderUserStatements()" class="px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-emerald-500"></select>
-                <input type="month" id="stmtMonthPicker" onchange="renderUserStatements()" class="px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-emerald-500">
+                <select id="stmtUserPicker" onchange="renderUserStatements()" class="px-2.5 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs sm:text-sm focus:ring-2 focus:ring-emerald-500"></select>
+                <input type="month" id="stmtMonthPicker" onchange="renderUserStatements()" class="px-2.5 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs sm:text-sm focus:ring-2 focus:ring-emerald-500">
               </div>
             </div>
 
-            <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse">
+            <div class="overflow-x-auto -mx-1">
+              <table class="w-full text-left border-collapse min-w-[450px]">
                 <thead>
-                  <tr class="border-b border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                    <th class="py-3 px-4">Date</th>
-                    <th class="py-3 px-4">Category / Particulars</th>
-                    <th class="py-3 px-4">Type</th>
-                    <th class="py-3 px-4">Amount</th>
+                  <tr class="border-b border-slate-200 dark:border-slate-800 text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <th class="py-2.5 px-3">Date</th>
+                    <th class="py-2.5 px-3">Category / Particulars</th>
+                    <th class="py-2.5 px-3">Type</th>
+                    <th class="py-2.5 px-3">Amount</th>
                   </tr>
                 </thead>
-                <tbody id="stmtTableBody" class="divide-y divide-slate-200 dark:divide-slate-800/60 text-sm"></tbody>
+                <tbody id="stmtTableBody" class="divide-y divide-slate-200 dark:divide-slate-800/60 text-xs sm:text-sm"></tbody>
               </table>
             </div>
           </div>
         </div>
 
         <!-- MONTHLY REPORTS -->
-        <div id="monthlyReportsView" class="hidden space-y-6">
-          <div class="glass-panel p-6 rounded-2xl shadow-sm space-y-6" id="monthlyReportCard">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+        <div id="monthlyReportsView" class="hidden space-y-4 sm:space-y-6">
+          <div class="glass-panel p-4 sm:p-6 rounded-2xl shadow-sm space-y-4 sm:space-y-6" id="monthlyReportCard">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
               <div>
-                <h2 class="text-xl font-bold dark:text-white text-slate-900 flex items-center space-x-2">
+                <h2 class="text-base sm:text-xl font-bold dark:text-white text-slate-900 flex items-center space-x-2">
                   <i class="fa-solid fa-calendar-days text-indigo-500"></i>
                   <span>Monthly Financial Report</span>
                 </h2>
-                <p class="text-xs text-slate-400 mt-1">Select month & user to filter statement or download.</p>
+                <p class="text-[10px] sm:text-xs text-slate-400 mt-0.5">Select month & user to filter statement or download.</p>
               </div>
 
               <div class="flex flex-wrap items-center gap-2">
-                <select id="reportUserPicker" onchange="renderMonthlyReport()" class="px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                <select id="reportUserPicker" onchange="renderMonthlyReport()" class="px-2.5 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500">
                   <option value="ALL">All Users Combined</option>
                 </select>
 
-                <input type="month" id="reportMonthPicker" onchange="renderMonthlyReport()" class="px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                <input type="month" id="reportMonthPicker" onchange="renderMonthlyReport()" class="px-2.5 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500">
                 
-                <button onclick="downloadReportExcel()" class="btn-pro px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-xl text-xs flex items-center space-x-1.5 shadow">
+                <button onclick="downloadReportExcel()" class="btn-pro px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-xl text-xs flex items-center space-x-1 shadow">
                   <i class="fa-solid fa-file-excel"></i>
                   <span>Excel</span>
                 </button>
-                <button onclick="downloadReportImage()" class="btn-pro px-3.5 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-xl text-xs flex items-center space-x-1.5 shadow">
+                <button onclick="downloadReportImage()" class="btn-pro px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-xl text-xs flex items-center space-x-1 shadow">
                   <i class="fa-solid fa-image"></i>
-                  <span>Picture</span>
+                  <span>Pic</span>
                 </button>
               </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div class="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-                <span class="text-xs font-semibold text-emerald-500 uppercase">Monthly Income</span>
-                <h4 class="text-lg font-bold text-emerald-500 mt-1" id="mIncomeText">AED 0</h4>
+            <div class="grid grid-cols-3 gap-2 sm:gap-4">
+              <div class="p-3 sm:p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                <span class="text-[9px] sm:text-xs font-semibold text-emerald-500 uppercase block">Income</span>
+                <h4 class="text-xs sm:text-lg font-bold text-emerald-500 mt-0.5" id="mIncomeText">AED 0</h4>
               </div>
-              <div class="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20">
-                <span class="text-xs font-semibold text-rose-500 uppercase">Monthly Expenses</span>
-                <h4 class="text-lg font-bold text-rose-500 mt-1" id="mExpenseText">AED 0</h4>
+              <div class="p-3 sm:p-4 rounded-xl bg-rose-500/10 border border-rose-500/20">
+                <span class="text-[9px] sm:text-xs font-semibold text-rose-500 uppercase block">Expenses</span>
+                <h4 class="text-xs sm:text-lg font-bold text-rose-500 mt-0.5" id="mExpenseText">AED 0</h4>
               </div>
-              <div class="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
-                <span class="text-xs font-semibold text-indigo-500 uppercase">Monthly Net Savings</span>
-                <h4 class="text-lg font-bold text-indigo-500 mt-1" id="mNetText">AED 0</h4>
+              <div class="p-3 sm:p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+                <span class="text-[9px] sm:text-xs font-semibold text-indigo-500 uppercase block">Savings</span>
+                <h4 class="text-xs sm:text-lg font-bold text-indigo-500 mt-0.5" id="mNetText">AED 0</h4>
               </div>
             </div>
 
-            <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse" id="monthlyReportTable">
+            <div class="overflow-x-auto -mx-1">
+              <table class="w-full text-left border-collapse min-w-[450px]" id="monthlyReportTable">
                 <thead>
-                  <tr class="border-b border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                    <th class="py-3 px-4">Date</th>
-                    <th class="py-3 px-4">Category / Description</th>
-                    <th class="py-3 px-4">Type</th>
-                    <th class="py-3 px-4">Amount</th>
+                  <tr class="border-b border-slate-200 dark:border-slate-800 text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <th class="py-2.5 px-3">Date</th>
+                    <th class="py-2.5 px-3">Category / Description</th>
+                    <th class="py-2.5 px-3">Type</th>
+                    <th class="py-2.5 px-3">Amount</th>
                   </tr>
                 </thead>
-                <tbody id="monthlyReportTableBody" class="divide-y divide-slate-200 dark:divide-slate-800/60 text-sm"></tbody>
+                <tbody id="monthlyReportTableBody" class="divide-y divide-slate-200 dark:divide-slate-800/60 text-xs sm:text-sm"></tbody>
               </table>
             </div>
           </div>
         </div>
 
         <!-- PASSWORD & USER CONTROL -->
-        <div id="userSecurityView" class="hidden space-y-6">
-          <div class="max-w-2xl mx-auto space-y-6">
-            <div class="glass-panel p-6 rounded-2xl shadow-sm">
-              <h2 class="text-lg font-bold dark:text-white text-slate-900 mb-2 flex items-center space-x-2">
+        <div id="userSecurityView" class="hidden space-y-4 sm:space-y-6">
+          <div class="max-w-2xl mx-auto space-y-4 sm:space-y-6">
+            <div class="glass-panel p-4 sm:p-6 rounded-2xl shadow-sm">
+              <h2 class="text-sm sm:text-lg font-bold dark:text-white text-slate-900 mb-1 sm:mb-2 flex items-center space-x-2">
                 <i class="fa-solid fa-shield-halved text-amber-500"></i>
                 <span>Admin Master Security Password</span>
               </h2>
-              <p class="text-xs text-slate-400 mb-4">Update the primary Admin password key stored in Supabase cloud settings.</p>
-              <div class="space-y-4">
+              <p class="text-[10px] sm:text-xs text-slate-400 mb-3 sm:mb-4">Update the primary Admin password key stored in Supabase settings.</p>
+              <div class="space-y-3 sm:space-y-4">
                 <div>
                   <label class="block text-xs font-semibold text-slate-400 mb-1">New Admin Password</label>
-                  <input type="password" id="newAdminPin" placeholder="Enter new Admin password key..." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                  <input type="password" id="newAdminPin" placeholder="Enter new Admin password key..." class="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs sm:text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
                 </div>
-                <button onclick="updateAdminPassword()" class="btn-pro px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-xl text-sm flex items-center space-x-2">
+                <button onclick="updateAdminPassword()" class="btn-pro px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-xl text-xs sm:text-sm flex items-center space-x-2">
                   <i class="fa-solid fa-floppy-disk"></i><span>Update Admin Password</span>
                 </button>
               </div>
             </div>
 
-            <div class="glass-panel p-6 rounded-2xl shadow-sm">
-              <h2 class="text-lg font-bold dark:text-white text-slate-900 mb-2 flex items-center space-x-2">
+            <div class="glass-panel p-4 sm:p-6 rounded-2xl shadow-sm">
+              <h2 class="text-sm sm:text-lg font-bold dark:text-white text-slate-900 mb-1 sm:mb-2 flex items-center space-x-2">
                 <i class="fa-solid fa-users-gear text-indigo-500"></i>
                 <span>Manage All User Passwords & Profiles</span>
               </h2>
-              <p class="text-xs text-slate-400 mb-4">Click eye icon to reveal password or delete non-admin profiles.</p>
+              <p class="text-[10px] sm:text-xs text-slate-400 mb-3 sm:mb-4">Click eye icon to reveal password or delete profiles.</p>
 
-              <div id="userListContainer" class="space-y-3 mb-6"></div>
+              <div id="userListContainer" class="space-y-2.5 mb-4 sm:mb-6"></div>
 
-              <div class="border-t border-slate-200 dark:border-slate-800 pt-4">
-                <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-3">Add New User Profile</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <input type="text" id="newUserName" placeholder="Profile Name (e.g. Usman)" class="px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm">
-                  <input type="password" id="newUserPin" placeholder="Access Password Key" class="px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm">
+              <div class="border-t border-slate-200 dark:border-slate-800 pt-3 sm:pt-4">
+                <h3 class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2 sm:mb-3">Add New User Profile</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+                  <input type="text" id="newUserName" placeholder="Profile Name (e.g. Usman)" class="px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs sm:text-sm">
+                  <input type="password" id="newUserPin" placeholder="Access Password Key" class="px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs sm:text-sm">
                 </div>
-                <button onclick="addNewUserProfile()" class="btn-pro mt-3 w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl text-sm flex items-center justify-center space-x-2">
+                <button onclick="addNewUserProfile()" class="btn-pro mt-3 w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl text-xs sm:text-sm flex items-center justify-center space-x-2">
                   <i class="fa-solid fa-user-plus"></i><span>Create User Profile</span>
                 </button>
               </div>
@@ -791,7 +791,7 @@
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 8 + 2;
+        this.size = Math.random() * 6 + 2;
         this.speedX = Math.random() * 0.8 - 0.4;
         this.speedY = Math.random() * -0.6 - 0.2;
         this.color = '#38bdf8';
@@ -803,7 +803,7 @@
         if (this.y < 0 || this.size <= 0.2) {
           this.x = Math.random() * canvas.width;
           this.y = canvas.height + 10;
-          this.size = Math.random() * 8 + 2;
+          this.size = Math.random() * 6 + 2;
         }
       }
       draw() {
@@ -816,7 +816,8 @@
 
     function initParticles() {
       particlesArray = [];
-      for (let i = 0; i < 45; i++) {
+      const particleCount = window.innerWidth < 640 ? 25 : 45;
+      for (let i = 0; i < particleCount; i++) {
         particlesArray.push(new Particle());
       }
     }
@@ -1015,7 +1016,6 @@
         
         document.getElementById('sidebarUserBadge').innerText = `Role: ${currentUser}`;
         
-        // STRICT PRIVACY FILTER: NON-ADMIN ACCOUNTS CANNOT SEE OTHER TABS
         const adminSection = document.getElementById('adminMenuSection');
         if (currentUser !== "Admin") {
           document.getElementById('guestBanner').classList.remove('hidden');
@@ -1293,9 +1293,9 @@
         total += item.amount;
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td class="py-2 px-3 text-slate-400">${item.date}</td>
-          <td class="py-2 px-3 font-medium text-slate-200">${item.category}</td>
-          <td class="py-2 px-3 text-right font-bold text-white">AED ${item.amount.toLocaleString()}</td>
+          <td class="py-2 px-2 sm:px-3 text-slate-400">${item.date}</td>
+          <td class="py-2 px-2 sm:px-3 font-medium text-slate-200">${item.category}</td>
+          <td class="py-2 px-2 sm:px-3 text-right font-bold text-white">AED ${item.amount.toLocaleString()}</td>
         `;
         tbody.appendChild(row);
       });
@@ -1353,10 +1353,10 @@
         const row = document.createElement('tr');
         row.className = "hover:bg-slate-500/5 transition";
         row.innerHTML = `
-          <td class="py-3 px-4 text-xs text-slate-400">${log.date}</td>
-          <td class="py-3 px-4 font-medium text-slate-700 dark:text-slate-200">${log.category}</td>
-          <td class="py-3 px-4"><span class="px-2 py-0.5 text-xs font-semibold rounded bg-slate-500/10 text-sky-400">${log.type}</span></td>
-          <td class="py-3 px-4 font-bold dark:text-white text-slate-900">AED ${log.amount.toLocaleString()}</td>
+          <td class="py-2.5 px-3 text-xs text-slate-400">${log.date}</td>
+          <td class="py-2.5 px-3 font-medium text-slate-700 dark:text-slate-200">${log.category}</td>
+          <td class="py-2.5 px-3"><span class="px-2 py-0.5 text-xs font-semibold rounded bg-slate-500/10 text-sky-400">${log.type}</span></td>
+          <td class="py-2.5 px-3 font-bold dark:text-white text-slate-900">AED ${log.amount.toLocaleString()}</td>
         `;
         tbody.appendChild(row);
       });
@@ -1374,10 +1374,10 @@
         const row = document.createElement('tr');
         row.className = "hover:bg-slate-500/5 transition";
         row.innerHTML = `
-          <td class="py-3 px-4 font-bold text-white">${d.person}</td>
-          <td class="py-3 px-4 text-slate-300">AED ${d.total_given.toLocaleString()}</td>
-          <td class="py-3 px-4 text-emerald-400">AED ${d.total_returned.toLocaleString()}</td>
-          <td class="py-3 px-4"><span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full font-bold text-xs">Fully Cleared (0 AED)</span></td>
+          <td class="py-2.5 px-3 font-bold text-white">${d.person}</td>
+          <td class="py-2.5 px-3 text-slate-300">AED ${d.total_given.toLocaleString()}</td>
+          <td class="py-2.5 px-3 text-emerald-400">AED ${d.total_returned.toLocaleString()}</td>
+          <td class="py-2.5 px-3"><span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full font-bold text-xs">Fully Cleared (0 AED)</span></td>
         `;
         tbody.appendChild(row);
       });
@@ -1436,10 +1436,10 @@
         const row = document.createElement('tr');
         row.className = "hover:bg-slate-500/5 transition";
         row.innerHTML = `
-          <td class="py-3 px-4 text-xs text-slate-400">${log.date}</td>
-          <td class="py-3 px-4 font-medium text-slate-700 dark:text-slate-200">${log.category}</td>
-          <td class="py-3 px-4"><span class="px-2 py-0.5 text-xs font-semibold rounded ${log.type==='Income'?'bg-emerald-500/20 text-emerald-500':'bg-rose-500/20 text-rose-500'}">${log.type}</span></td>
-          <td class="py-3 px-4 font-bold dark:text-white text-slate-900">AED ${log.amount.toLocaleString()}</td>
+          <td class="py-2.5 px-3 text-xs text-slate-400">${log.date}</td>
+          <td class="py-2.5 px-3 font-medium text-slate-700 dark:text-slate-200">${log.category}</td>
+          <td class="py-2.5 px-3"><span class="px-2 py-0.5 text-xs font-semibold rounded ${log.type==='Income'?'bg-emerald-500/20 text-emerald-500':'bg-rose-500/20 text-rose-500'}">${log.type}</span></td>
+          <td class="py-2.5 px-3 font-bold dark:text-white text-slate-900">AED ${log.amount.toLocaleString()}</td>
         `;
         tbody.appendChild(row);
       });
@@ -1567,18 +1567,18 @@
 
         const safeId = uName.replace(/\s+/g, '_');
         const row = document.createElement('div');
-        row.className = "flex items-center justify-between p-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm";
+        row.className = "flex items-center justify-between p-2.5 sm:p-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs sm:text-sm";
         row.innerHTML = `
           <div>
             <span class="font-bold dark:text-white text-slate-900">${uName}</span>
             <div class="flex items-center space-x-2 mt-0.5">
               <span class="text-xs text-slate-400 font-mono" id="passText_${safeId}">••••••••</span>
-              <button onclick="togglePasswordVisibility('${uName}')" class="text-slate-400 hover:text-sky-500 text-xs">
+              <button onclick="togglePasswordVisibility('${uName}')" class="text-slate-400 hover:text-sky-500 text-xs p-1">
                 <i class="fa-solid fa-eye" id="eyeIcon_${safeId}"></i>
               </button>
             </div>
           </div>
-          <div class="flex items-center space-x-2">
+          <div class="flex items-center space-x-1.5">
             <button onclick="updateUserPassword('${uName}')" class="btn-pro px-2.5 py-1.5 bg-sky-500/10 text-sky-400 border border-sky-500/30 hover:bg-sky-500/20 text-xs rounded-lg font-medium">
               <i class="fa-solid fa-pen"></i> Edit
             </button>
@@ -1591,7 +1591,6 @@
       }
     }
 
-    // DYNAMIC CASCADE DEPOSIT / DEBT LEDGER ADJUSTMENT ON DELETE
     async function deleteLog(id) {
       if (currentUser !== 'Admin') return;
       
@@ -1641,7 +1640,6 @@
       }
     }
 
-    // ACCURATE DYNAMIC METRIC CALCULATIONS & DYNAMIC PERSPECTIVE HEADINGS
     function renderDashboard() {
       const curMonth = new Date().toISOString().slice(0, 7);
 
@@ -1673,7 +1671,6 @@
       const debtTableBody = document.getElementById('debtTableBody');
       debtTableBody.innerHTML = '';
 
-      // Active Debts Filter: Balance != 0
       let activeDebts = state.debts.filter(d => (d.total_given - d.total_returned) !== 0);
 
       if (currentUser !== 'Admin') {
@@ -1692,18 +1689,18 @@
           : (currentUser === 'Admin' ? '(Client ne Aapko Dene Hain)' : '(Aapne Hassan ko Dene Hain)');
 
         row.innerHTML = `
-          <td class="py-3 px-4 font-semibold dark:text-white text-slate-900 flex items-center space-x-2">
-            <span class="w-8 h-8 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20 flex items-center justify-center font-bold text-xs">${d.person.charAt(0)}</span>
-            <span>${d.person}</span>
+          <td class="py-2.5 px-3 font-semibold dark:text-white text-slate-900 flex items-center space-x-2">
+            <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20 flex items-center justify-center font-bold text-xs shrink-0">${d.person.charAt(0)}</span>
+            <span class="truncate max-w-[100px] sm:max-w-none">${d.person}</span>
           </td>
-          <td class="py-3 px-4 text-emerald-500 font-medium">AED ${(d.total_returned || 0).toLocaleString()}</td>
-          <td class="py-3 px-4 text-slate-400 font-medium">AED ${(d.total_given || 0).toLocaleString()}</td>
-          <td class="py-3 px-4 font-bold ${balance > 0 ? 'text-amber-500' : 'text-emerald-400'}">
+          <td class="py-2.5 px-3 text-emerald-500 font-medium">AED ${(d.total_returned || 0).toLocaleString()}</td>
+          <td class="py-2.5 px-3 text-slate-400 font-medium">AED ${(d.total_given || 0).toLocaleString()}</td>
+          <td class="py-2.5 px-3 font-bold ${balance > 0 ? 'text-amber-500' : 'text-emerald-400'}">
             AED ${balance.toLocaleString()} 
             <span class="text-[9px] font-normal block text-slate-400">${statusText}</span>
           </td>
-          <td class="py-3 px-4 text-right space-x-1">
-            ${currentUser === 'Admin' ? `<button onclick="generateWhatsAppReceiptLink('${d.person}', 'RECEIVED', 0, ${d.total_given}, ${d.total_returned}, '${new Date().toISOString().split('T')[0]}', 'Ledger Summary')" class="btn-pro text-emerald-500 text-xs px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-lg"><i class="fa-brands fa-whatsapp"></i> Slip PDF Link</button>` : '-'}
+          <td class="py-2.5 px-3 text-right whitespace-nowrap">
+            ${currentUser === 'Admin' ? `<button onclick="generateWhatsAppReceiptLink('${d.person}', 'RECEIVED', 0, ${d.total_given}, ${d.total_returned}, '${new Date().toISOString().split('T')[0]}', 'Ledger Summary')" class="btn-pro text-emerald-500 text-xs px-2 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-lg"><i class="fa-brands fa-whatsapp"></i> Slip PDF</button>` : '-'}
           </td>
         `;
         debtTableBody.appendChild(row);
@@ -1717,11 +1714,11 @@
         const row = document.createElement('tr');
         row.className = "hover:bg-slate-500/5 transition";
         row.innerHTML = `
-          <td class="py-3 px-4 text-xs text-slate-400">${pe.date}</td>
-          <td class="py-3 px-4 font-medium text-slate-700 dark:text-slate-200">${pe.description}</td>
-          <td class="py-3 px-4 font-bold text-purple-500">AED ${pe.amount.toLocaleString()}</td>
-          <td class="py-3 px-4 text-right">
-            ${currentUser === 'Admin' ? `<button onclick="deletePersonalExpense(${pe.id})" class="text-rose-500 hover:text-rose-400 text-xs px-2 py-1 rounded transition"><i class="fa-solid fa-trash"></i></button>` : '-'}
+          <td class="py-2.5 px-3 text-xs text-slate-400 whitespace-nowrap">${pe.date}</td>
+          <td class="py-2.5 px-3 font-medium text-slate-700 dark:text-slate-200">${pe.description}</td>
+          <td class="py-2.5 px-3 font-bold text-purple-500 whitespace-nowrap">AED ${pe.amount.toLocaleString()}</td>
+          <td class="py-2.5 px-3 text-right">
+            ${currentUser === 'Admin' ? `<button onclick="deletePersonalExpense(${pe.id})" class="text-rose-500 hover:text-rose-400 text-xs p-1 rounded transition"><i class="fa-solid fa-trash"></i></button>` : '-'}
           </td>
         `;
         personalExpenseTableBody.appendChild(row);
@@ -1746,13 +1743,13 @@
         if (log.type && log.type.includes('Borrowed')) badgeColor = "bg-purple-500/10 text-purple-500 border border-purple-500/20";
 
         row.innerHTML = `
-          <td class="py-3 px-4 text-xs text-slate-400">${log.date}</td>
-          <td class="py-3 px-4 font-medium text-slate-700 dark:text-slate-200">${log.category}</td>
-          <td class="py-3 px-4"><span class="px-2.5 py-0.5 text-xs font-semibold rounded-md ${badgeColor}">${log.type}</span></td>
-          <td class="py-3 px-4 font-bold dark:text-white text-slate-900">AED ${log.amount.toLocaleString()}</td>
-          <td class="py-3 px-4 text-right space-x-1">
-            <button onclick="viewInvoiceForLog(${log.id})" class="btn-pro text-sky-400 text-xs px-2 py-1 bg-sky-500/10 border border-sky-500/30 rounded"><i class="fa-solid fa-file-invoice"></i> View Invoice</button>
-            ${currentUser === 'Admin' ? `<button onclick="deleteLog(${log.id})" class="text-rose-500 hover:text-rose-400 text-xs px-2 py-1 rounded transition"><i class="fa-solid fa-trash"></i></button>` : '-'}
+          <td class="py-2.5 px-3 text-xs text-slate-400 whitespace-nowrap">${log.date}</td>
+          <td class="py-2.5 px-3 font-medium text-slate-700 dark:text-slate-200">${log.category}</td>
+          <td class="py-2.5 px-3"><span class="px-2 py-0.5 text-[10px] sm:text-xs font-semibold rounded-md ${badgeColor} whitespace-nowrap">${log.type}</span></td>
+          <td class="py-2.5 px-3 font-bold dark:text-white text-slate-900 whitespace-nowrap">AED ${log.amount.toLocaleString()}</td>
+          <td class="py-2.5 px-3 text-right whitespace-nowrap space-x-1">
+            <button onclick="viewInvoiceForLog(${log.id})" class="btn-pro text-sky-400 text-xs px-2 py-1 bg-sky-500/10 border border-sky-500/30 rounded"><i class="fa-solid fa-file-invoice"></i> Invoice</button>
+            ${currentUser === 'Admin' ? `<button onclick="deleteLog(${log.id})" class="text-rose-500 hover:text-rose-400 text-xs p-1 rounded transition"><i class="fa-solid fa-trash"></i></button>` : '-'}
           </td>
         `;
         logsTableBody.appendChild(row);
