@@ -106,8 +106,8 @@
       <div class="flex space-x-2 pt-2">
         <button onclick="closeWhatsAppModal()" class="w-1/2 py-2.5 bg-slate-800 text-slate-300 font-medium rounded-xl text-xs">Cancel</button>
         <button onclick="executeWhatsAppSend()" class="w-1/2 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-xs flex items-center justify-center space-x-1">
-          <i class="fa-solid fa-paper-plane"></i>
-          <span>Send Silent</span>
+          <i class="fa-brands fa-whatsapp"></i>
+          <span>Open WhatsApp</span>
         </button>
       </div>
     </div>
@@ -211,6 +211,7 @@
 
       <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 overflow-y-auto">
 
+        <!-- GUEST BANNER FOR NON-ADMIN -->
         <div id="guestBanner" class="hidden bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-4 flex items-center justify-between">
           <div class="flex items-center space-x-3">
             <i class="fa-solid fa-user-shield text-indigo-500 text-xl"></i>
@@ -324,7 +325,7 @@
                 </form>
               </div>
 
-              <!-- Manage Debt Form -->
+              <!-- Manage Debt Form (WITH DATE BOX) -->
               <div class="glass-panel p-5 rounded-2xl shadow-sm">
                 <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center space-x-2">
                   <i class="fa-solid fa-hand-holding-hand text-amber-500"></i>
@@ -335,6 +336,7 @@
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Select Person</label>
                     <select id="debtPersonSelect" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500"></select>
                   </div>
+
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Action Type</label>
                     <select id="debtAction" onchange="toggleSpentOption()" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
@@ -357,16 +359,25 @@
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Amount (AED)</label>
                     <input type="number" id="debtAmount" required placeholder="0" min="1" step="any" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
                   </div>
+
+                  <!-- DATE SELECTION BOX FOR LOANS -->
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Transaction Date</label>
+                    <input type="date" id="debtDate" required class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
+                  </div>
+
                   <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">Note / Remark</label>
                     <input type="text" id="debtNote" placeholder="e.g., iPhone purchase, Installment" class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
                   </div>
+
                   <div class="pt-1">
                     <label class="inline-flex items-center space-x-2 text-xs text-slate-600 dark:text-slate-300 cursor-pointer">
                       <input type="checkbox" id="sendWhatsAppCheck" class="rounded border-slate-700 text-emerald-500 focus:ring-emerald-500 bg-slate-900">
                       <span>Generate Professional WhatsApp Receipt Link</span>
                     </label>
                   </div>
+
                   <button type="submit" id="updateDebtBtn" class="btn-pro w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg text-sm flex items-center justify-center space-x-1">
                     <i class="fa-solid fa-arrows-rotate"></i><span>Update Debt Ledger</span>
                   </button>
@@ -442,7 +453,7 @@
           </div>
         </div>
 
-        <!-- MONTHLY REPORTS WITH USER DROPDOWN FILTER -->
+        <!-- MONTHLY REPORTS -->
         <div id="monthlyReportsView" class="hidden space-y-6">
           <div class="glass-panel p-6 rounded-2xl shadow-sm space-y-6" id="monthlyReportCard">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
@@ -455,12 +466,10 @@
               </div>
 
               <div class="flex flex-wrap items-center gap-2">
-                <!-- USER FILTER DROPDOWN -->
                 <select id="reportUserPicker" onchange="renderMonthlyReport()" class="px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
                   <option value="ALL">All Users Combined</option>
                 </select>
 
-                <!-- MONTH PICKER -->
                 <input type="month" id="reportMonthPicker" onchange="renderMonthlyReport()" class="px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500">
                 
                 <button onclick="downloadReportExcel()" class="btn-pro px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-xl text-xs flex items-center space-x-1.5 shadow">
@@ -505,7 +514,7 @@
           </div>
         </div>
 
-        <!-- PASSWORD & USER CONTROL (STRICTLY ADMIN ONLY SECTION) -->
+        <!-- PASSWORD & USER CONTROL -->
         <div id="userSecurityView" class="hidden space-y-6">
           <div class="max-w-2xl mx-auto space-y-6">
             <div class="glass-panel p-6 rounded-2xl shadow-sm">
@@ -574,7 +583,6 @@
     function showLoader() { document.getElementById('topLoader').style.display = 'block'; }
     function hideLoader() { document.getElementById('topLoader').style.display = 'none'; }
 
-    // WINDOWS 7 STYLE STARTUP AUDIO CHIME SYNTHESIZER
     function playWin7StartupSound() {
       try {
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -582,10 +590,10 @@
         const ctx = new AudioCtx();
 
         const notes = [
-          { f: 329.63, t: 0.0, d: 1.2 }, // E4
-          { f: 493.88, t: 0.1, d: 1.2 }, // B4
-          { f: 659.25, t: 0.25, d: 1.4 }, // E5
-          { f: 987.77, t: 0.4, d: 1.8 }  // B5
+          { f: 329.63, t: 0.0, d: 1.2 },
+          { f: 493.88, t: 0.1, d: 1.2 },
+          { f: 659.25, t: 0.25, d: 1.4 },
+          { f: 987.77, t: 0.4, d: 1.8 }
         ];
 
         notes.forEach(n => {
@@ -660,6 +668,7 @@
       const curMonth = new Date().toISOString().slice(0, 7);
       if (document.getElementById('cfDate')) document.getElementById('cfDate').value = today;
       if (document.getElementById('peDate')) document.getElementById('peDate').value = today;
+      if (document.getElementById('debtDate')) document.getElementById('debtDate').value = today;
       if (document.getElementById('reportMonthPicker')) document.getElementById('reportMonthPicker').value = curMonth;
     });
 
@@ -713,7 +722,7 @@
 
       if (matchedUser) {
         currentUser = matchedUser;
-        playWin7StartupSound(); // PLAY WINDOWS 7 STARTUP AUDIO CHIME
+        playWin7StartupSound();
 
         errorEl.classList.add('hidden');
         document.getElementById('authScreen').classList.add('hidden');
@@ -810,6 +819,7 @@
       await loadDataFromSupabase();
     }
 
+    // MANAGE DEBT WITH SPECIFIC TRANSACTION DATE
     async function handleManageDebt(e) {
       e.preventDefault();
       const btn = document.getElementById('updateDebtBtn');
@@ -821,9 +831,9 @@
       const action = document.getElementById('debtAction').value;
       const amount = parseFloat(document.getElementById('debtAmount').value);
       const note = document.getElementById('debtNote').value || '';
+      const date = document.getElementById('debtDate').value || new Date().toISOString().split('T')[0];
       const sendWa = document.getElementById('sendWhatsAppCheck').checked;
       const alreadySpent = document.getElementById('alreadySpentCheck').checked;
-      const date = new Date().toISOString().split('T')[0];
 
       let { data: debtRecord } = await supabaseClient.from('debts').select('*').eq('person', person).maybeSingle();
 
@@ -867,6 +877,7 @@
       await loadDataFromSupabase();
     }
 
+    // WHATSAPP TRIGGER FIX (ONE-CLICK DIRECT ACCURATE SEND)
     function generateWhatsAppReceiptLink(personName, action, currentAmount, totalGiven, totalReturned, dateStr, noteText) {
       const remainingBalance = totalGiven - totalReturned;
       const receiptNo = "HSN-" + Math.floor(100000 + Math.random() * 900000);
@@ -913,24 +924,14 @@
       const fullPhone = code + num.replace(/[^0-9]/g, '');
       const waUrl = `https://api.whatsapp.com/send?phone=${fullPhone}&text=${encodeURIComponent(pendingWhatsAppMessage)}`;
       
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.src = waUrl;
-      document.body.appendChild(iframe);
-
-      setTimeout(() => {
-        if (iframe && iframe.parentNode) {
-          document.body.removeChild(iframe);
-        }
-      }, 2500);
-
+      // Direct Trigger - Browser / Mobile app will handle smoothly
+      window.open(waUrl, '_blank');
       closeWhatsAppModal();
     }
 
-    // MONTHLY REPORT FILTER BY MONTH AND SELECTED USER
     function renderMonthlyReport() {
       const pickerVal = document.getElementById('reportMonthPicker').value;
-      const selectedUser = document.getElementById('reportUserPicker').value; // 'ALL' or individual name
+      const selectedUser = document.getElementById('reportUserPicker').value;
       if (!pickerVal) return;
 
       let filteredTrans = state.logs.filter(item => item.date && item.date.startsWith(pickerVal));
