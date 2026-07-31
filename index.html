@@ -5,9 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>HASSAN - Pro Financial Dashboard</title>
   
-  <!-- App Favicons -->
-  <link id="app-favicon" rel="icon" type="image/jpeg" href="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=300&q=80">
-  <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=300&q=80">
+  <!-- DYNAMIC INFINITY NEON FAVICON LOGO -->
+  <link id="app-favicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50' fill='none' stroke='%2338bdf8' stroke-width='6'><path d='M 30,25 C 10,5 0,25 0,25 C 0,25 10,45 30,25 C 50,5 70,5 80,25 C 90,45 100,25 100,25 C 100,25 90,5 80,25 C 70,45 50,45 30,25 Z'/></svg>">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -27,7 +26,7 @@
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Day / Night Smooth Transition */
+    /* Smooth Theme Transition */
     html, body, aside, main, header, div, table, tr, td, th {
       transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
                   color 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
@@ -49,18 +48,18 @@
 
     /* Infinity Neon Pulsing Animation */
     .infinity-glow {
-      filter: drop-shadow(0 0 12px #38bdf8) drop-shadow(0 0 25px #0284c7);
+      filter: drop-shadow(0 0 10px #38bdf8) drop-shadow(0 0 20px #0284c7);
       animation: infinityPulse 2.5s infinite ease-in-out;
     }
     @keyframes infinityPulse {
-      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px #38bdf8) drop-shadow(0 0 20px #0284c7); }
-      50% { transform: scale(1.06); filter: drop-shadow(0 0 18px #38bdf8) drop-shadow(0 0 35px #0ea5e9); }
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px #38bdf8) drop-shadow(0 0 16px #0284c7); }
+      50% { transform: scale(1.05); filter: drop-shadow(0 0 16px #38bdf8) drop-shadow(0 0 30px #0ea5e9); }
     }
 
-    /* Background Floating Particles for Login UI */
-    .login-bg-grid {
-      background-image: radial-gradient(rgba(56, 189, 248, 0.15) 1px, transparent 0);
-      background-size: 24px 24px;
+    /* Floating Bubbles Interactive Animation Canvas */
+    #particleCanvas {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 0; opacity: 0.4;
     }
 
     /* Dark Glass Panel */
@@ -77,24 +76,23 @@
       color: #0f172a;
     }
 
-    /* Left Menu Sticky Scroll Lock */
-    .sidebar-fixed {
-      position: sticky; top: 0; height: 100vh;
-    }
-
+    .sidebar-fixed { position: sticky; top: 0; height: 100vh; }
     .btn-pro { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
     .btn-pro:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 20px rgba(56, 189, 248, 0.3); }
     .btn-pro:active { transform: translateY(0) scale(0.98); }
     body { touch-action: manipulation; }
   </style>
 </head>
-<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen">
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen relative overflow-x-hidden">
+
+  <!-- BACKGROUND FLOATING BUBBLES CANVAS -->
+  <canvas id="particleCanvas"></canvas>
 
   <div id="topLoader" class="top-loader-line"></div>
 
   <!-- WHATSAPP NUMBER MODAL -->
   <div id="whatsappModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-    <div class="glass-panel p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl border border-slate-700">
+    <div class="glass-panel p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl border border-slate-700 relative z-10">
       <div class="flex items-center justify-between border-b border-slate-700 pb-3">
         <h3 class="text-base font-bold text-emerald-500 flex items-center space-x-2">
           <i class="fa-brands fa-whatsapp text-lg"></i>
@@ -130,9 +128,9 @@
     </div>
   </div>
 
-  <!-- OVERVIEW METRIC DETAIL BREAKDOWN MODAL -->
+  <!-- METRIC DETAIL BREAKDOWN MODAL -->
   <div id="metricDetailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
-    <div class="glass-panel p-6 rounded-2xl max-w-xl w-full space-y-4 shadow-2xl border border-slate-700 text-left">
+    <div class="glass-panel p-6 rounded-2xl max-w-xl w-full space-y-4 shadow-2xl border border-slate-700 text-left relative z-10">
       <div class="flex items-center justify-between border-b border-slate-700 pb-3">
         <h3 class="text-base font-bold text-white flex items-center space-x-2" id="metricDetailTitle">
           <i class="fa-solid fa-circle-info text-sky-400"></i>
@@ -161,9 +159,9 @@
     </div>
   </div>
 
-  <!-- HIGH QUALITY INVOICE PDF PREVIEW MODAL -->
+  <!-- HIGH QUALITY DYNAMIC INVOICE VIEW MODAL -->
   <div id="receiptSearchResultModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
-    <div class="glass-panel p-6 rounded-2xl max-w-lg w-full space-y-4 shadow-2xl border border-slate-700 text-left">
+    <div class="glass-panel p-6 rounded-2xl max-w-lg w-full space-y-4 shadow-2xl border border-slate-700 text-left relative z-10">
       <div class="flex items-center justify-between border-b border-slate-700 pb-3">
         <h3 class="text-sm font-bold text-sky-400 flex items-center space-x-2">
           <i class="fa-solid fa-file-invoice"></i>
@@ -172,7 +170,6 @@
         <button onclick="closeReceiptSearchModal()" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
-      <!-- INVOICE TEMPLATE WITH INFINITY NEON LOGO -->
       <div id="receiptTemplateContainer" class="p-6 bg-slate-900 border border-sky-500/30 rounded-2xl text-xs space-y-4 text-slate-200 shadow-xl">
         <div class="flex items-center justify-between border-b border-slate-800 pb-4">
           <div class="flex items-center space-x-3">
@@ -227,7 +224,7 @@
     </div>
   </div>
 
-  <!-- SPLASH ANIMATED INITIAL LOADING SCREEN -->
+  <!-- INITIAL SPLASH SCREEN -->
   <div id="loadingScreen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950">
     <div class="relative flex flex-col items-center">
       <svg class="w-24 h-24 infinity-glow text-sky-400" viewBox="0 0 100 50" fill="none" stroke="currentColor" stroke-width="5">
@@ -238,10 +235,9 @@
     </div>
   </div>
 
-  <!-- ADVANCE ANIMATED LOGIN SCREEN -->
-  <div id="authScreen" class="hidden fixed inset-0 z-40 flex items-center justify-center p-4 bg-slate-950 login-bg-grid">
-    <div class="glass-panel rounded-3xl shadow-2xl p-8 w-full max-w-md text-center border border-sky-500/20">
-      
+  <!-- AUTH SCREEN -->
+  <div id="authScreen" class="hidden fixed inset-0 z-40 flex items-center justify-center p-4 bg-slate-950">
+    <div class="glass-panel rounded-3xl shadow-2xl p-8 w-full max-w-md text-center border border-sky-500/20 relative z-10">
       <div class="inline-block p-4 rounded-full bg-slate-900 mb-4 shadow-xl border border-sky-500/30">
         <svg class="w-16 h-16 infinity-glow text-sky-400" viewBox="0 0 100 50" fill="none" stroke="currentColor" stroke-width="5">
           <path d="M 30,25 C 10,5 0,25 0,25 C 0,25 10,45 30,25 C 50,5 70,5 80,25 C 90,45 100,25 100,25 C 100,25 90,5 80,25 C 70,45 50,45 30,25 Z"/>
@@ -265,10 +261,10 @@
     </div>
   </div>
 
-  <!-- MAIN DASHBOARD SCREEN WITH STICKY SIDEBAR -->
-  <div id="appScreen" class="hidden min-h-screen flex flex-col md:flex-row">
+  <!-- MAIN APP CONTAINER -->
+  <div id="appScreen" class="hidden min-h-screen flex flex-col md:flex-row relative z-10">
     
-    <!-- LEFT FIXED STICKY SIDEBAR MENU -->
+    <!-- LEFT FIXED SIDEBAR MENU -->
     <aside id="sidebarMenu" class="hidden md:flex md:w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-col justify-between shrink-0 sidebar-fixed">
       <div>
         <div class="p-5 flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800">
@@ -287,19 +283,17 @@
             <span>Overview Metrics</span>
           </button>
 
-          <!-- TAB 2: USER STATEMENTS HISTORY -->
-          <button onclick="switchTab('userStatementsView')" id="navUserStatements" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <!-- ADMIN ONLY TABS -->
+          <button onclick="switchTab('userStatementsView')" id="navUserStatements" class="nav-item hidden w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
             <i class="fa-solid fa-user-clock w-5 text-emerald-500"></i>
             <span>User Statements</span>
           </button>
 
-          <!-- TAB 3: MONTHLY REPORTS -->
-          <button onclick="switchTab('monthlyReportsView')" id="navMonthly" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <button onclick="switchTab('monthlyReportsView')" id="navMonthly" class="nav-item hidden w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
             <i class="fa-solid fa-calendar-days w-5 text-indigo-500"></i>
             <span>Monthly Reports</span>
           </button>
 
-          <!-- TAB 4: PASSWORD CONTROL (ADMIN ONLY) -->
           <button onclick="switchTab('userSecurityView')" id="navAdminSec" class="nav-item hidden w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
             <i class="fa-solid fa-users-gear w-5 text-amber-500"></i>
             <span>Password & User Control</span>
@@ -323,7 +317,7 @@
       </div>
     </aside>
 
-    <!-- RIGHT MAIN CONTENT (SCROLLABLE AREA) -->
+    <!-- RIGHT SCROLLABLE CONTENT -->
     <div class="flex-1 flex flex-col min-w-0">
       <header class="md:hidden sticky top-0 z-30 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 h-16 flex items-center justify-between">
         <div class="flex items-center space-x-3">
@@ -577,7 +571,7 @@
                 </div>
               </div>
 
-              <!-- Audit Logs -->
+              <!-- Master Audit Logs Table WITH VIEW INVOICE OPTION -->
               <div class="glass-panel p-5 rounded-2xl shadow-sm">
                 <h2 class="text-base font-bold dark:text-white text-slate-900 mb-4 flex items-center justify-between">
                   <span class="flex items-center space-x-2"><i class="fa-solid fa-list-check text-sky-400"></i><span>Master Transaction Audit Logs</span></span>
@@ -745,7 +739,7 @@
   </div>
 
   <script>
-    // SECURITY ENFORCEMENT: DISABLE DEV TOOLS KEY CUTS AND RIGHT CLICK
+    // SECURITY BLOCK DEV TOOLS KEYS
     document.addEventListener('contextmenu', event => event.preventDefault());
     document.onkeydown = function(e) {
       if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) {
@@ -753,6 +747,63 @@
       }
     }
 
+    // FLOATING BUBBLES INTERACTIVE ANIMATION JS
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    let particlesArray = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 8 + 2;
+        this.speedX = Math.random() * 0.8 - 0.4;
+        this.speedY = Math.random() * -0.6 - 0.2;
+        this.color = '#38bdf8';
+      }
+      update() {
+        this.y += this.speedY;
+        this.x += this.speedX;
+        if (this.size > 0.2) this.size -= 0.008;
+        if (this.y < 0 || this.size <= 0.2) {
+          this.x = Math.random() * canvas.width;
+          this.y = canvas.height + 10;
+          this.size = Math.random() * 8 + 2;
+        }
+      }
+      draw() {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function initParticles() {
+      particlesArray = [];
+      for (let i = 0; i < 45; i++) {
+        particlesArray.push(new Particle());
+      }
+    }
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+        particlesArray[i].draw();
+      }
+      requestAnimationFrame(animateParticles);
+    }
+    initParticles();
+    animateParticles();
+
+    // SUPABASE DATA CLIENT
     const SUPABASE_URL = "https://gwulouepjydhdjzfmhfo.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3dWxvdWVwanlkaGRqemZtaGZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU0MzM0NzIsImV4cCI6MjEwMTAwOTQ3Mn0.1X8y-3y4vx5lUAmMXBOdcsb-mOAp9SYJHeCtGl4FZpY";
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -877,7 +928,7 @@
     }
 
     function switchTab(view) {
-      if (currentUser !== 'Admin' && view === 'userSecurityView') return;
+      if (currentUser !== 'Admin' && (view === 'userSecurityView' || view === 'monthlyReportsView' || view === 'userStatementsView')) return;
 
       document.getElementById('dashboardView').classList.add('hidden');
       document.getElementById('userStatementsView').classList.add('hidden');
@@ -929,12 +980,15 @@
         
         document.getElementById('sidebarUserBadge').innerText = `Role: ${currentUser}`;
         
+        // STRICT USER PRIVACY HIDING (Password & Reports Tabs hidden for Non-Admin)
         if (currentUser !== "Admin") {
           document.getElementById('guestBanner').classList.remove('hidden');
           document.getElementById('guestName').innerText = currentUser;
           document.getElementById('adminControls').classList.add('hidden');
           document.getElementById('adminMetrics').classList.add('hidden');
           document.getElementById('navAdminSec').classList.add('hidden');
+          document.getElementById('navUserStatements').classList.add('hidden');
+          document.getElementById('navMonthly').classList.add('hidden');
           document.getElementById('personalExpensesSection').classList.add('hidden');
           document.getElementById('userSecurityView').classList.add('hidden');
           document.getElementById('displaySection').classList.remove('lg:col-span-2');
@@ -945,6 +999,8 @@
           document.getElementById('adminControls').classList.remove('hidden');
           document.getElementById('adminMetrics').classList.remove('hidden');
           document.getElementById('navAdminSec').classList.remove('hidden');
+          document.getElementById('navUserStatements').classList.remove('hidden');
+          document.getElementById('navMonthly').classList.remove('hidden');
           document.getElementById('personalExpensesSection').classList.remove('hidden');
           document.getElementById('displaySection').classList.remove('lg:col-span-3');
           document.getElementById('displaySection').classList.add('lg:col-span-2');
@@ -1220,6 +1276,30 @@
       document.getElementById('metricDetailModal').classList.add('hidden');
     }
 
+    function viewInvoiceForLog(logId) {
+      const matchLog = state.logs.find(l => l.id === logId);
+      if (!matchLog) return;
+
+      const receiptNo = "HSN-" + (100000 + matchLog.id * 17);
+      document.getElementById('rNumText').innerText = receiptNo;
+      document.getElementById('rDateText').innerText = matchLog.date;
+      document.getElementById('rClientText').innerText = matchLog.category.split(' ')[0] || currentUser;
+      document.getElementById('rTypeText').innerText = matchLog.type || 'TRANSACTION';
+      document.getElementById('rAmountText').innerText = `AED ${matchLog.amount.toLocaleString()}`;
+      document.getElementById('rNoteText').innerText = matchLog.category;
+
+      let debtRec = state.debts.find(d => matchLog.category.toLowerCase().includes(d.person.toLowerCase()));
+      let given = debtRec ? debtRec.total_given : 0;
+      let returned = debtRec ? debtRec.total_returned : 0;
+      let bal = debtRec ? (given - returned) : 0;
+
+      document.getElementById('rGivenText').innerText = `AED ${given.toLocaleString()}`;
+      document.getElementById('rReturnedText').innerText = `AED ${returned.toLocaleString()}`;
+      document.getElementById('rBalanceText').innerText = `AED ${Math.abs(bal).toLocaleString()}`;
+
+      document.getElementById('receiptSearchResultModal').classList.remove('hidden');
+    }
+
     function renderUserStatements() {
       let selectedUser = document.getElementById('stmtUserPicker').value;
       const monthVal = document.getElementById('stmtMonthPicker').value;
@@ -1264,23 +1344,7 @@
         return alert("ACCESS DENIED: Record Not Related To You.");
       }
 
-      document.getElementById('rNumText').innerText = searchNum.toUpperCase();
-      document.getElementById('rDateText').innerText = matchLog.date;
-      document.getElementById('rClientText').innerText = matchLog.category.split(' ')[0] || currentUser;
-      document.getElementById('rTypeText').innerText = matchLog.type || 'TRANSACTION';
-      document.getElementById('rAmountText').innerText = `AED ${matchLog.amount.toLocaleString()}`;
-      document.getElementById('rNoteText').innerText = matchLog.category;
-
-      let debtRec = state.debts.find(d => matchLog.category.toLowerCase().includes(d.person.toLowerCase()));
-      let given = debtRec ? debtRec.total_given : 0;
-      let returned = debtRec ? debtRec.total_returned : 0;
-      let bal = debtRec ? (given - returned) : 0;
-
-      document.getElementById('rGivenText').innerText = `AED ${given.toLocaleString()}`;
-      document.getElementById('rReturnedText').innerText = `AED ${returned.toLocaleString()}`;
-      document.getElementById('rBalanceText').innerText = `AED ${Math.abs(bal).toLocaleString()}`;
-
-      document.getElementById('receiptSearchResultModal').classList.remove('hidden');
+      viewInvoiceForLog(matchLog.id);
     }
 
     function closeReceiptSearchModal() {
@@ -1469,10 +1533,43 @@
       }
     }
 
+    // CASCADE DEPOSIT / DEBT LEDGER DYNAMIC ADJUSTMENT ON DELETE
     async function deleteLog(id) {
       if (currentUser !== 'Admin') return;
-      if (confirm('Delete log entry from Supabase?')) {
+      
+      const logToDelete = state.logs.find(l => l.id === id);
+      if (!logToDelete) return;
+
+      if (confirm(`Delete record '${logToDelete.category}' of AED ${logToDelete.amount}?`)) {
         showLoader();
+
+        // 1. Identify if deleting a Debt transaction (Loan Given/Returned)
+        let matchedPerson = null;
+        for (let pName in USER_PASSWORDS) {
+          if (pName !== 'Admin' && logToDelete.category.toLowerCase().includes(pName.toLowerCase())) {
+            matchedPerson = pName;
+            break;
+          }
+        }
+
+        if (matchedPerson) {
+          let { data: debtRec } = await supabaseClient.from('debts').select('*').eq('person', matchedPerson).maybeSingle();
+          if (debtRec) {
+            let given = debtRec.total_given || 0;
+            let returned = debtRec.total_returned || 0;
+
+            if (logToDelete.type && logToDelete.type.includes('Given')) {
+              given = Math.max(0, given - logToDelete.amount);
+            } else if (logToDelete.type && (logToDelete.type.includes('Borrowed') || logToDelete.type.includes('Received'))) {
+              returned = Math.max(0, returned - logToDelete.amount);
+            }
+
+            // Sync updated debt balances back to Supabase
+            await supabaseClient.from('debts').update({ total_given: given, total_returned: returned }).eq('person', matchedPerson);
+          }
+        }
+
+        // 2. Delete transaction log
         await supabaseClient.from('transactions').delete().eq('id', id);
         await loadDataFromSupabase();
       }
@@ -1487,32 +1584,27 @@
       }
     }
 
-    // MAIN DASHBOARD CALCULATIONS (WITH STRICT DATE & PAST MONTH LOAN MATH LOGIC)
+    // DYNAMIC ACCURATE DASHBOARD COMPUTATION
     function renderDashboard() {
-      const curMonth = new Date().toISOString().slice(0, 7); // e.g. "2026-07"
+      const curMonth = new Date().toISOString().slice(0, 7);
 
       let totalIncome = state.cashflow.filter(c => c.type === 'Income').reduce((a, b) => a + b.amount, 0);
       let totalExpense = state.cashflow.filter(c => c.type === 'Expense').reduce((a, b) => a + b.amount, 0);
       let totalPersonalExpense = state.personalExpenses.reduce((a, b) => a + b.amount, 0);
 
-      // Borrowed Loan Cash-In (Current Month Only)
       let borrowedCashIn = state.logs
         .filter(l => l.type === 'Loan Borrowed (Cash In)')
         .reduce((a, b) => a + b.amount, 0);
 
-      // Loan Repaid Back (Deduct from Net Cash)
       let loanRepaid = state.logs
         .filter(l => l.type === 'Loan Repaid Back')
         .reduce((a, b) => a + b.amount, 0);
 
-      // LOAN GIVEN (Only deduct if transaction date belongs to CURRENT MONTH)
       let currentMonthLoanGiven = state.logs
         .filter(l => l.type === 'Loan Given' && l.date && l.date.startsWith(curMonth))
         .reduce((a, b) => a + b.amount, 0);
 
       let totalReceivable = state.debts.reduce((a, b) => a + (b.total_given - b.total_returned), 0);
-
-      // DYNAMIC ACCURATE NET CASH FORMULA
       let netCash = totalIncome + borrowedCashIn - totalExpense - totalPersonalExpense - loanRepaid - currentMonthLoanGiven;
 
       document.getElementById('metricIncome').innerText = `AED ${totalIncome.toLocaleString()}`;
@@ -1591,7 +1683,8 @@
           <td class="py-3 px-4 font-medium text-slate-700 dark:text-slate-200">${log.category}</td>
           <td class="py-3 px-4"><span class="px-2.5 py-0.5 text-xs font-semibold rounded-md ${badgeColor}">${log.type}</span></td>
           <td class="py-3 px-4 font-bold dark:text-white text-slate-900">AED ${log.amount.toLocaleString()}</td>
-          <td class="py-3 px-4 text-right">
+          <td class="py-3 px-4 text-right space-x-1">
+            <button onclick="viewInvoiceForLog(${log.id})" class="btn-pro text-sky-400 text-xs px-2 py-1 bg-sky-500/10 border border-sky-500/30 rounded"><i class="fa-solid fa-file-invoice"></i> View Invoice</button>
             ${currentUser === 'Admin' ? `<button onclick="deleteLog(${log.id})" class="text-rose-500 hover:text-rose-400 text-xs px-2 py-1 rounded transition"><i class="fa-solid fa-trash"></i></button>` : '-'}
           </td>
         `;
