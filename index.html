@@ -80,7 +80,6 @@
     .btn-pro:active { transform: scale(0.96); }
     body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 
-    /* Custom Mobile Scrollbars */
     ::-webkit-scrollbar { width: 4px; height: 4px; }
     ::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); rounded: 4px; }
   </style>
@@ -1271,6 +1270,7 @@
       html2pdf().set(opt).from(element).save();
     }
 
+    // UPDATED EXCLUSIVE INCOME POPUP FILTER (EXCLUDES LOANS BORROWED)
     function openMetricDetail(metricType) {
       if (currentUser !== 'Admin') return;
 
@@ -1284,7 +1284,8 @@
 
       if (metricType === 'Income') {
         titleEl.innerHTML = '<i class="fa-solid fa-money-bill-trend-up text-emerald-400"></i><span>Total Income Breakdown</span>';
-        items = state.logs.filter(l => l.type === 'Income' || l.type === 'Loan Borrowed (Cash In)');
+        // EXCLUSIVELY SHOW REAL INCOME TRANSACTIONS ONLY (FILTER OUT LOAN BORROWED)
+        items = state.logs.filter(l => l.type === 'Income');
       } else if (metricType === 'Expense') {
         titleEl.innerHTML = '<i class="fa-solid fa-receipt text-rose-400"></i><span>General Expenses Breakdown</span>';
         items = state.logs.filter(l => l.type === 'Expense');
