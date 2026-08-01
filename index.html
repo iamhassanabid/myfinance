@@ -2,11 +2,17 @@
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>HASSAN - Pro Financial Dashboard</title>
   
-  <!-- DYNAMIC INFINITY NEON FAVICON LOGO -->
+  <!-- MOBILE HOME SCREEN APP ICON (INFINITY NEON BLUE) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50' fill='%230f172a' stroke='%2338bdf8' stroke-width='6'><path d='M 30,25 C 10,5 0,25 0,25 C 0,25 10,45 30,25 C 50,5 70,5 80,25 C 90,45 100,25 100,25 C 100,25 90,5 80,25 C 70,45 50,45 30,25 Z'/></svg>">
   <link id="app-favicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50' fill='none' stroke='%2338bdf8' stroke-width='6'><path d='M 30,25 C 10,5 0,25 0,25 C 0,25 10,45 30,25 C 50,5 70,5 80,25 C 90,45 100,25 100,25 C 100,25 90,5 80,25 C 70,45 50,45 30,25 Z'/></svg>">
+
+  <!-- OPEN GRAPH / WHATSAPP SHARE CARD TAGS -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="HASSAN FINANCIALS - Secure Ledger & Analytics">
+  <meta property="og:description" content="Official Financial Management Dashboard & Digital Invoice Portal.">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -57,22 +63,26 @@
     }
 
     .dark .glass-panel {
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(12px);
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(14px);
       border: 1px solid rgba(56, 189, 248, 0.15);
       color: #f8fafc;
     }
     html:not(.dark) .glass-panel {
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(14px);
       border: 1px solid rgba(0, 0, 0, 0.08);
       color: #0f172a;
     }
 
     .sidebar-fixed { position: sticky; top: 0; height: 100vh; }
     .btn-pro { transition: all 0.2s ease; cursor: pointer; }
-    .btn-pro:active { transform: scale(0.97); }
+    .btn-pro:active { transform: scale(0.96); }
     body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+
+    /* Custom Mobile Scrollbars */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); rounded: 4px; }
   </style>
 </head>
 <body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen relative overflow-x-hidden">
@@ -1353,10 +1363,10 @@
         const row = document.createElement('tr');
         row.className = "hover:bg-slate-500/5 transition";
         row.innerHTML = `
-          <td class="py-2.5 px-3 text-xs text-slate-400">${log.date}</td>
+          <td class="py-2.5 px-3 text-xs text-slate-400 whitespace-nowrap">${log.date}</td>
           <td class="py-2.5 px-3 font-medium text-slate-700 dark:text-slate-200">${log.category}</td>
-          <td class="py-2.5 px-3"><span class="px-2 py-0.5 text-xs font-semibold rounded bg-slate-500/10 text-sky-400">${log.type}</span></td>
-          <td class="py-2.5 px-3 font-bold dark:text-white text-slate-900">AED ${log.amount.toLocaleString()}</td>
+          <td class="py-2.5 px-3"><span class="px-2 py-0.5 text-[10px] sm:text-xs font-semibold rounded bg-slate-500/10 text-sky-400 whitespace-nowrap">${log.type}</span></td>
+          <td class="py-2.5 px-3 font-bold dark:text-white text-slate-900 whitespace-nowrap">AED ${log.amount.toLocaleString()}</td>
         `;
         tbody.appendChild(row);
       });
@@ -1377,7 +1387,7 @@
           <td class="py-2.5 px-3 font-bold text-white">${d.person}</td>
           <td class="py-2.5 px-3 text-slate-300">AED ${d.total_given.toLocaleString()}</td>
           <td class="py-2.5 px-3 text-emerald-400">AED ${d.total_returned.toLocaleString()}</td>
-          <td class="py-2.5 px-3"><span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full font-bold text-xs">Fully Cleared (0 AED)</span></td>
+          <td class="py-2.5 px-3"><span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full font-bold text-[10px] sm:text-xs whitespace-nowrap">Fully Cleared (0 AED)</span></td>
         `;
         tbody.appendChild(row);
       });
@@ -1436,10 +1446,10 @@
         const row = document.createElement('tr');
         row.className = "hover:bg-slate-500/5 transition";
         row.innerHTML = `
-          <td class="py-2.5 px-3 text-xs text-slate-400">${log.date}</td>
+          <td class="py-2.5 px-3 text-xs text-slate-400 whitespace-nowrap">${log.date}</td>
           <td class="py-2.5 px-3 font-medium text-slate-700 dark:text-slate-200">${log.category}</td>
-          <td class="py-2.5 px-3"><span class="px-2 py-0.5 text-xs font-semibold rounded ${log.type==='Income'?'bg-emerald-500/20 text-emerald-500':'bg-rose-500/20 text-rose-500'}">${log.type}</span></td>
-          <td class="py-2.5 px-3 font-bold dark:text-white text-slate-900">AED ${log.amount.toLocaleString()}</td>
+          <td class="py-2.5 px-3"><span class="px-2 py-0.5 text-[10px] sm:text-xs font-semibold rounded ${log.type==='Income'?'bg-emerald-500/20 text-emerald-500':'bg-rose-500/20 text-rose-500'} whitespace-nowrap">${log.type}</span></td>
+          <td class="py-2.5 px-3 font-bold dark:text-white text-slate-900 whitespace-nowrap">AED ${log.amount.toLocaleString()}</td>
         `;
         tbody.appendChild(row);
       });
@@ -1693,9 +1703,9 @@
             <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20 flex items-center justify-center font-bold text-xs shrink-0">${d.person.charAt(0)}</span>
             <span class="truncate max-w-[100px] sm:max-w-none">${d.person}</span>
           </td>
-          <td class="py-2.5 px-3 text-emerald-500 font-medium">AED ${(d.total_returned || 0).toLocaleString()}</td>
-          <td class="py-2.5 px-3 text-slate-400 font-medium">AED ${(d.total_given || 0).toLocaleString()}</td>
-          <td class="py-2.5 px-3 font-bold ${balance > 0 ? 'text-amber-500' : 'text-emerald-400'}">
+          <td class="py-2.5 px-3 text-emerald-500 font-medium whitespace-nowrap">AED ${(d.total_returned || 0).toLocaleString()}</td>
+          <td class="py-2.5 px-3 text-slate-400 font-medium whitespace-nowrap">AED ${(d.total_given || 0).toLocaleString()}</td>
+          <td class="py-2.5 px-3 font-bold whitespace-nowrap ${balance > 0 ? 'text-amber-500' : 'text-emerald-400'}">
             AED ${balance.toLocaleString()} 
             <span class="text-[9px] font-normal block text-slate-400">${statusText}</span>
           </td>
