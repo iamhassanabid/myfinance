@@ -1334,7 +1334,7 @@
         let debtRecord = debtRecords ? debtRecords.find(d => d.person.toLowerCase().includes(record.sender_name.toLowerCase())) : null;
 
         if (!debtRecord) {
-          const { data: newRecord } = await supabaseClient.from('debts').insert([{ person: record.sender_name, total_given: record.amount, total_returned: 0 }]).select().single();
+          await supabaseClient.from('debts').insert([{ person: record.sender_name, total_given: record.amount, total_returned: 0 }]);
         } else {
           await supabaseClient.from('debts').update({ total_given: (debtRecord.total_given || 0) + record.amount }).eq('id', debtRecord.id);
         }
@@ -1394,6 +1394,20 @@
           ? `<span class="px-2 py-0.5 text-[9px] font-bold rounded bg-sky-500/10 text-sky-400 border border-sky-500/20"><i class="fa-solid fa-circle-check"></i> Sent Pak</span>`
           : `<span class="px-2 py-0.5 text-[9px] font-bold rounded bg-slate-800 text-slate-400">In UAE</span>`;
 
+        let adminActions = '';
+        if (currentUser === 'Admin') {
+          if (r.status === 'PENDING') {
+            adminActions = `
+              <button onclick="approveKametiRecord(${r.id})" class="btn-pro text-emerald-400 text-xs px-2 py-1 bg-emerald-500/10 border border-emerald-500/30 hover:bg-emerald-500/20 rounded font-semibold"><i class="fa-solid fa-check"></i> Approve</button>
+              <button onclick="rejectKametiRecord(${r.id})" class="btn-pro text-rose-400 text-xs px-2 py-1 bg-rose-500/10 border border-rose-500/30 hover:bg-rose-500/20 rounded font-semibold"><i class="fa-solid fa-xmark"></i> Reject</button>
+            `;
+          } else if (r.status === 'APPROVED' && r.type === 'Kameti') {
+            adminActions = `
+              <button onclick="togglePakistanSent(${r.id}, ${r.pakistan_sent})" class="btn-pro text-sky-400 text-xs px-2 py-1 bg-sky-500/10 border border-sky-500/30 hover:bg-sky-500/20 rounded font-semibold"><i class="fa-solid fa-plane"></i> Toggle Pak</button>
+            `;
+          }
+        }
+
         row.innerHTML = `
           <td class="py-2.5 px-3 text-xs text-slate-400 whitespace-nowrap">${r.date}</td>
           <td class="py-2.5 px-3 font-semibold text-white">${r.sender_name}</td>
@@ -1401,13 +1415,7 @@
           <td class="py-2.5 px-3 font-bold text-emerald-400 whitespace-nowrap">AED ${r.amount.toLocaleString()}</td>
           <td class="py-2.5 px-3 space-x-1">${statusBadge} ${r.type === 'Kameti' && r.status === 'APPROVED' ? pakBadge : ''}</td>
           <td class="py-2.5 px-3 text-right whitespace-nowrap space-x-1">
-            ${currentUser === 'Admin' && r.status === 'PENDING' ? `
-              <button onclick="approveKametiRecord(${r.id})" class="btn-pro text-emerald-400 text-xs px-2 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded"><i class="fa-solid fa-check"></i> Approve</button>
-              <button onclick="rejectKametiRecord(${r.id})" class="btn-pro text-rose-400 text-xs px-2 py-1 bg-rose-500/10 border border-rose-500/30 rounded"><i class="fa-solid fa-xmark"></i> Reject</button>
-            ` : ''}
-            ${currentUser === 'Admin' && r.status === 'APPROVED' && r.type === 'Kameti' ? `
-              <button onclick="togglePakistanSent(${r.id}, ${r.pakistan_sent})" class="btn-pro text-sky-400 text-xs px-2 py-1 bg-sky-500/10 border border-sky-500/30 rounded"><i class="fa-solid fa-plane"></i> Toggle Pak</button>
-            ` : ''}
+            ${adminActions || '<span class="text-xs text-slate-500">-</span>'}
           </td>
         `;
         tbody.appendChild(row);
