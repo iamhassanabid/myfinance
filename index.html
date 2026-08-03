@@ -5,14 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>HASSAN - Pro Financial Dashboard</title>
   
-  <!-- MOBILE HOME SCREEN APP ICON (INFINITY NEON BLUE) -->
   <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50' fill='%230f172a' stroke='%2338bdf8' stroke-width='6'><path d='M 30,25 C 10,5 0,25 0,25 C 0,25 10,45 30,25 C 50,5 70,5 80,25 C 90,45 100,25 100,25 C 100,25 90,5 80,25 C 70,45 50,45 30,25 Z'/></svg>">
   <link id="app-favicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50' fill='none' stroke='%2338bdf8' stroke-width='6'><path d='M 30,25 C 10,5 0,25 0,25 C 0,25 10,45 30,25 C 50,5 70,5 80,25 C 90,45 100,25 100,25 C 100,25 90,5 80,25 C 70,45 50,45 30,25 Z'/></svg>">
-
-  <!-- OPEN GRAPH / WHATSAPP SHARE CARD TAGS -->
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="HASSAN FINANCIALS - Secure Ledger & Analytics">
-  <meta property="og:description" content="Official Financial Management Dashboard & Digital Invoice Portal.">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -845,7 +839,7 @@
                   <input type="text" id="newUserName" placeholder="Profile Name (e.g. Usman)" class="px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs sm:text-sm">
                   <input type="password" id="newUserPin" placeholder="Access Password Key" class="px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs sm:text-sm">
                 </div>
-                <button onclick="addNewUserProfile()" class="btn-pro mt-3 w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl text-xs sm:text-sm flex items-center justify-center space-x-2">
+                <button onclick="addNewUserProfile()" class="btn-pro mt-3 w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg text-xs sm:text-sm flex items-center justify-center space-x-2">
                   <i class="fa-solid fa-user-plus"></i><span>Create User Profile</span>
                 </button>
               </div>
@@ -859,7 +853,6 @@
   </div>
 
   <script>
-    // SECURITY BLOCK DEV TOOLS KEYS
     document.addEventListener('contextmenu', event => event.preventDefault());
     document.onkeydown = function(e) {
       if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) {
@@ -867,7 +860,6 @@
       }
     }
 
-    // FLOATING BUBBLES INTERACTIVE ANIMATION JS
     const canvas = document.getElementById('particleCanvas');
     const ctx = canvas.getContext('2d');
     let particlesArray = [];
@@ -924,7 +916,6 @@
     initParticles();
     animateParticles();
 
-    // SUPABASE DATA CLIENT
     const SUPABASE_URL = "https://gwulouepjydhdjzfmhfo.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3dWxvdWVwanlkaGRqemZtaGZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU0MzM0NzIsImV4cCI6MjEwMTAwOTQ3Mn0.1X8y-3y4vx5lUAmMXBOdcsb-mOAp9SYJHeCtGl4FZpY";
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -1005,8 +996,12 @@
         const { data: db } = await supabaseClient.from('debts').select('*').order('id', { ascending: true });
         if (db) state.debts = db;
 
-        const { data: km } = await supabaseClient.from('kameti_records').select('*').order('id', { ascending: false });
-        if (km) state.kameti = km;
+        const { data: km, error: kmErr } = await supabaseClient.from('kameti_records').select('*').order('id', { ascending: false });
+        if (kmErr) {
+          console.warn("Kameti table query warning:", kmErr.message);
+        } else if (km) {
+          state.kameti = km;
+        }
 
         renderDashboard();
         renderUserSecurityList();
@@ -1304,18 +1299,22 @@
       const amount = parseFloat(document.getElementById('kametiAmount').value);
       const date = document.getElementById('kametiDate').value;
 
-      await supabaseClient.from('kameti_records').insert([{
-        sender_name: currentUser,
+      const { data, error } = await supabaseClient.from('kameti_records').insert([{
+        sender_name: currentUser || 'User',
         type: type,
         amount: amount,
         date: date,
         status: 'PENDING',
         pakistan_sent: false
-      }]);
+      }]).select();
 
-      document.getElementById('kametiAmount').value = '';
-      alert(`Transfer request of AED ${amount} (${type}) submitted for approval!`);
-      await loadDataFromSupabase();
+      if (error) {
+        alert("Supabase Error: 'kameti_records' table missing or disabled!\nPlease run the SQL query provided in Step 1 in your Supabase SQL Editor.\n\nDetails: " + error.message);
+      } else {
+        document.getElementById('kametiAmount').value = '';
+        alert(`Transfer request of AED ${amount} (${type}) submitted for approval!`);
+        await loadDataFromSupabase();
+      }
     }
 
     async function approveKametiRecord(id) {
@@ -1325,11 +1324,9 @@
       const record = state.kameti.find(k => k.id === id);
       if (!record) return;
 
-      // Update Kameti Status
-      await supabaseClient.from('kameti_records').update({ status: 'APPROVED' }).eq('id', id);
+      const { error } = await supabaseClient.from('kameti_records').update({ status: 'APPROVED' }).eq('id', id);
 
-      if (record.type === 'Loan') {
-        // Automatically add to main Debt Ledger if type is Loan
+      if (!error && record.type === 'Loan') {
         let { data: debtRecords } = await supabaseClient.from('debts').select('*');
         let debtRecord = debtRecords ? debtRecords.find(d => d.person.toLowerCase().includes(record.sender_name.toLowerCase())) : null;
 
@@ -1371,7 +1368,7 @@
 
       let records = state.kameti || [];
       if (currentUser !== 'Admin') {
-        records = records.filter(k => k.sender_name.toLowerCase() === currentUser.toLowerCase());
+        records = records.filter(k => k.sender_name && currentUser && k.sender_name.toLowerCase() === currentUser.toLowerCase());
       }
 
       let approvedTotal = records.filter(k => k.status === 'APPROVED' && k.type === 'Kameti').reduce((a, b) => a + b.amount, 0);
@@ -1381,6 +1378,11 @@
       document.getElementById('kametiTotalApproved').innerText = `AED ${approvedTotal.toLocaleString()}`;
       document.getElementById('kametiTotalPending').innerText = `AED ${pendingTotal.toLocaleString()}`;
       document.getElementById('kametiTotalSentPak').innerText = `AED ${sentPakTotal.toLocaleString()}`;
+
+      if (records.length === 0) {
+        tbody.innerHTML = `<tr><td colSpan="6" class="py-6 text-center text-slate-500 font-medium">No transfer records found. Submit an entry on the left to start.</td></tr>`;
+        return;
+      }
 
       records.forEach(r => {
         const row = document.createElement('tr');
@@ -1888,7 +1890,6 @@
         .filter(l => l.type === 'Loan Given' && l.date && l.date.startsWith(curMonth))
         .reduce((a, b) => a + b.amount, 0);
 
-      // Kameti approved amount that is in UAE (not yet sent to Pakistan) contributes to Cash In
       let kametiApprovedCashIn = (state.kameti || [])
         .filter(k => k.status === 'APPROVED' && k.type === 'Kameti' && !k.pakistan_sent)
         .reduce((a, b) => a + b.amount, 0);
